@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DaGameClient", "DaGameClient\DaGameClient.vcxproj", "{7C184D6A-5101-4D1F-AF10-C6A37CC6EDBD}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DaGameEngine", "DaGameEngine\DaGameEngine.vcxproj", "{5516D06A-DC26-4855-8996-656A79EFE605}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DaGameEngine", "DaGameEngine\DaGameEngine.vcxproj", "{6C2900E4-1053-418C-8262-24EC885A23A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +15,10 @@ Global
 		{7C184D6A-5101-4D1F-AF10-C6A37CC6EDBD}.Debug|Win32.Build.0 = Debug|Win32
 		{7C184D6A-5101-4D1F-AF10-C6A37CC6EDBD}.Release|Win32.ActiveCfg = Release|Win32
 		{7C184D6A-5101-4D1F-AF10-C6A37CC6EDBD}.Release|Win32.Build.0 = Release|Win32
-		{5516D06A-DC26-4855-8996-656A79EFE605}.Debug|Win32.ActiveCfg = Debug|Win32
-		{5516D06A-DC26-4855-8996-656A79EFE605}.Debug|Win32.Build.0 = Debug|Win32
-		{5516D06A-DC26-4855-8996-656A79EFE605}.Release|Win32.ActiveCfg = Release|Win32
-		{5516D06A-DC26-4855-8996-656A79EFE605}.Release|Win32.Build.0 = Release|Win32
+		{6C2900E4-1053-418C-8262-24EC885A23A2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6C2900E4-1053-418C-8262-24EC885A23A2}.Debug|Win32.Build.0 = Debug|Win32
+		{6C2900E4-1053-418C-8262-24EC885A23A2}.Release|Win32.ActiveCfg = Release|Win32
+		{6C2900E4-1053-418C-8262-24EC885A23A2}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
