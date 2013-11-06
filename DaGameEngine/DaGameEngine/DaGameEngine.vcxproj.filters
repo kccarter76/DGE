@@ -33,9 +33,6 @@
     <ClInclude Include="DaKeyMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DaKeyMapNode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DaWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -59,9 +56,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DaKeyMap.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DaKeyMapNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DaWindow.cpp">

@@ -81,7 +81,6 @@
     <ClInclude Include="DaGameEngine.h" />
     <ClInclude Include="DaKeyCodes.h" />
     <ClInclude Include="DaKeyMap.h" />
-    <ClInclude Include="DaKeyMapNode.h" />
     <ClInclude Include="DaWindow.h" />
     <ClInclude Include="dge.h" />
     <ClInclude Include="resource.h" />
@@ -94,7 +93,6 @@
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="DaGameEngine.cpp" />
     <ClCompile Include="DaKeyMap.cpp" />
-    <ClCompile Include="DaKeyMapNode.cpp" />
     <ClCompile Include="DaWindow.cpp" />
     <ClCompile Include="Stdafx.cpp" />
   </ItemGroup>
