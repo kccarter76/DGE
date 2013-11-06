@@ -2,9 +2,10 @@
 #include "DaKeyMapNode.h"
 
 
-DaKeyMapNode::DaKeyMapNode(void)
-	: m_bShift(false), m_bCtrl(false), m_bAlt(false)
+DaKeyMapNode::DaKeyMapNode(gui::EKEY_CODE code, bool shift, bool ctrl, bool alt)
+	: m_bShift(shift), m_bCtrl(ctrl), m_bAlt(alt)
 {
+	m_code = code;
 }
 
 
