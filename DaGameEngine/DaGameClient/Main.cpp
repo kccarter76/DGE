@@ -30,7 +30,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	window = new DaWindow(hWnd, hInstance, 1024, 768, true, (WNDPROC)&ClientProc);
 
 	window->m_ptrKeyMap->Add(WM_FULLSCREEN, EKEY_CODE::KEY_F11, true, false);
-	window->m_ptrKeyMap->Add(WM_FORWARD, EKEY_CODE::KEY_W, false, false);
+	window->m_ptrKeyMap->Add(WM_FORWARD, EKEY_CODE::KEY_KEY_W, false, false);
 
 	try
 	{
