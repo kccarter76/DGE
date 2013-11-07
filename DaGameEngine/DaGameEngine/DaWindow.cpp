@@ -2,6 +2,7 @@
 #include "DaWindow.h"
 
 using namespace DGE;
+using namespace gui;
 
 WNDPROC DaWindow::m_lpClientWndProc = NULL;
 WINDOWPLACEMENT DaWindow::m_WindowPlacement = { sizeof(m_WindowPlacement) };
@@ -69,12 +70,18 @@ DaWindow::DaWindow(HWND& wWndHandle, HINSTANCE hInstance, int nWidth, int nHeigh
 	}
 
 	ShowWindow(wWndHandle, TRUE);
+
+	m_ptrKeyMap = new DaKeyMap();
+
+	g_DaWindow = this;
 }
 
 DaWindow::~DaWindow(void)
 {
 	ZeroMemory(&m_wWndClassEx, sizeof(WNDCLASSEX));
 	ZeroMemory(&m_WindowPlacement, sizeof(WINDOWPLACEMENT));
+
+	delete m_ptrKeyMap;
 
 	m_lpClientWndProc = NULL;
 }
@@ -83,6 +90,35 @@ LRESULT DaWindow::DaWindowProc(HWND hWnd, UINT nMessage, WPARAM wParam, LPARAM l
 {
 	switch(nMessage)
 	{
+	case WM_KEYUP:
+		{
+			if(wParam == KEY_LSHIFT || wParam == KEY_RSHIFT || wParam == KEY_SHIFT)
+				g_DaWindow->m_ptrKeyMap->shift = false;
+			else if(wParam == KEY_LCONTROL || wParam == KEY_RCONTROL || wParam == KEY_CONTROL)
+				g_DaWindow->m_ptrKeyMap->CtrlKey = false;
+			else
+			{
+				UINT msg = g_DaWindow->m_ptrKeyMap->Find((gui::EKEY_CODE)wParam, g_DaWindow->m_ptrKeyMap->shift, g_DaWindow->m_ptrKeyMap->CtrlKey);
+				if(msg > 0)
+					PostMessage(hWnd, msg, NULL, NULL);
+			}
+			break;
+		}
+	case WM_KEYDOWN:
+		{
+			if(wParam == KEY_LSHIFT || wParam == KEY_RSHIFT || wParam == KEY_SHIFT)
+				g_DaWindow->m_ptrKeyMap->shift = true;
+			else if(wParam == KEY_LCONTROL || wParam == KEY_RCONTROL || wParam == KEY_CONTROL)
+				g_DaWindow->m_ptrKeyMap->CtrlKey = true;
+			else 
+			{	// this should only happen for movement mappings
+				UINT msg = g_DaWindow->m_ptrKeyMap->Find((gui::EKEY_CODE)wParam, false, false);
+
+				if(msg > 0 & (msg & WM_MOVEMENT) > 0)
+					PostMessage(hWnd, msg, NULL, NULL);
+			}
+			break;
+		}
 	case WM_DESTROY:
 		{
 			//TODO:: Window Closing Event remeber to cleanup anything that should be cleanned up

@@ -1,61 +1,59 @@
 #include "StdAfx.h"
 #include "DaKeyMap.h"
 
+#include <boost/foreach.hpp>
+
 using namespace DGE;
 
 DaKeyMap::DaKeyMap(void)
+	: _shift(false), _ctrl(false), _alt(false)
 {
-
 }
 
 DaKeyMap::~DaKeyMap(void)
 {
-	key_map_ptr = new std::unordered_map<UINT, gui::key_mapping>();
 }
 
-void DaKeyMap::add(UINT msg, gui::EKEY_CODE code, bool shift, bool ctrl, bool alt)
+void DaKeyMap::Add(UINT msg, gui::EKEY_CODE code, bool shift, bool ctrl)
 {
 	// remove any pre-existing mapping if it exists
-	if(key_map_ptr->find(msg) != key_map_ptr->end()) {
-		key_map_ptr->erase(key_map_ptr->find(msg));
+	if(key_map.find(msg) != key_map.end()) {
+		key_map.erase(key_map.find(msg));
 	}
 
 	gui::key_mapping mapping;
 
-	ZeroMemory(&mapping, sizeof(gui::key_mapping));
-
 	mapping.code = code;
 	mapping.shift = shift;
 	mapping.ctrl = ctrl;
-	mapping.alt = alt;
 
-	key_map_ptr->insert(DaKeyMapping::value_type(msg, mapping));
+	key_map.insert(key_code_map::value_type(msg, mapping));
 }
 
-UINT DaKeyMap::find(gui::EKEY_CODE code, bool shift, bool ctrl, bool alt)
-{
-	key_mapping_itr = &key_map_ptr->begin();
+UINT DaKeyMap::Find(gui::EKEY_CODE code, bool shift, bool ctrl)
+{	
+	UINT msg;
 
-	UINT msg = -1;
+	ZeroMemory(&msg, sizeof(msg));
 
-	while(key_mapping_itr != &key_map_ptr->end())
+	BOOST_FOREACH(key_code_map::value_type ele, key_map)
 	{
-		gui::key_mapping mapping = (**key_mapping_itr).second;
-		if(mapping.code == code && mapping.shift == shift && mapping.ctrl == ctrl && mapping.alt) {
-			msg = (**key_mapping_itr).first;
+		gui::key_mapping mapping = ele.second;
+		if(mapping.code == code && mapping.shift == shift && mapping.ctrl == ctrl) {
+			msg = ele.first;
 			break;
 		}
 	}
 	return msg;
 }
 
-gui::key_mapping DaKeyMap::find(UINT msg)
+gui::key_mapping DaKeyMap::Find(UINT msg)
 {
 	gui::key_mapping mapping;
 
-	key_mapping_itr = &key_map_ptr->find(msg);
+	key_map_iter = key_map.find(msg);
 
-	if(key_mapping_itr != &key_map_ptr->end())
-		mapping = (**key_mapping_itr).second;
+	if(key_map_iter != key_map.end())
+		mapping = (*key_map_iter).second;
 	return mapping;
 }

@@ -165,10 +165,9 @@ namespace gui {
 		EKEY_CODE	code;
 		bool		shift;
 		bool		ctrl;
-		bool		alt;
 
 		key_mapping(void)
-			: shift(false), ctrl(false), alt(false)
+			: shift(false), ctrl(false)
 		{
 			code = KEY_NONE;
 		}

@@ -2,10 +2,11 @@
 
 #include "stdafx.h"
 #include "DaKeyCodes.h"
-#include <unordered_map>
+
+#include <boost\unordered_map.hpp>
 
 namespace DGE {
-	typedef std::unordered_map<UINT, gui::key_mapping> DaKeyMapping;
+	typedef boost::unordered_map<UINT, gui::key_mapping> key_code_map;
 
 	class DGE_API DaKeyMap
 	{
@@ -13,11 +14,36 @@ namespace DGE {
 		DaKeyMap(void);
 		virtual ~DaKeyMap(void);
 
-		void add(UINT msg, gui::EKEY_CODE code, bool shift, bool ctrl, bool alt);
-		UINT find(gui::EKEY_CODE code, bool shift, bool ctrl, bool alt);
-		gui::key_mapping find(UINT msg);
+		void Add(UINT msg, gui::EKEY_CODE code, bool shift, bool ctrl);
+
+		UINT Find(gui::EKEY_CODE code, bool shift, bool ctrl);
+
+		gui::key_mapping Find(UINT msg);
+
+		PROPERTY(bool, shift);
+		GET(shift)
+		{
+			return _shift;
+		}
+		SET(shift)
+		{
+			_shift = value;
+		}
+
+		PROPERTY(bool, CtrlKey);
+		GET(CtrlKey)
+		{
+			return _ctrl;
+		}
+		SET(CtrlKey)
+		{
+			_ctrl = value;
+		}
+
 	private:
-		std::unordered_map<UINT, gui::key_mapping>				*key_map_ptr;
-		std::unordered_map<UINT, gui::key_mapping>::iterator	*key_mapping_itr;
+		key_code_map				key_map;
+		key_code_map::iterator	key_map_iter;
+
+		bool	_shift, _ctrl, _alt;
 	};
 };

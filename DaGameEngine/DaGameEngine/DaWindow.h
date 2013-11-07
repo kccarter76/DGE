@@ -1,6 +1,7 @@
 #pragma once
 
 #include "stdafx.h"
+#include "DaKeyMap.h"
 
 namespace DGE{
 	class DGE_API DaWindow
@@ -13,10 +14,14 @@ namespace DGE{
 
 		void release(void) { delete this; }
 
+		DaKeyMap		*m_ptrKeyMap;
 	private:
 		WNDCLASSEXW		m_wWndClassEx;
 
 		static WNDPROC			m_lpClientWndProc;
 		static WINDOWPLACEMENT	m_WindowPlacement;
 	};
+
+	//global window reference
+	DaWindow *g_DaWindow;
 };
