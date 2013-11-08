@@ -1,5 +1,7 @@
 #pragma once
 
+#include <boost/unordered_map.hpp>
+
 namespace gui {
 	enum  EKEY_CODE
 	{
@@ -161,6 +163,18 @@ namespace gui {
 		KEY_KEY_CODES_COUNT  = 0xFF // this is not a key, but the amount of keycodes there are.
 	};
 
+	enum ACTION {
+		IDLE			= (1u << 0),
+		FORWARD			= (1u << 1),
+		LEFT			= (1u << 2),
+		RIGHT			= (1u << 3),
+		BACKWARD		= (1u << 4),
+		UP				= (1u << 5),
+		DOWN			= (1u << 6),
+		RUN				= (1u << 7),
+		JUMP			= (1u << 8)
+	};
+
 	struct DGE_API key_mapping {
 		EKEY_CODE	code;
 		bool		shift;
@@ -170,6 +184,41 @@ namespace gui {
 			: shift(false), ctrl(false)
 		{
 			code = KEY_NONE;
+		}
+	};
+
+	struct DGE_API key_message {
+		UINT		msg;
+		ACTION		action;
+
+		key_message(void) {
+			ZeroMemory(&msg, sizeof(msg));
+			ZeroMemory(&action, sizeof(action));
+		}
+
+		bool operator==(key_message const& b) {
+			return msg == b.msg && action == b.action;
+		}
+	};
+
+	struct key_message_equal
+		: std::binary_function<key_message, key_message, bool>
+	{
+		bool operator()(key_message const& a, key_message const& b) const
+		{
+			return a.msg == b.msg && a.action == b.action;
+		}
+	};
+
+	struct key_message_hash
+		: std::unary_function<key_message, std::size_t>
+	{
+		std::size_t operator()(key_message const& a) const
+		{
+			std::size_t seed = 0;
+			boost::hash_combine(seed, a.msg);
+			boost::hash_combine(seed, a.action);
+			return seed;
 		}
 	};
 };

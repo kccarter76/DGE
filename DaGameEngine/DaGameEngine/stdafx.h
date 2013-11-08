@@ -10,7 +10,7 @@
 	#define DGE_API __declspec(dllimport)
 #endif
 
-#define PROPERTY(t,n) __declspec(property(put = property__set_##n, get = property__get_##n)) t n;\
+#define PROPERTY(t,n) __declspec( property (put = property__set_##n, get = property__get_##n) ) t n;\
 	typedef t property__tmp_type_##n
 #define READONLY_PROPERTY(t,n) __declspec( property (get = property__get_##n) ) t n;\
 	typedef t property__tmp_type_##n
@@ -22,9 +22,4 @@
 #include <Windows.h>
 #include <WindowsX.h>
 #include <string>
-
-//	define engine messages
-#define WM_SOCKET (WM_USER + 1)
-#define WM_FULLSCREEN (WM_USER + 2)
-#define WM_MOVEMENT (WM_USER + 4)
-#define WM_FORWARD (WM_MOVEMENT | WM_USER + 8)
+#include "definitions.h"

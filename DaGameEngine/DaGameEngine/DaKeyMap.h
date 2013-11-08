@@ -6,7 +6,7 @@
 #include <boost\unordered_map.hpp>
 
 namespace DGE {
-	typedef boost::unordered_map<UINT, gui::key_mapping> key_code_map;
+	typedef boost::unordered_map<gui::key_message, gui::key_mapping, gui::key_message_hash, gui::key_message_equal> key_code_map;
 
 	class DGE_API DaKeyMap
 	{
@@ -14,11 +14,11 @@ namespace DGE {
 		DaKeyMap(void);
 		virtual ~DaKeyMap(void);
 
-		void Add(UINT msg, gui::EKEY_CODE code, bool shift, bool ctrl);
+		void Add(gui::key_message msg, gui::EKEY_CODE code, bool shift, bool ctrl);
 
-		UINT Find(gui::EKEY_CODE code, bool shift, bool ctrl);
+		gui::key_message Find(gui::EKEY_CODE code, bool shift, bool ctrl);
 
-		gui::key_mapping Find(UINT msg);
+		gui::key_mapping Find(gui::key_message msg);
 
 		PROPERTY(bool, shift);
 		GET(shift)

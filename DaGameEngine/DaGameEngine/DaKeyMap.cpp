@@ -14,7 +14,7 @@ DaKeyMap::~DaKeyMap(void)
 {
 }
 
-void DaKeyMap::Add(UINT msg, gui::EKEY_CODE code, bool shift, bool ctrl)
+void DaKeyMap::Add(gui::key_message msg, gui::EKEY_CODE code, bool shift, bool ctrl)
 {
 	// remove any pre-existing mapping if it exists
 	if(key_map.find(msg) != key_map.end()) {
@@ -30,9 +30,9 @@ void DaKeyMap::Add(UINT msg, gui::EKEY_CODE code, bool shift, bool ctrl)
 	key_map.insert(key_code_map::value_type(msg, mapping));
 }
 
-UINT DaKeyMap::Find(gui::EKEY_CODE code, bool shift, bool ctrl)
+gui::key_message DaKeyMap::Find(gui::EKEY_CODE code, bool shift, bool ctrl)
 {	
-	UINT msg;
+	gui::key_message msg;
 
 	ZeroMemory(&msg, sizeof(msg));
 
@@ -44,10 +44,11 @@ UINT DaKeyMap::Find(gui::EKEY_CODE code, bool shift, bool ctrl)
 			break;
 		}
 	}
+
 	return msg;
 }
 
-gui::key_mapping DaKeyMap::Find(UINT msg)
+gui::key_mapping DaKeyMap::Find(gui::key_message msg)
 {
 	gui::key_mapping mapping;
 

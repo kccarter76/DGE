@@ -98,9 +98,9 @@ LRESULT DaWindow::DaWindowProc(HWND hWnd, UINT nMessage, WPARAM wParam, LPARAM l
 				g_DaWindow->m_ptrKeyMap->CtrlKey = false;
 			else
 			{
-				UINT msg = g_DaWindow->m_ptrKeyMap->Find((gui::EKEY_CODE)wParam, g_DaWindow->m_ptrKeyMap->shift, g_DaWindow->m_ptrKeyMap->CtrlKey);
-				if(msg > 0)
-					PostMessage(hWnd, msg, NULL, NULL);
+				gui::key_message msg = g_DaWindow->m_ptrKeyMap->Find((gui::EKEY_CODE)wParam, g_DaWindow->m_ptrKeyMap->shift, g_DaWindow->m_ptrKeyMap->CtrlKey);
+				if(msg.msg > 0)
+					PostMessage(hWnd, msg.msg, msg.action, NULL);
 			}
 			break;
 		}
@@ -111,11 +111,12 @@ LRESULT DaWindow::DaWindowProc(HWND hWnd, UINT nMessage, WPARAM wParam, LPARAM l
 			else if(wParam == KEY_LCONTROL || wParam == KEY_RCONTROL || wParam == KEY_CONTROL)
 				g_DaWindow->m_ptrKeyMap->CtrlKey = true;
 			else 
-			{	// this should only happen for movement mappings
-				UINT msg = g_DaWindow->m_ptrKeyMap->Find((gui::EKEY_CODE)wParam, false, false);
+			{	// this should only happen for actor/camera mappings
+				// a key being held done is indicative of a movement or change in camera orientation.
+				gui::key_message msg = g_DaWindow->m_ptrKeyMap->Find((gui::EKEY_CODE)wParam, false, false);
 
-				if(msg > 0 & (msg & WM_MOVEMENT) > 0)
-					PostMessage(hWnd, msg, NULL, NULL);
+				/*if(msg > 0 & (msg & WM_MOVEMENT) > 0)
+					PostMessage(hWnd, msg, NULL, NULL);*/
 			}
 			break;
 		}
@@ -126,7 +127,7 @@ LRESULT DaWindow::DaWindowProc(HWND hWnd, UINT nMessage, WPARAM wParam, LPARAM l
 			PostQuitMessage(0);
 			return 0;
 		}
-	case WM_FULLSCREEN:
+	case DGE_FULLSCREEN:
 		{
 			DWORD dwStyle = GetWindowLong(hWnd, GWL_STYLE);
 			
@@ -153,7 +154,8 @@ LRESULT DaWindow::DaWindowProc(HWND hWnd, UINT nMessage, WPARAM wParam, LPARAM l
 			}
 			break;
 		}
-	case WM_SOCKET:
+	case DGE_SOCKET:
+		// network communication
 		break;
 	}
 

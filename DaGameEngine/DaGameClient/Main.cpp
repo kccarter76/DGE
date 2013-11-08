@@ -10,7 +10,7 @@ static LRESULT ClientProc(HWND hWnd, UINT nMessage, WPARAM wParam, LPARAM lParam
 {
 	switch(nMessage)
 	{
-	case WM_FULLSCREEN:
+	case DGE_FULLSCREEN:
 		{	// remember the engine sets the window and this is where we can perform any additional coding for the client
 			break;
 		}
@@ -29,8 +29,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	
 	window = new DaWindow(hWnd, hInstance, 1024, 768, true, (WNDPROC)&ClientProc);
 
-	window->m_ptrKeyMap->Add(WM_FULLSCREEN, EKEY_CODE::KEY_F11, true, false);
-	window->m_ptrKeyMap->Add(WM_FORWARD, EKEY_CODE::KEY_KEY_W, false, false);
+	window->input_map->Add(DGE_FULLSCREEN, EKEY_CODE::KEY_F11, true, false);
+	window->input_map->Add(DGE_AVATAR, EKEY_CODE::KEY_KEY_W, false, false);
 
 	try
 	{
