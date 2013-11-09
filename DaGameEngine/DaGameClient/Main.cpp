@@ -4,7 +4,7 @@
 #include <dge.h>
 
 using namespace DGE;
-using namespace gui;
+using namespace GUI;
 
 static LRESULT ClientProc(HWND hWnd, UINT nMessage, WPARAM wParam, LPARAM lParam)
 {
@@ -12,6 +12,10 @@ static LRESULT ClientProc(HWND hWnd, UINT nMessage, WPARAM wParam, LPARAM lParam
 	{
 	case DGE_FULLSCREEN:
 		{	// remember the engine sets the window and this is where we can perform any additional coding for the client
+			break;
+		}
+	case DGE_AVATAR:
+		{	// messages that reflect action to occur on the avatar
 			break;
 		}
 	default:
@@ -29,8 +33,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	
 	window = new DaWindow(hWnd, hInstance, 1024, 768, true, (WNDPROC)&ClientProc);
 
-	window->input_map->Add(DGE_FULLSCREEN, EKEY_CODE::KEY_F11, true, false);
-	window->input_map->Add(DGE_AVATAR, EKEY_CODE::KEY_KEY_W, false, false);
+	window->input_map->Add(key_message(DGE_FULLSCREEN, ACTION::IDLE), EKEY_CODE::KEY_F11, true, false);
+	window->input_map->Add(key_message(DGE_AVATAR, ACTION::FORWARD), EKEY_CODE::KEY_KEY_W, false, false);
+	window->input_map->Add(key_message(DGE_AVATAR, ACTION::LEFT), EKEY_CODE::KEY_KEY_A, false, false);
+	window->input_map->Add(key_message(DGE_AVATAR, ACTION::RIGHT), EKEY_CODE::KEY_KEY_D, false, false);
+	window->input_map->Add(key_message(DGE_AVATAR, ACTION::BACKWARD), EKEY_CODE::KEY_KEY_S, false, false);
 
 	try
 	{

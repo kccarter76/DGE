@@ -2,7 +2,7 @@
 #include "DaWindow.h"
 
 using namespace DGE;
-using namespace gui;
+using namespace GUI;
 
 WNDPROC DaWindow::m_lpClientWndProc = NULL;
 WINDOWPLACEMENT DaWindow::m_WindowPlacement = { sizeof(m_WindowPlacement) };
@@ -98,9 +98,9 @@ LRESULT DaWindow::DaWindowProc(HWND hWnd, UINT nMessage, WPARAM wParam, LPARAM l
 				g_DaWindow->m_ptrKeyMap->CtrlKey = false;
 			else
 			{
-				gui::key_message msg = g_DaWindow->m_ptrKeyMap->Find((gui::EKEY_CODE)wParam, g_DaWindow->m_ptrKeyMap->shift, g_DaWindow->m_ptrKeyMap->CtrlKey);
-				if(msg.msg > 0)
-					PostMessage(hWnd, msg.msg, msg.action, NULL);
+				GUI::key_message key = g_DaWindow->m_ptrKeyMap->Find((GUI::EKEY_CODE)wParam, g_DaWindow->m_ptrKeyMap->shift, g_DaWindow->m_ptrKeyMap->CtrlKey);
+				if(key.mapped())
+					PostMessage(hWnd, key.msg, key.action, key.extended);
 			}
 			break;
 		}
@@ -113,10 +113,11 @@ LRESULT DaWindow::DaWindowProc(HWND hWnd, UINT nMessage, WPARAM wParam, LPARAM l
 			else 
 			{	// this should only happen for actor/camera mappings
 				// a key being held done is indicative of a movement or change in camera orientation.
-				gui::key_message msg = g_DaWindow->m_ptrKeyMap->Find((gui::EKEY_CODE)wParam, false, false);
-
-				/*if(msg > 0 & (msg & WM_MOVEMENT) > 0)
-					PostMessage(hWnd, msg, NULL, NULL);*/
+				GUI::key_message key = g_DaWindow->input_map->Find((GUI::EKEY_CODE)wParam, false, false);
+				// if the mapped key is not an idle action then we will post it to the thread.
+				if(key.mapped() && (key.action & ACTION::IDLE) == 0) {
+					PostMessage(hWnd, key.msg, key.action, key.extended);
+				}
 			}
 			break;
 		}

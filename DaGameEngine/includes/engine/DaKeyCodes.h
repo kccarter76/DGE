@@ -2,8 +2,8 @@
 
 #include <boost/unordered_map.hpp>
 
-namespace gui {
-	enum  EKEY_CODE
+namespace GUI {
+	enum DGE_API EKEY_CODE
 	{
 		KEY_NONE			 = 0x00,  // No key defined
 		KEY_LBUTTON          = 0x01,  // Left mouse button
@@ -163,7 +163,7 @@ namespace gui {
 		KEY_KEY_CODES_COUNT  = 0xFF // this is not a key, but the amount of keycodes there are.
 	};
 
-	enum ACTION {
+	enum DGE_API ACTION {
 		IDLE			= (1u << 0),
 		FORWARD			= (1u << 1),
 		LEFT			= (1u << 2),
@@ -171,8 +171,9 @@ namespace gui {
 		BACKWARD		= (1u << 4),
 		UP				= (1u << 5),
 		DOWN			= (1u << 6),
-		RUN				= (1u << 7),
-		JUMP			= (1u << 8)
+		TOGGLE_RUN		= (1u << 7),
+		JUMP			= (1u << 8),
+		EXTENDED		= (1u << 9)
 	};
 
 	struct DGE_API key_mapping {
@@ -188,13 +189,24 @@ namespace gui {
 	};
 
 	struct DGE_API key_message {
-		UINT		msg;
+		UINT		msg, extended;
 		ACTION		action;
 
 		key_message(void) {
 			ZeroMemory(&msg, sizeof(msg));
+			ZeroMemory(&extended, sizeof(extended));
 			ZeroMemory(&action, sizeof(action));
 		}
+
+		key_message(UINT msg, ACTION action)
+			: msg(msg), action(action) { 
+			ZeroMemory(&extended, sizeof(extended));
+		}
+
+		key_message(UINT msg, UINT extended)
+			: msg(msg), action(ACTION::EXTENDED), extended(extended) { }
+
+		inline bool mapped() { return msg > 0; }
 
 		bool operator==(key_message const& b) {
 			return msg == b.msg && action == b.action;
