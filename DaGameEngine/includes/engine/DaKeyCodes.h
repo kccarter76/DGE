@@ -176,6 +176,11 @@ namespace GUI {
 		EXTENDED		= (1u << 9)
 	};
 
+	enum DGE_API ENGINE {
+		PAUSE			= (1u << 0),
+		STATS			= (1u << 1),
+	};
+
 	struct DGE_API key_mapping {
 		EKEY_CODE	code;
 		bool		shift;
@@ -196,6 +201,12 @@ namespace GUI {
 			ZeroMemory(&msg, sizeof(msg));
 			ZeroMemory(&extended, sizeof(extended));
 			ZeroMemory(&action, sizeof(action));
+		}
+
+		key_message(UINT msg)
+			: msg(msg) {
+			ZeroMemory(&action, sizeof(action));
+			ZeroMemory(&extended, sizeof(extended));
 		}
 
 		key_message(UINT msg, ACTION action)
