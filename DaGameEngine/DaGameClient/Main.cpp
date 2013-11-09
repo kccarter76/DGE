@@ -18,6 +18,11 @@ static LRESULT ClientProc(HWND hWnd, UINT nMessage, WPARAM wParam, LPARAM lParam
 		{	// messages that reflect action to occur on the avatar
 			break;
 		}
+	case DGE_ENGINE:
+		{	// messages that reflect action to occur on the rendering engine
+			// this may be moved into the DaGameEngine project instead of the client
+			break;
+		}
 	default:
 		return DefWindowProc(hWnd, nMessage, wParam, lParam);
 	}
@@ -33,11 +38,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	
 	window = new DaWindow(hWnd, hInstance, 1024, 768, true, (WNDPROC)&ClientProc);
 
-	window->input_map->Add(key_message(DGE_FULLSCREEN, ACTION::IDLE), EKEY_CODE::KEY_F11, true, false);
+	window->input_map->Add(key_message(DGE_FULLSCREEN), EKEY_CODE::KEY_F11, true, false);
+
 	window->input_map->Add(key_message(DGE_AVATAR, ACTION::FORWARD), EKEY_CODE::KEY_KEY_W, false, false);
 	window->input_map->Add(key_message(DGE_AVATAR, ACTION::LEFT), EKEY_CODE::KEY_KEY_A, false, false);
 	window->input_map->Add(key_message(DGE_AVATAR, ACTION::RIGHT), EKEY_CODE::KEY_KEY_D, false, false);
 	window->input_map->Add(key_message(DGE_AVATAR, ACTION::BACKWARD), EKEY_CODE::KEY_KEY_S, false, false);
+
+	window->input_map->Add(key_message(DGE_ENGINE, ENGINE::PAUSE), EKEY_CODE::KEY_PAUSE, false, false);
+	window->input_map->Add(key_message(DGE_ENGINE, ENGINE::STATS), EKEY_CODE::KEY_F12, false, false);
 
 	try
 	{
