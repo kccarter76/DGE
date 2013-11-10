@@ -13,7 +13,7 @@ namespace DGE{
 
 		static LRESULT CALLBACK DaWindowProc(HWND hWnd, UINT nMessage, WPARAM wParam, LPARAM lParam);
 
-		void release(void) { delete this; }
+		RELEASE;
 		
 		__declspec( property (get = property__get_mapping) ) DaKeyMap* input_map;
 		

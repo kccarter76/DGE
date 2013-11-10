@@ -32,10 +32,25 @@ static LRESULT ClientProc(HWND hWnd, UINT nMessage, WPARAM wParam, LPARAM lParam
 //Entry Point
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	DaWindow	*window = NULL;
+	DaWindow	*window = nullptr;
 	HWND		hWnd;
 	MSG			msg;
-	
+	DaGraphics	*graphics = nullptr;
+
+	// Shader Variables
+	DaVertexShader	*vertexShader	[ DaLocator::SHADER_CONFIGURATION_COUNT ];
+	DaPixelShader	*pixelShader	[ DaLocator::SHADER_CONFIGURATION_COUNT ];
+	//DXHullShader	*hullShader		[ DXLocator::SHADER_CONFIGURATION_COUNT ];
+	DaDomainShader	*domainShader	[ DaLocator::SHADER_CONFIGURATION_COUNT ];
+
+	for( int i = 0; i < DaLocator::SHADER_CONFIGURATION_COUNT; i++)
+	{
+		vertexShader	[ i ]	= NULL;
+		pixelShader		[ i ]	= NULL;
+		//hullShader		[ i ]	= NULL;
+		domainShader	[ i ]	= NULL;
+	}
+
 	window = new DaWindow(hWnd, hInstance, 1024, 768, true, (WNDPROC)&ClientProc);
 
 	window->input_map->Add(key_message(DGE_FULLSCREEN), EKEY_CODE::KEY_F11, true, false);
@@ -50,7 +65,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	try
 	{
-		while(true)
+		graphics = new DaGraphics(hWnd, true, 1024, 768, 4);
+
+		DaLocator::RegisterGraphicsService(*graphics);
+
+		while(graphics->IsRunning)
 		{
 			if(PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE))
 			{
@@ -64,7 +83,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			}
 		}
 
-		SAFE_DX_RELEASE(window);
+		SAFE_DGE_RELEASE(window);
 	}
 	catch(std::exception ex)
 	{

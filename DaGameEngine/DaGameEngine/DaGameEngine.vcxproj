@@ -39,6 +39,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <LibraryPath>A:\SDK\Microsoft DirectX SDK %28June 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -50,11 +51,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;DAGAMEENGINE_EXPORTS;DGE_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>G:\Projects\C++\API\BOOST\boost_1_54_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>G:\Projects\C++\API\BOOST\boost_1_54_0;A:\SDK\Microsoft DirectX SDK %28June 2010%29\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>D3DX11.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>XCOPY *.h ..\includes\engine /Y</Command>
@@ -82,12 +84,26 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DaAsset.h" />
+    <ClInclude Include="DaBitMap.h" />
+    <ClInclude Include="DaDomainShader.h" />
+    <ClInclude Include="DaFile.h" />
     <ClInclude Include="DaGameEngine.h" />
     <ClInclude Include="DaKeyCodes.h" />
     <ClInclude Include="DaKeyMap.h" />
+    <ClInclude Include="DaLocator.h" />
+    <ClInclude Include="DaMesh.h" />
+    <ClInclude Include="DaPixelShader.h" />
     <ClInclude Include="DaWindow.h" />
     <ClInclude Include="definitions.h" />
     <ClInclude Include="dge.h" />
+    <ClInclude Include="DaVertexShader.h" />
+    <ClInclude Include="DaGraphics.h" />
+    <ClInclude Include="IControllable.h" />
+    <ClInclude Include="IInputComponent.h" />
+    <ClInclude Include="IObject.h" />
+    <ClInclude Include="IRenderable.h" />
+    <ClInclude Include="IShader.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
@@ -96,9 +112,23 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="DaAsset.cpp" />
+    <ClCompile Include="DaBitMap.cpp" />
+    <ClCompile Include="DaDomainShader.cpp" />
+    <ClCompile Include="DaFile.cpp" />
     <ClCompile Include="DaGameEngine.cpp" />
     <ClCompile Include="DaKeyMap.cpp" />
+    <ClCompile Include="DaLocator.cpp" />
+    <ClCompile Include="DaMesh.cpp" />
+    <ClCompile Include="DaPixelShader.cpp" />
     <ClCompile Include="DaWindow.cpp" />
+    <ClCompile Include="DaVertexShader.cpp" />
+    <ClCompile Include="DaGraphics.cpp" />
+    <ClCompile Include="IControllable.cpp" />
+    <ClCompile Include="IInputComponent.cpp" />
+    <ClCompile Include="IObject.cpp" />
+    <ClCompile Include="IRenderable.cpp" />
+    <ClCompile Include="IShader.cpp" />
     <ClCompile Include="Stdafx.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
