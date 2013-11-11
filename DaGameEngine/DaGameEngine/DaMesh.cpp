@@ -2,7 +2,7 @@
 #include "DaVertexShader.h"
 #include "DaDomainShader.h"
 #include "DaPixelShader.h"
-#include "DaLocator.h"
+#include "DaEngine.h"
 
 using namespace DGE;
 
@@ -81,7 +81,7 @@ DaMesh::DaMesh( void )
 	// Load Textures
 	// ----------------------------------
 	DaAsset	*assetLoader	= nullptr;
-	assetLoader				= DaLocator::GetAssetLoadingService( );
+	assetLoader				= DaEngine::Get()->AssetLoadingService;
 	_jointHierarchyRoot		= NULL;
 
 	_instances.clear( );
@@ -89,10 +89,10 @@ DaMesh::DaMesh( void )
 
 	if( assetLoader )
 	{
-		_diffuseTexture			= DaLocator::GetDefaultTextureResource( DaLocator::DIFFUSE );
-		_normalTexture			= DaLocator::GetDefaultTextureResource( DaLocator::NORMAL );
-		_alphaTexture			= DaLocator::GetDefaultTextureResource( DaLocator::ALPHA );
-		_specularTexture		= DaLocator::GetDefaultTextureResource( DaLocator::SPECULAR );
+		_diffuseTexture			= DaEngine::GetDefaultTextureResource( DaEngine::DIFFUSE );
+		_normalTexture			= DaEngine::GetDefaultTextureResource( DaEngine::NORMAL );
+		_alphaTexture			= DaEngine::GetDefaultTextureResource( DaEngine::ALPHA );
+		_specularTexture		= DaEngine::GetDefaultTextureResource( DaEngine::SPECULAR );
 	}
 }
 
@@ -210,24 +210,24 @@ void DaMesh::DrawAllInstances( void )
 
 	// Bind Data to the Shader Pipeline
 	// ---------------------------------------------
-	context			= &DaLocator::GetGraphicsService()->Context;
+	context			= &DaEngine::Get()->Graphics->Context;
 
 	if( context )
 	{
-		vertexShader	= ( DaVertexShader* )DaLocator::GetShader( DaLocator::S_VERTEX );
-		domainShader	= ( DaDomainShader* )DaLocator::GetShader( DaLocator::S_DOMAIN );
-		pixelShader		= ( DaPixelShader* )DaLocator::GetShader( DaLocator::S_PIXEL );
+		vertexShader	= ( DaVertexShader* )DaEngine::GetShader( DaEngine::S_VERTEX );
+		domainShader	= ( DaDomainShader* )DaEngine::GetShader( DaEngine::S_DOMAIN );
+		pixelShader		= ( DaPixelShader* )DaEngine::GetShader( DaEngine::S_PIXEL );
 
 		if( vertexShader && domainShader && pixelShader )
 		{
 			// Get matrix information from the Graphics Engine
-			vertexShaderData._projectionMatrix	= DaLocator::GetGraphicsService()->ProjectionMatrix;
-			vertexShaderData._viewMatrix		= DaLocator::GetMainCamera()->ViewMatrix;
-			vertexShaderData._worldMatrix		= DaLocator::GetGraphicsService()->WorldMatrix;
+			vertexShaderData._projectionMatrix	= DaEngine::Get()->Graphics->ProjectionMatrix;
+			vertexShaderData._viewMatrix		= DaEngine::Get()->Camera->ViewMatrix;
+			vertexShaderData._worldMatrix		= DaEngine::Get()->Graphics->WorldMatrix;
 			// Other Vertex Shader data
 			//vertexShaderData._lightDir			= D3DXVECTOR3( 0.5f, 0.5f, 0.5f );
 			vertexShaderData._lightDir			= D3DXVECTOR3( 1.0f, -1.0f, 3.0f );
-			vertexShaderData._playerPosition	= DaLocator::GetMainCamera( )->Translation;
+			vertexShaderData._playerPosition	= DaEngine::Get()->Camera->Translation;
 
 			// Transpose Projection, View and World Matrices
 			D3DXMatrixTranspose( &vertexShaderData._projectionMatrix, &vertexShaderData._projectionMatrix );
@@ -257,8 +257,8 @@ void DaMesh::DrawAllInstances( void )
 
 				// Set Pixel Shader Information
 				pixelShaderData._ambientLightColour		= D3DXVECTOR3( 1.0f, 1.0f, 1.0f );
-				pixelShaderData._cameraViewDirection	= DaLocator::GetMainCamera( )->LookAt;
-				pixelShaderData._playerPos				= DaLocator::GetMainCamera( )->Translation;
+				pixelShaderData._cameraViewDirection	= DaEngine::Get()->Camera->LookAt;
+				pixelShaderData._playerPos				= DaEngine::Get()->Camera->Translation;
 				pixelShaderData._PADDING				= D3DXVECTOR3( 0.0f, 0.0f, 0.0f );
 
 				// Bind data to the vertex and domain shader pipelines.
@@ -612,7 +612,7 @@ int DaMesh::BindVertexBuffer( void )
 	ID3D11Device				*device					= nullptr;
 	ID3D11DeviceContext			*context				= nullptr;
 
-	graphicsService = DaLocator::GetGraphicsService();
+	graphicsService = DaEngine::Get()->Graphics;
 
 	if( graphicsService )
 	{
@@ -662,7 +662,7 @@ int DaMesh::BindVertexBuffer( void )
 		// Load Textures
 		// ----------------------------------
 		DaAsset	*assetLoader	= NULL;
-		assetLoader				= DaLocator::GetAssetLoadingService( );
+		assetLoader				= DaEngine::Get()->AssetLoadingService;
 
 		if( assetLoader )
 		{
@@ -673,7 +673,7 @@ int DaMesh::BindVertexBuffer( void )
 			else
 			{
 				// Assign Default Texture
-				_diffuseTexture			= DaLocator::GetDefaultTextureResource( DaLocator::DIFFUSE );
+				_diffuseTexture			= DaEngine::GetDefaultTextureResource( DaEngine::DIFFUSE );
 			}
 
 			if( _textureIndices[1] > -1 )
@@ -683,7 +683,7 @@ int DaMesh::BindVertexBuffer( void )
 			else
 			{
 				// Assign Default Texture
-				_normalTexture			= DaLocator::GetDefaultTextureResource( DaLocator::NORMAL );
+				_normalTexture			= DaEngine::GetDefaultTextureResource( DaEngine::NORMAL );
 			}
 
 			// Alpha Texture
@@ -694,7 +694,7 @@ int DaMesh::BindVertexBuffer( void )
 			else
 			{
 				// Assign Default Texture
-				_alphaTexture			= DaLocator::GetDefaultTextureResource( DaLocator::ALPHA );
+				_alphaTexture			= DaEngine::GetDefaultTextureResource( DaEngine::ALPHA );
 			}
 
 			// Specular Texture
@@ -705,7 +705,7 @@ int DaMesh::BindVertexBuffer( void )
 			else
 			{
 				// Assign Default Texture
-				_specularTexture		= DaLocator::GetDefaultTextureResource( DaLocator::SPECULAR );
+				_specularTexture		= DaEngine::GetDefaultTextureResource( DaEngine::SPECULAR );
 			}
 		}
 

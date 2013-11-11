@@ -1,6 +1,6 @@
 #include "DaBitMap.h"
 #include "DaGraphics.h"
-#include "DaLocator.h"
+#include "DaEngine.h"
 
 using namespace DGE;
 
@@ -9,7 +9,7 @@ DaBitMap::DaBitMap(const std::string textureID, const D3DXVECTOR2& textureDimens
 	, _textureID(textureID)
 {
 	ID3D11Device	*device				= NULL;
-	D3DXVECTOR2		screenDimensions	= DaLocator::GetGraphicsService( )->ScreenDimensions;
+	D3DXVECTOR2		screenDimensions	= DaEngine::Get()->Graphics->ScreenDimensions;
 
 	// Modify translations to fit the orthographic matrix used.
 	translation							+= D3DXVECTOR3( ( -screenDimensions.x / 2 ), ( screenDimensions.y / 2 ) - textureDimensions.y, 0.0f );
@@ -17,7 +17,7 @@ DaBitMap::DaBitMap(const std::string textureID, const D3DXVECTOR2& textureDimens
 
 	_textureDimensions	= textureDimensions;
 	_clipDimensions		= textureDimensions;
-	device				= &DaLocator::GetGraphicsService( )->Device;
+	device				= &DaEngine::Get()->Graphics->Device;
 	
 	if( device )
 	{
@@ -53,12 +53,12 @@ void DaBitMap::Draw( void )
 	ID3D11DeviceContext			*context	= NULL;
 	ID3D11ShaderResourceView	*texture	= NULL;
 
-	context		= &DaLocator::GetGraphicsService( )->Context;
-	texture		= &DaLocator::GetAssetLoadingService( )->GetUITexture( _textureID );
+	context		= &DaEngine::Get()->Graphics->Context;
+	texture		= &DaEngine::Get()->AssetLoadingService->GetUITexture( _textureID );
 
 	if( context && texture )
 	{
-		DaLocator::GetGraphicsService( )->SetRenderingMode( DaGraphics::RENDER_2D );
+		DaEngine::Get()->Graphics->SetRenderingMode( DaGraphics::RENDER_2D );
 		// Set up vertex information
 		context->IASetVertexBuffers( 0, 1, &_vertexBuffer, &_vertexBufferStride, &_vertexBufferOffset );
 		context->PSSetShaderResources( 0, 1, &texture );
@@ -80,7 +80,7 @@ int DaBitMap::BindVertexBuffer( void )
 	ID3D11Device				*device					= nullptr;
 	ID3D11DeviceContext			*context				= nullptr;
 
-	graphicsService = DaLocator::GetGraphicsService();
+	graphicsService = DaEngine::Get()->Graphics;
 
 	if( graphicsService )
 	{

@@ -15,22 +15,10 @@ namespace DGE{
 
 		RELEASE;
 		
-		__declspec( property (get = property__get_mapping) ) DaKeyMap* input_map;
-		
-		DaKeyMap* property__get_mapping()
-		{
-			return m_ptrKeyMap;
-		}
-		
 	private:
 		WNDCLASSEXW		m_wWndClassEx;
-
-		DaKeyMap		*m_ptrKeyMap;
 
 		static WNDPROC			m_lpClientWndProc;
 		static WINDOWPLACEMENT	m_WindowPlacement;
 	};
-
-	//global window reference
-	DaWindow *g_DaWindow;
 };

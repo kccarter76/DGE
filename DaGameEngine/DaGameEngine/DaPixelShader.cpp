@@ -1,5 +1,5 @@
 #include "DaPixelShader.h"
-#include "DaLocator.h"
+#include "DaEngine.h"
 
 using namespace DGE;
 
@@ -40,7 +40,7 @@ DaPixelShader::DaPixelShader(std::wstring filePath)
 	}
 
 	// Create the Shader
-	hResult = DaLocator::GetGraphicsService()->Device.CreatePixelShader(	shaderBlob->GetBufferPointer(),
+	hResult = DaEngine::Get()->Graphics->Device.CreatePixelShader(	shaderBlob->GetBufferPointer(),
 																				shaderBlob->GetBufferSize(),
 																				NULL,
 																				&_shader );
@@ -81,7 +81,7 @@ void DaPixelShader::BindDataToPipelineStage( _dataToShader& data )
 	bufferDesc.MiscFlags			= 0;
 	bufferDesc.StructureByteStride	= 0;
 
-	graphicsService					= DaLocator::GetGraphicsService( );
+	graphicsService					= DaEngine::Get()->Graphics;
 
 	if( graphicsService )
 	{
@@ -121,5 +121,5 @@ void DaPixelShader::BindDataToPipelineStage( _dataToShader& data )
 
 void DaPixelShader::Set( void )
 {
-	DaLocator::GetGraphicsService()->Context.PSSetShader( _shader, 0, 0 );
+	DaEngine::Get()->Graphics->Context.PSSetShader( _shader, 0, 0 );
 }

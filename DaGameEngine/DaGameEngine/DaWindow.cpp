@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "DaWindow.h"
+#include "DaEngine.h"
 
 using namespace DGE;
 using namespace GUI;
@@ -70,10 +71,6 @@ DaWindow::DaWindow(HWND& wWndHandle, HINSTANCE hInstance, int nWidth, int nHeigh
 	}
 
 	ShowWindow(wWndHandle, TRUE);
-
-	m_ptrKeyMap = new DaKeyMap();
-
-	g_DaWindow = this;
 }
 
 DaWindow::~DaWindow(void)
@@ -81,24 +78,24 @@ DaWindow::~DaWindow(void)
 	ZeroMemory(&m_wWndClassEx, sizeof(WNDCLASSEX));
 	ZeroMemory(&m_WindowPlacement, sizeof(WINDOWPLACEMENT));
 
-	delete m_ptrKeyMap;
-
 	m_lpClientWndProc = NULL;
 }
 
 LRESULT DaWindow::DaWindowProc(HWND hWnd, UINT nMessage, WPARAM wParam, LPARAM lParam)
 {
+	SingletonAccess<DaEngine> oEngine = DaEngine::Get();
+
 	switch(nMessage)
 	{
 	case WM_KEYUP:
 		{
 			if(wParam == KEY_LSHIFT || wParam == KEY_RSHIFT || wParam == KEY_SHIFT)
-				g_DaWindow->m_ptrKeyMap->shift = false;
+				oEngine->InputMap->shift = false;
 			else if(wParam == KEY_LCONTROL || wParam == KEY_RCONTROL || wParam == KEY_CONTROL)
-				g_DaWindow->m_ptrKeyMap->CtrlKey = false;
+				oEngine->InputMap->CtrlKey = false;
 			else
 			{
-				GUI::key_message key = g_DaWindow->m_ptrKeyMap->Find((GUI::EKEY_CODE)wParam, g_DaWindow->m_ptrKeyMap->shift, g_DaWindow->m_ptrKeyMap->CtrlKey);
+				GUI::key_message key = oEngine->InputMap->Find((GUI::EKEY_CODE)wParam, oEngine->InputMap->shift, oEngine->InputMap->CtrlKey);
 				if(key.mapped())
 					PostMessage(hWnd, key.msg, key.action, key.extended);
 			}
@@ -107,15 +104,15 @@ LRESULT DaWindow::DaWindowProc(HWND hWnd, UINT nMessage, WPARAM wParam, LPARAM l
 	case WM_KEYDOWN:
 		{
 			if(wParam == KEY_LSHIFT || wParam == KEY_RSHIFT || wParam == KEY_SHIFT)
-				g_DaWindow->m_ptrKeyMap->shift = true;
+				oEngine->InputMap->shift = true;
 			else if(wParam == KEY_LCONTROL || wParam == KEY_RCONTROL || wParam == KEY_CONTROL)
-				g_DaWindow->m_ptrKeyMap->CtrlKey = true;
+				oEngine->InputMap->CtrlKey = true;
 			else 
 			{	// this should only happen for actor/camera mappings
 				// a key being held done is indicative of a movement or change in camera orientation.
-				GUI::key_message key = g_DaWindow->input_map->Find((GUI::EKEY_CODE)wParam, false, false);
+				GUI::key_message key = oEngine->InputMap->Find((GUI::EKEY_CODE)wParam, false, false);
 				// if the mapped key is not an idle action then we will post it to the thread.
-				if(key.mapped() && (key.action & ACTION::IDLE) == 0) {
+				if(key.mapped() && (key.msg == DGE_AVATAR || key.msg == DGE_CAMERA)) {
 					PostMessage(hWnd, key.msg, key.action, key.extended);
 				}
 			}
@@ -124,6 +121,7 @@ LRESULT DaWindow::DaWindowProc(HWND hWnd, UINT nMessage, WPARAM wParam, LPARAM l
 	case WM_DESTROY:
 		{
 			//TODO:: Window Closing Event remeber to cleanup anything that should be cleanned up
+			oEngine->Graphics->PrepareForShutdown();
 
 			PostQuitMessage(0);
 			return 0;
@@ -152,6 +150,21 @@ LRESULT DaWindow::DaWindowProc(HWND hWnd, UINT nMessage, WPARAM wParam, LPARAM l
 				SetWindowPlacement(hWnd, &m_WindowPlacement);
 				SetWindowPos(hWnd, NULL, 0, 0, 0, 0,
 					SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+			}
+			break;
+		}
+	case DGE_ENGINE:
+		{
+			if (ACTION::PAUSE == (ACTION)wParam) 
+			{	// we will start or stop based on the state of the engine clock
+				if (oEngine->Timer->IsStopped)
+					oEngine->Timer->Start();
+				else
+					oEngine->Timer->Stop();
+			} else if (ACTION::STATS == (ACTION)wParam) 
+			{	// based on the state of the graphics service stat flag we will render engine statistics
+				// toggle the display statistics boolean property
+				oEngine->Graphics->DisplayStats = !oEngine->Graphics->DisplayStats;
 			}
 			break;
 		}

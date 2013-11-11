@@ -1,13 +1,16 @@
 #include "DaGraphics.h"
-#include "DaLocator.h"
+#include "DaEngine.h"
 #include "DaVertexShader.h"
+
+#include <assert.h>
 
 using namespace DGE;
 
 DaGraphics::DaGraphics(HWND hWnd, BOOL windowed, int width, int height, int resamplingRate)
 	: _perspectiveNear( 0.1f ), 
 	  _perspectiveFar( 2000.0f ),
-	  _shutdown( false )
+	  _shutdown( false ),
+	  _FPS(1.0f)
 {
 	DXGI_SWAP_CHAIN_DESC			swapChainDesc;
 	D3D_FEATURE_LEVEL				featureLevel;
@@ -44,7 +47,9 @@ DaGraphics::DaGraphics(HWND hWnd, BOOL windowed, int width, int height, int resa
 	_screenWidth		= width;
 	_screenHeight		= height;
 
-	ZeroMemory( &swapChainDesc, sizeof( DXGI_SWAP_CHAIN_DESC ) );
+	ZeroMemory(&swapChainDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
+	ZeroMemory(&_lastUpdateTime, sizeof(_lastUpdateTime));
+	ZeroMemory(&_lastUpdateFrames, sizeof(_lastUpdateFrames));
 
 	windowed			= _windowed;
 
@@ -312,17 +317,17 @@ void DaGraphics::SetRenderingMode( ERenderingMode mode )
 		// Set normal, alpha and specular texture resources to default.
 		ID3D11ShaderResourceView	*texture	= NULL;
 
-		texture = DaLocator::GetDefaultTextureResource( DaLocator::NORMAL );
+		texture = DaEngine::GetDefaultTextureResource( DaEngine::NORMAL );
 		_context->PSSetShaderResources( 1, 1, &texture );
 
-		texture = DaLocator::GetDefaultTextureResource( DaLocator::ALPHA );
+		texture = DaEngine::GetDefaultTextureResource( DaEngine::ALPHA );
 		_context->PSSetShaderResources( 2, 1, &texture );
 
-		texture = DaLocator::GetDefaultTextureResource( DaLocator::SPECULAR );
+		texture = DaEngine::GetDefaultTextureResource( DaEngine::SPECULAR );
 		_context->PSSetShaderResources( 3, 1, &texture );
 
 		// Set default matrices.
-		DaVertexShader	*vertexShader	= ( DaVertexShader* )DaLocator::GetShader( DaLocator::S_VERTEX );
+		DaVertexShader	*vertexShader	= ( DaVertexShader* )DaEngine::GetShader( DaEngine::S_VERTEX );
 
 		if( vertexShader )
 		{
@@ -335,7 +340,7 @@ void DaGraphics::SetRenderingMode( ERenderingMode mode )
 			data._worldMatrix		= _worldMatrix;
 			data._modelViewMatrix	= identityMatrix;
 			data._projectionMatrix	= _orthographicMatrix;
-			data._viewMatrix		= DaLocator::GetMainCamera( )->DefaultViewMatrix;
+			data._viewMatrix		= DaEngine::Get()->Camera->DefaultViewMatrix;
 
 			D3DXMatrixTranspose( &data._projectionMatrix, &data._projectionMatrix );
 			D3DXMatrixTranspose( &data._viewMatrix, &data._viewMatrix );
@@ -366,11 +371,14 @@ None.
 */
 void DaGraphics::Render( void )
 {
+	double fTime, fAbsTime;
+	float fElapsedTime;
+
 	if( _rendering )
 	{
 		DaAsset	*assetLoader = NULL;
 
-		assetLoader	= DaLocator::GetAssetLoadingService();
+		assetLoader	= DaEngine::Get()->AssetLoadingService;
 
 		if( assetLoader )
 		{
@@ -380,6 +388,8 @@ void DaGraphics::Render( void )
 			// Draw 3D elements the scene
 			assetLoader->DrawAll( );
 		}
+	} else {
+		Sleep(50);
 	}
 }
 

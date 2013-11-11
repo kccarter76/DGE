@@ -1,5 +1,5 @@
 #include "DaAsset.h"
-#include "DaLocator.h"
+#include "DaEngine.h"
 
 using namespace DGE;
 
@@ -123,7 +123,7 @@ bool DaAsset::LoadAssetFile( std::string filePath )
 						// Allocate char buffer for binary data
 						texture			= new _TextureInfo( );
 						textureBinary	= new char[ *byteLength ];
-						graphicsService	= DaLocator::GetGraphicsService( );
+						graphicsService	= DaEngine::Get()->Graphics;
 
 						if( texture && textureBinary && graphicsService )
 						{
@@ -275,7 +275,7 @@ bool DaAsset::AddUITexture( const std::string identifier, const std::wstring fil
 	ID3D11ShaderResourceView	*texture		= NULL;
 	_UITextureInfo				*uiTextureInfo	= NULL;
 
-	device			= &DaLocator::GetGraphicsService( )->Device;
+	device			= &DaEngine::Get()->Graphics->Device;
 	uiTextureInfo	= new _UITextureInfo( );
 
 	if( _uiTextures[ identifier ] == 0 && device && uiTextureInfo )

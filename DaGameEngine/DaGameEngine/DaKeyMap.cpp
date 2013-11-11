@@ -6,7 +6,7 @@
 using namespace DGE;
 
 DaKeyMap::DaKeyMap(void)
-	: _shift(false), _ctrl(false), _alt(false)
+	: _shift(false), _ctrl(false)
 {
 }
 

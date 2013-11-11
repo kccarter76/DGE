@@ -96,25 +96,31 @@ namespace DGE {
 		D3DXMATRIX					_orthographicMatrix;
 		const float					_perspectiveNear;
 		const float					_perspectiveFar;
+		
+		// Statistics Resources
+		// ====================================
+		double						_lastUpdateTime;	// last time that the statistics where updated
+		DWORD						_lastUpdateFrames;
+		float						_FPS;
 
 		// Miscellaneous Resources
 		// ====================================
 		bool						_shutdown;
 		bool						_rendering;
 		bool						_windowed;
-		bool						_paused;
+		bool						_statistics;
 
 		ERenderingMode				_renderingMode;
 	public:
 		READONLY_PROPERTY(bool, Rendering);
-		GET(Rendering)
-		{
-			return _rendering;
-		}
+		GET(Rendering)		{ return _rendering; };
+
 		READONLY_PROPERTY(bool, IsRunning);
-		GET(IsRunning)
-		{
-			return !_shutdown;
-		}
+		GET(IsRunning)		{ return !_shutdown; };
+
+		PROPERTY(bool, DisplayStats);
+		GET(DisplayStats)	{ return _statistics; };
+		SET(DisplayStats)	{ _statistics = value;};
+
 	};
 };

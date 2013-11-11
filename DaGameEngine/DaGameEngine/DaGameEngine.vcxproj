@@ -39,7 +39,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>A:\SDK\Microsoft DirectX SDK %28June 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
+    <LibraryPath>A:\SDK\Microsoft DirectX SDK %28June 2010%29\Lib\x86;A:\Program Files %28x86%29\JustSoftwareSolutions\JustThread\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>A:\Program Files %28x86%29\JustSoftwareSolutions\JustThread\include;G:\Projects\C++\DaGameEngine\includes\common;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -87,13 +88,14 @@
     <ClInclude Include="DaAsset.h" />
     <ClInclude Include="DaBitMap.h" />
     <ClInclude Include="DaDomainShader.h" />
+    <ClInclude Include="DaEngine.h" />
     <ClInclude Include="DaFile.h" />
     <ClInclude Include="DaGameEngine.h" />
     <ClInclude Include="DaKeyCodes.h" />
     <ClInclude Include="DaKeyMap.h" />
-    <ClInclude Include="DaLocator.h" />
     <ClInclude Include="DaMesh.h" />
     <ClInclude Include="DaPixelShader.h" />
+    <ClInclude Include="DaTimer.h" />
     <ClInclude Include="DaWindow.h" />
     <ClInclude Include="definitions.h" />
     <ClInclude Include="dge.h" />
@@ -105,6 +107,7 @@
     <ClInclude Include="IRenderable.h" />
     <ClInclude Include="IShader.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="singleton.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
@@ -115,12 +118,13 @@
     <ClCompile Include="DaAsset.cpp" />
     <ClCompile Include="DaBitMap.cpp" />
     <ClCompile Include="DaDomainShader.cpp" />
+    <ClCompile Include="DaEngine.cpp" />
     <ClCompile Include="DaFile.cpp" />
     <ClCompile Include="DaGameEngine.cpp" />
     <ClCompile Include="DaKeyMap.cpp" />
-    <ClCompile Include="DaLocator.cpp" />
     <ClCompile Include="DaMesh.cpp" />
     <ClCompile Include="DaPixelShader.cpp" />
+    <ClCompile Include="DaTimer.cpp" />
     <ClCompile Include="DaWindow.cpp" />
     <ClCompile Include="DaVertexShader.cpp" />
     <ClCompile Include="DaGraphics.cpp" />

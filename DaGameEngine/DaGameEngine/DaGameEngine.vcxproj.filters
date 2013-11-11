@@ -78,13 +78,19 @@
     <ClInclude Include="DaAsset.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DaLocator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DaPixelShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DaDomainShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DaEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="singleton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DaTimer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -142,13 +148,16 @@
     <ClCompile Include="DaAsset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DaLocator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DaPixelShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DaDomainShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DaEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DaTimer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

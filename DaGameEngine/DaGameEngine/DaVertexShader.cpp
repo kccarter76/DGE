@@ -1,5 +1,5 @@
 #include "DaVertexShader.h"
-#include "DaLocator.h"
+#include "DaEngine.h"
 
 using namespace DGE;
 
@@ -48,13 +48,13 @@ DaVertexShader::DaVertexShader(std::wstring filePath)
 		}
 	}
 
-	hr = DaLocator::GetGraphicsService()->Device.CreateVertexShader(  shaderBlob->GetBufferPointer(),
+	hr = DaEngine::Get()->Graphics->Device.CreateVertexShader(  shaderBlob->GetBufferPointer(),
 																				shaderBlob->GetBufferSize(),
 																				NULL,
 																				&_shader );
 
 	// Create an input layout.
-	if( DaLocator::GetGraphicsService()->InputLayout )
+	if( DaEngine::Get()->Graphics->InputLayout )
 	{
 		ID3D11InputLayout	*inputLayout	= NULL;
 
@@ -69,9 +69,9 @@ DaVertexShader::DaVertexShader(std::wstring filePath)
 		};
 
 		// Create the input layout
-		hr	= DaLocator::GetGraphicsService()->Device.CreateInputLayout( ied, 6, shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), &inputLayout );
+		hr	= DaEngine::Get()->Graphics->Device.CreateInputLayout( ied, 6, shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), &inputLayout );
 		// Set the input layout
-		DaLocator::GetGraphicsService()->Context.IASetInputLayout( inputLayout );
+		DaEngine::Get()->Graphics->Context.IASetInputLayout( inputLayout );
 	}
 
 	SAFE_DX_RELEASE( errorMsg );
@@ -111,7 +111,7 @@ void DaVertexShader::BindDataToPipelineStage( _dataToShader& data )
 	bufferDesc.MiscFlags			= 0;
 	bufferDesc.StructureByteStride	= 0;
 
-	graphicsService					= DaLocator::GetGraphicsService( );
+	graphicsService					= DaEngine::Get()->Graphics;
 
 	if( graphicsService )
 	{
@@ -155,5 +155,5 @@ void DaVertexShader::BindDataToPipelineStage( _dataToShader& data )
 
 void DaVertexShader::Set( void )
 {
-	DaLocator::GetGraphicsService()->Context.VSSetShader( _shader, 0, 0 );
+	DaEngine::Get()->Graphics->Context.VSSetShader( _shader, 0, 0 );
 }
