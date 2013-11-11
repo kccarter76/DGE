@@ -39,7 +39,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>A:\SDK\Microsoft DirectX SDK %28June 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
+    <LibraryPath>A:\SDK\Microsoft DirectX SDK %28June 2010%29\Lib\x86;A:\Program Files %28x86%29\JustSoftwareSolutions\JustThread\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>A:\Program Files %28x86%29\JustSoftwareSolutions\JustThread\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -51,7 +52,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\includes\engine;G:\Projects\C++\API\BOOST\boost_1_54_0;A:\SDK\Microsoft DirectX SDK %28June 2010%29\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\includes\engine;G:\Projects\C++\API\BOOST\boost_1_54_0;A:\SDK\Microsoft DirectX SDK %28June 2010%29\Include;..\includes\common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
