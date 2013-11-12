@@ -165,20 +165,19 @@ namespace GUI {
 
 	enum DGE_API ACTION {
 		IDLE			= (1u << 0),
-		FORWARD			= (1u << 1),
-		LEFT			= (1u << 2),
-		RIGHT			= (1u << 3),
-		BACKWARD		= (1u << 4),
-		UP				= (1u << 5),
-		DOWN			= (1u << 6),
-		TOGGLE_RUN		= (1u << 7),
-		JUMP			= (1u << 8),
-		EXTENDED		= (1u << 9)
-	};
-
-	enum DGE_API ENGINE {
-		PAUSE			= (1u << 0),
-		STATS			= (1u << 1),
+		CAMERA			= (1u << 1),
+		MOVE			= (1u << 2),
+		FORWARD			= (1u << 3),
+		LEFT			= (1u << 4),
+		RIGHT			= (1u << 5),
+		BACKWARD		= (1u << 6),
+		UP				= (1u << 7),
+		DOWN			= (1u << 8),
+		TOGGLE_RUN		= (1u << 9),
+		JUMP			= (1u << 10),
+		PAUSE			= (1u << 11),
+		STATS			= (1u << 12),
+		EXTENDED		= (1u << 13)
 	};
 
 	struct DGE_API key_mapping {
@@ -210,12 +209,10 @@ namespace GUI {
 		}
 
 		key_message(UINT msg, ACTION action)
-			: msg(msg), action(action) { 
+			: msg(msg), action(action) 
+		{ 
 			ZeroMemory(&extended, sizeof(extended));
 		}
-
-		key_message(UINT msg, UINT extended)
-			: msg(msg), action(ACTION::EXTENDED), extended(extended) { }
 
 		inline bool mapped() { return msg > 0; }
 

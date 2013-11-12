@@ -14,6 +14,8 @@ namespace DGE {
 		DaKeyMap(void);
 		virtual ~DaKeyMap(void);
 
+		RELEASE;
+
 		void Add(GUI::key_message msg, GUI::EKEY_CODE code, bool shift, bool ctrl);
 
 		GUI::key_message Find(GUI::EKEY_CODE code, bool shift, bool ctrl);
@@ -44,6 +46,6 @@ namespace DGE {
 		key_code_map				key_map;
 		key_code_map::iterator	key_map_iter;
 
-		bool	_shift, _ctrl, _alt;
+		bool	_shift, _ctrl;
 	};
 };

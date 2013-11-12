@@ -5,3 +5,7 @@
 #define DGE_AVATAR (WM_USER + 3)
 #define DGE_CAMERA (WM_USER + 4)
 #define DGE_ENGINE (WM_USER + 5)
+
+
+// CALLBACKS
+typedef void (CALLBACK *LPDGECALLBACKTIMER)(UINT idEvent, void* pContext);
