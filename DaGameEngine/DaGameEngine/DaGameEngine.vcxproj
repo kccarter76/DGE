@@ -95,6 +95,7 @@
     <ClInclude Include="DaKeyMap.h" />
     <ClInclude Include="DaMesh.h" />
     <ClInclude Include="DaPixelShader.h" />
+    <ClInclude Include="DaTextHelper.h" />
     <ClInclude Include="DaTimer.h" />
     <ClInclude Include="DaWindow.h" />
     <ClInclude Include="definitions.h" />
@@ -124,6 +125,7 @@
     <ClCompile Include="DaKeyMap.cpp" />
     <ClCompile Include="DaMesh.cpp" />
     <ClCompile Include="DaPixelShader.cpp" />
+    <ClCompile Include="DaTextHelper.cpp" />
     <ClCompile Include="DaTimer.cpp" />
     <ClCompile Include="DaWindow.cpp" />
     <ClCompile Include="DaVertexShader.cpp" />

@@ -10,6 +10,8 @@ DaGraphics::DaGraphics(HWND hWnd, BOOL windowed, int width, int height, int resa
 	: _perspectiveNear( 0.1f ), 
 	  _perspectiveFar( 2000.0f ),
 	  _shutdown( false ),
+	  _lastUpdateTime(0),
+	  _lastUpdateFrames(0),
 	  _FPS(1.0f)
 {
 	DXGI_SWAP_CHAIN_DESC			swapChainDesc;
@@ -48,8 +50,6 @@ DaGraphics::DaGraphics(HWND hWnd, BOOL windowed, int width, int height, int resa
 	_screenHeight		= height;
 
 	ZeroMemory(&swapChainDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
-	ZeroMemory(&_lastUpdateTime, sizeof(_lastUpdateTime));
-	ZeroMemory(&_lastUpdateFrames, sizeof(_lastUpdateFrames));
 
 	windowed			= _windowed;
 
@@ -259,7 +259,9 @@ None.
 */
 void DaGraphics::BeginDraw(void)
 {
-	if( !_rendering )
+	DaEngine::Get()->Timer->GetTimeValues(&_time, &_absTime, &_elapsedTime);
+
+	if( !_rendering && _elapsedTime > 0.0f )
 	{
 		// Set render target to the Main Back Buffer, using the primary Z Buffer.
 		_context->OMSetRenderTargets( 1, &_backBuffer, _zBuffer );
@@ -269,6 +271,11 @@ void DaGraphics::BeginDraw(void)
 		_context->ClearDepthStencilView( _zBuffer, D3D11_CLEAR_DEPTH, 1.0f, 0 );
 		// Set topology to triangle list.
 		_context->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
+		// update the statistics so the data is ready to render on the screen
+		if( _statistics )
+		{
+			UpdateFrameStatistics();
+		}
 
 		_rendering = true;
 	}
@@ -371,11 +378,7 @@ None.
 */
 void DaGraphics::Render( void )
 {
-	double fTime, fAbsTime;
-	float fElapsedTime;
-
-	if( _rendering )
-	{
+	if( _rendering ) {
 		DaAsset	*assetLoader = NULL;
 
 		assetLoader	= DaEngine::Get()->AssetLoadingService;
@@ -390,6 +393,43 @@ void DaGraphics::Render( void )
 		}
 	} else {
 		Sleep(50);
+	}
+}
+
+void DaGraphics::RenderStats(void)
+{
+	if( _rendering && _statistics )
+	{
+
+	}
+}
+
+/**
+DXGraphics::UpdateFrameStatistics
+=============================================================
+Updates Frame Statistics
+=============================================================
+Parameters:
+-------------------------------------------------------------
+None.
+=============================================================
+Returns:
+-------------------------------------------------------------
+None.
+=============================================================
+*/
+void DaGraphics::UpdateFrameStatistics(void)
+{
+	_lastUpdateFrames++;
+
+	// Update the scene stats once per second
+	if(_absTime - _lastUpdateTime > 1.0f)
+	{
+		_FPS = ( float )( _lastUpdateFrames / ( _absTime - _lastUpdateTime  ) );
+
+		_lastUpdateTime = _absTime;
+
+		_lastUpdateFrames = 0;
 	}
 }
 
