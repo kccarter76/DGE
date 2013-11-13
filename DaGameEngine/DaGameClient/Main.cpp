@@ -110,6 +110,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 						assetLoader->DrawAll2DElements( );
 					}
 
+					graphics->RenderStats();
+
 					graphics->EndDraw();
 				}
 			}

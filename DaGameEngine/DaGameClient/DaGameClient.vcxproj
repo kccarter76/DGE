@@ -87,6 +87,11 @@
       <Project>{5516d06a-dc26-4855-8996-656a79efe605}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\Font.dds">
+      <FileType>Document</FileType>
+    </Resource>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
