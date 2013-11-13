@@ -2,7 +2,21 @@
 
 using namespace DGE;
 
+IObject::IObject(void)
+{
+	Initialize(D3DXVECTOR3( 0.0f, 0.0f, 0.0f ), D3DXVECTOR3( 0.0f, 0.0f, 0.0f ), false);
+}
+
 IObject::IObject(D3DXVECTOR3 translation, D3DXVECTOR3 rotation, bool generateViewMatrix)
+{
+	Initialize(translation, rotation, generateViewMatrix);
+}
+
+IObject::~IObject(void)
+{
+}
+
+void IObject::Initialize(D3DXVECTOR3 translation, D3DXVECTOR3 rotation, bool generateViewMatrix)
 {
 	D3DXMatrixIdentity( &_viewMatrix );
 	D3DXMatrixIdentity( &_defaultViewMatrix );
@@ -25,11 +39,6 @@ IObject::IObject(D3DXVECTOR3 translation, D3DXVECTOR3 rotation, bool generateVie
 		GenerateDefaultViewMatrix( );
 		Update( );
 	}
-}
-
-
-IObject::~IObject(void)
-{
 }
 
 /**

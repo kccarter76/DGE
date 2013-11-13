@@ -96,6 +96,9 @@
     <ClInclude Include="DaTextHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IText.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc">
@@ -164,6 +167,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DaTextHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IText.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

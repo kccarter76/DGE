@@ -119,6 +119,8 @@ HRESULT DaTextHelper::DrawText(LPRECT rc, LPCWSTR text)
 HRESULT DaTextHelper::EndText(void)
 {
 	UINT FontDataBytes = _sprites.size() * sizeof( SpriteVertex );
+
+	_sprites
 }
 
 void DaTextHelper::End(void)

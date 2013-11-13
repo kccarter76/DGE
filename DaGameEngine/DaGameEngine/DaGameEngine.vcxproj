@@ -107,6 +107,7 @@
     <ClInclude Include="IObject.h" />
     <ClInclude Include="IRenderable.h" />
     <ClInclude Include="IShader.h" />
+    <ClInclude Include="IText.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="singleton.h" />
     <ClInclude Include="stdafx.h" />
@@ -135,6 +136,7 @@
     <ClCompile Include="IObject.cpp" />
     <ClCompile Include="IRenderable.cpp" />
     <ClCompile Include="IShader.cpp" />
+    <ClCompile Include="IText.cpp" />
     <ClCompile Include="Stdafx.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

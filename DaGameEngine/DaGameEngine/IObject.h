@@ -10,6 +10,8 @@ namespace DGE
 {
 	class DGE_API IObject
 	{
+	private:
+		void Initialize(D3DXVECTOR3 translation, D3DXVECTOR3 rotation, bool generateViewMatrix);
 	protected:
 		struct _worldSpace
 		{
@@ -23,6 +25,7 @@ namespace DGE
 
 		void GenerateDefaultViewMatrix( void );
 	public:
+		IObject(void);
 		IObject(D3DXVECTOR3 translation, D3DXVECTOR3 rotation, bool generateViewMatrix);
 		~IObject(void);
 

@@ -86,9 +86,14 @@ namespace DGE {
 		READONLY_PROPERTY(D3DXMATRIX&, WorldMatrix);
 		GET(WorldMatrix)		{ return _worldMatrix; }
 
-		PROPERTY(ID3D11InputLayout*, InputLayout);
-		GET(InputLayout)		{ return _shaderInputLayout; }
-		SET(InputLayout)		{ _shaderInputLayout = value; }
+		READONLY_PROPERTY(ID3D11InputLayout*, InputLayout);
+		GET(InputLayout)		{ 
+			if(!_shaderInputLayout) {
+				_context->IAGetInputLayout(&_shaderInputLayout);
+			}
+			return _shaderInputLayout; 
+		}
+		//SET(InputLayout)		{ _shaderInputLayout = value; }
 
 		PROPERTY(ERenderingMode, Mode);
 		GET(Mode)		{ return _renderingMode; }
