@@ -36,10 +36,10 @@ namespace DGE
 		IRenderable(D3DXVECTOR3 translation, D3DXVECTOR3 rotation, bool generateViewMatrix);
 		~IRenderable(void);
 
-		READONLY_PROPERTY(ID3D11Buffer&, Buffer);
+		READONLY_PROPERTY(ID3D11Buffer*, Buffer);
 		GET(Buffer)
 		{
-			return *_vertexBuffer;
+			return _vertexBuffer;
 		};
 
 		virtual void	Draw( void )				{ };

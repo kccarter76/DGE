@@ -60,26 +60,6 @@ namespace DGE {
 		READONLY_PROPERTY(ID3D11DeviceContext&, Context);
 		GET(Context)			{ return *_context; }
 
-		READONLY_PROPERTY(DXGI_SURFACE_DESC, Surface);
-		GET(Surface)			
-		{
-			HRESULT hr = S_OK;
-
-			IDXGISurface* pDXGISurface;
-
-			DXGI_SURFACE_DESC surface_desc;
-
-			ZeroMemory(&surface_desc, sizeof(surface_desc));
-
-			hr = _device->QueryInterface<IDXGISurface>(&pDXGISurface);
-
-			if(!FAILED(hr)) {
-				pDXGISurface->GetDesc(&surface_desc);
-			}
-
-			return surface_desc;
-		}
-
 		READONLY_PROPERTY(D3DXMATRIX&, ProjectionMatrix);
 		GET(ProjectionMatrix)	{ return _projectionMatrix; }
 

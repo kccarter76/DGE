@@ -93,9 +93,6 @@
     <ClInclude Include="DaTimer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DaTextHelper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="IText.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -164,9 +161,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DaTimer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DaTextHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="IText.cpp">

@@ -34,8 +34,8 @@ namespace DGE
 
 		int					_line_height;
 
-		virtual HRESULT DrawText(LPRECT rc, LPCWSTR text);
-		virtual HRESULT EndText(void);
+		//virtual HRESULT DrawText(LPRECT rc, LPCWSTR text);
+		//virtual HRESULT EndText(void);
 	public:
 		DaTextHelper(ID3DXFont* pFont = NULL, ID3DXSprite* pSprite = NULL, int nLineHeigt = 15);
 
