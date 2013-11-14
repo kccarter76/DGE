@@ -25,8 +25,8 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="resources\Font.dds">
+    <None Include="resources\Font.dds">
       <Filter>Resource Files</Filter>
-    </Resource>
+    </None>
   </ItemGroup>
 </Project>

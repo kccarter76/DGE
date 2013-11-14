@@ -88,9 +88,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="resources\Font.dds">
+    <None Include="resources\Font.dds">
       <FileType>Document</FileType>
-    </Resource>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
