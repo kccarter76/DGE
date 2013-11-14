@@ -6,13 +6,16 @@
 
 using namespace DGE;
 
-DaGraphics::DaGraphics(HWND hWnd, BOOL windowed, int width, int height, int resamplingRate)
+DaGraphics::DaGraphics(HWND hWnd, bool windowed, int width, int height, int resamplingRate)
 	: _perspectiveNear( 0.1f ), 
 	  _perspectiveFar( 2000.0f ),
 	  _shutdown( false ),
+	  _rendering( false ),
+	  _statistics( false ),
+	  _windowed(windowed),
 	  _lastUpdateTime(0),
 	  _lastUpdateFrames(0),
-	  _FPS(1.0f)
+	  _fps(1.0f)
 {
 	DXGI_SWAP_CHAIN_DESC			swapChainDesc;
 	D3D_FEATURE_LEVEL				featureLevel;
@@ -37,6 +40,8 @@ DaGraphics::DaGraphics(HWND hWnd, BOOL windowed, int width, int height, int resa
 	_sampleStateClamp		= NULL;
 	_rasterizerState		= NULL;
 	_blendState				= NULL;
+	_shaderInputLayout		= NULL;
+	_text					= NULL;
 
 	// Local Pointer Variables
 	// ================================
@@ -50,8 +55,6 @@ DaGraphics::DaGraphics(HWND hWnd, BOOL windowed, int width, int height, int resa
 	_screenHeight		= height;
 
 	ZeroMemory(&swapChainDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
-
-	windowed			= _windowed;
 
 	if( windowed )
 	{
@@ -86,7 +89,7 @@ DaGraphics::DaGraphics(HWND hWnd, BOOL windowed, int width, int height, int resa
 	swapChainDesc.OutputWindow			= hWnd;
 	swapChainDesc.SampleDesc.Count		= resamplingRate;
 	swapChainDesc.SampleDesc.Quality	= resamplingRate;
-	swapChainDesc.Windowed				= true;
+	swapChainDesc.Windowed				= windowed;
 	swapChainDesc.Flags					= DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
 	// Set feature level to DirectX 11.0
@@ -226,6 +229,7 @@ DaGraphics::DaGraphics(HWND hWnd, BOOL windowed, int width, int height, int resa
 
 	// Identity the World Matrix
 	D3DXMatrixIdentity(&_worldMatrix);
+	
 }
 
 
@@ -241,6 +245,8 @@ DaGraphics::~DaGraphics(void)
 	SAFE_DX_RELEASE( _swapChain );
 	SAFE_DX_RELEASE( _context );
 	SAFE_DX_RELEASE( _device );
+
+	SAFE_DGE_RELEASE( _text );
 }
 
 /**
@@ -272,6 +278,13 @@ void DaGraphics::BeginDraw(void)
 		// Set topology to triangle list.
 		_context->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 		// update the statistics so the data is ready to render on the screen
+		if(!_text) {
+			// Text renderer for the graphics service 
+			_text = new DaText( _device, _context, L"..\\resources\\Font.dds" );
+		} else {
+			_text->reset();
+		}
+
 		if( _statistics )
 		{
 			UpdateFrameStatistics();
@@ -400,7 +413,8 @@ void DaGraphics::RenderStats(void)
 {
 	if( _rendering && _statistics )
 	{
-
+		// draw the fps statistics to the screen
+		_text->DrawFormattedTextLine(L"%0.2f fps", _fps);
 	}
 }
 
@@ -425,7 +439,7 @@ void DaGraphics::UpdateFrameStatistics(void)
 	// Update the scene stats once per second
 	if(_absTime - _lastUpdateTime > 1.0f)
 	{
-		_FPS = ( float )( _lastUpdateFrames / ( _absTime - _lastUpdateTime  ) );
+		_fps = ( float )( _lastUpdateFrames / ( _absTime - _lastUpdateTime  ) );
 
 		_lastUpdateTime = _absTime;
 

@@ -9,6 +9,7 @@ WNDPROC DaWindow::m_lpClientWndProc = NULL;
 WINDOWPLACEMENT DaWindow::m_WindowPlacement = { sizeof(m_WindowPlacement) };
 
 DaWindow::DaWindow(HWND& wWndHandle, HINSTANCE hInstance, int nWidth, int nHeight, bool bWindowed, WNDPROC wClientWndProc)
+	: m_bWindowed(bWindowed)
 {
 	int nSize = sizeof(WNDCLASSEX);
 

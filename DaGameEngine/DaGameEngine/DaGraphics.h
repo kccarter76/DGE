@@ -14,6 +14,8 @@ Niall Frederick Weedon (2013) <http://www.niallweedon.co.uk>
 
 #include <stdlib.h>
 
+#include "DaText.h"
+
 #pragma comment (lib, "d3d11.lib")
 #pragma comment (lib, "d3dx11.lib")
 #pragma comment (lib, "d3dx10.lib")
@@ -33,7 +35,7 @@ namespace DGE {
 			RENDER_3D
 		};
 
-		DaGraphics(HWND hWnd, BOOL windowed, int width, int height, int resamplingRate);
+		DaGraphics(HWND hWnd, bool windowed, int width, int height, int resamplingRate);
 		~DaGraphics(void);
 
 		RELEASE;
@@ -57,6 +59,9 @@ namespace DGE {
 		READONLY_PROPERTY(ID3D11Device&, Device);
 		GET(Device)				{ return *_device; }
 
+		READONLY_PROPERTY(ID3D11RenderTargetView&, BackBuffer);
+		GET(BackBuffer)				{ return *_backBuffer; }
+
 		READONLY_PROPERTY(ID3D11DeviceContext&, Context);
 		GET(Context)			{ return *_context; }
 
@@ -66,12 +71,12 @@ namespace DGE {
 		READONLY_PROPERTY(D3DXMATRIX&, WorldMatrix);
 		GET(WorldMatrix)		{ return _worldMatrix; }
 
-		READONLY_PROPERTY(ID3D11InputLayout*, InputLayout);
+		READONLY_PROPERTY(ID3D11InputLayout&, InputLayout);
 		GET(InputLayout)		{ 
 			if(!_shaderInputLayout) {
 				_context->IAGetInputLayout(&_shaderInputLayout);
 			}
-			return _shaderInputLayout; 
+			return *_shaderInputLayout; 
 		}
 		//SET(InputLayout)		{ _shaderInputLayout = value; }
 
@@ -104,6 +109,8 @@ namespace DGE {
 		D3DXMATRIX					_orthographicMatrix;
 		const float					_perspectiveNear;
 		const float					_perspectiveFar;
+
+		DaText*						_text;
 		
 		// Statistics Resources
 		// ====================================
@@ -111,7 +118,7 @@ namespace DGE {
 		float						_elapsedTime;
 		double						_lastUpdateTime;	// last time that the statistics where updated
 		DWORD						_lastUpdateFrames;
-		float						_FPS;
+		float						_fps;
 
 		// Miscellaneous Resources
 		// ====================================
@@ -124,15 +131,6 @@ namespace DGE {
 
 		void UpdateFrameStatistics(void);
 
-		READONLY_PROPERTY(WCHAR*, FPS);
-		GET(FPS) 
-		{
-			WCHAR FPS[64];
-
-			swprintf_s( FPS, 64, L"%0.2f fps ", _FPS );
-
-			return FPS;
-		};
 	public:
 		READONLY_PROPERTY(bool, Rendering);
 		GET(Rendering)		{ return _rendering; };

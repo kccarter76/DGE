@@ -1,5 +1,10 @@
-#include "IText.h"
+#include "DaText.h"
+#include "DaFile.h"
 #include "DaEngine.h"
+
+#include <dxgi.h>
+
+#pragma comment(lib, "DXGI.lib")
 
 using namespace DGE;
 
@@ -9,7 +14,11 @@ DaText::DaText( ID3D11Device* pDevice, ID3D11DeviceContext* pContext )
 	, _context_ptr(pContext)
 	, _color(D3DXCOLOR( 1.0f, 1.0f, 1.0f, 1.0f ))
 	, _line_height(15)
+	, _font_buffer_size(0)
 {
+	_font_ptr			= NULL;
+	_font_buffer_ptr	= NULL;
+
 	Initialize( NULL );
 }
 
@@ -19,7 +28,11 @@ DaText::DaText( ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LPCWSTR fi
 	, _context_ptr(pContext)
 	, _color(D3DXCOLOR( 1.0f, 1.0f, 1.0f, 1.0f ))
 	, _line_height(15)
+	, _font_buffer_size(0)
 {
+	_font_ptr			= NULL;
+	_font_buffer_ptr	= NULL;
+
 	Initialize( filePath );
 }
 
@@ -33,21 +46,51 @@ HRESULT DaText::Initialize( LPCWSTR filePath )
 {
 	HRESULT hr = S_OK;
 
-	IDXGISurface*	pDXGISurface;
+	IDXGISurface*	surface_ptr = NULL;
 
 	ZeroMemory(&_surface_desc, sizeof(_surface_desc));
 	ZeroMemory(&_pt, sizeof(_pt));
 
-	hr = _device_ptr->QueryInterface<IDXGISurface>(&pDXGISurface);
+	hr = DaEngine::Get()->Graphics->BackBuffer.QueryInterface<IDXGISurface>(&surface_ptr);
 
 	if(!FAILED(hr))
 	{
-		hr = pDXGISurface->GetDesc(&_surface_desc);
+		hr = surface_ptr->GetDesc(&_surface_desc);
+	} else {
+		_surface_desc.Format = DXGI_FORMAT::DXGI_FORMAT_UNKNOWN;
+		_surface_desc.Height = DaEngine::Get()->Graphics->ScreenDimensions.y;
+		_surface_desc.Width = DaEngine::Get()->Graphics->ScreenDimensions.x;
+		// reset we have updated the surface description
+		hr = S_OK;
 	}
 
-	if(!FAILED(hr) && filePath != NULL)
+	if(!FAILED(hr) && filePath != NULL )
 	{	// we load the font dds file at this point
 		hr = LoadFont( filePath );
+
+		if(&DaEngine::Get()->Graphics->InputLayout == NULL) {
+
+			ID3D11InputLayout	*inputLayout	= NULL;
+
+			D3D11_INPUT_ELEMENT_DESC ied[] =
+			{
+				{"POSITION",	0, DXGI_FORMAT_R32G32B32_FLOAT,		0, 0,								D3D11_INPUT_PER_VERTEX_DATA,	0},
+				{"NORMAL",		0, DXGI_FORMAT_R32G32B32_FLOAT,		0, D3D11_APPEND_ALIGNED_ELEMENT,	D3D11_INPUT_PER_VERTEX_DATA,	0},
+				{"TEXCOORD",	0, DXGI_FORMAT_R32G32B32A32_FLOAT,	0, D3D11_APPEND_ALIGNED_ELEMENT,	D3D11_INPUT_PER_VERTEX_DATA,	0},	
+				{"TANGENT",		0, DXGI_FORMAT_R32G32B32_FLOAT,		0, D3D11_APPEND_ALIGNED_ELEMENT,	D3D11_INPUT_PER_VERTEX_DATA,	0},
+				{"BINORMAL",	0, DXGI_FORMAT_R32G32B32_FLOAT,		0, D3D11_APPEND_ALIGNED_ELEMENT,	D3D11_INPUT_PER_VERTEX_DATA,	0},
+				{"COLOR",		0, DXGI_FORMAT_R32G32B32A32_FLOAT,	0, D3D11_APPEND_ALIGNED_ELEMENT,	D3D11_INPUT_PER_VERTEX_DATA,	0}
+			};
+
+			DaFile* file = new DaFile(filePath, READ);
+
+			// Create the input layout
+			hr	= DaEngine::Get()->Graphics->Device.CreateInputLayout( ied, ARRAYSIZE(ied), NULL, NULL, &inputLayout );
+			// Set the input layout
+			DaEngine::Get()->Graphics->Context.IASetInputLayout( inputLayout );
+
+			SAFE_DGE_RELEASE(file);
+		}
 	}
 
 	return hr;
@@ -92,9 +135,14 @@ HRESULT DaText::LoadFont( LPCWSTR filePath )
 	return hr;
 }
 
+HRESULT DaText::reset(void)
+{
+	return Initialize( NULL );
+}
+
 void DaText::Draw( LPRECT rc, LPCWSTR text )
 {
-	Draw(rc, text, _color );
+	Draw( rc, text, _color );
 }
 
 void DaText::Draw( LPRECT rc, LPCWSTR text, D3DXCOLOR color )
@@ -159,7 +207,7 @@ void DaText::End(void)
 {
 	UINT font_buffer_size = _v_sprites.size() * sizeof( SPRITEVERTEX );
 	
-	if( _font_buffer_size < font_buffer_size )
+	if( _font_buffer_size < font_buffer_size || !_font_buffer_ptr )
 	{	// if the existing buffer is smaller than what we need we need to re create it.
 		SAFE_DX_RELEASE(_font_buffer_ptr);
 
@@ -188,6 +236,8 @@ void DaText::End(void)
 
 	D3D11_MAPPED_SUBRESOURCE mapped_resource;
 
+	ZeroMemory(&mapped_resource, sizeof (mapped_resource));
+
 	if( S_OK == _context_ptr->Map(_font_buffer_ptr, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped_resource))
 	{
 		CopyMemory(mapped_resource.pData, (void *)_v_sprites.data(), font_buffer_size);
@@ -205,7 +255,7 @@ void DaText::End(void)
 		offset = 0;
 
 	_context_ptr->IASetVertexBuffers( 0, 1, &_font_buffer_ptr, &stride, &offset );
-	_context_ptr->IASetInputLayout( DaEngine::Get()->Graphics->InputLayout );
+	_context_ptr->IASetInputLayout( &DaEngine::Get()->Graphics->InputLayout );
 	_context_ptr->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 	_context_ptr->Draw( _v_sprites.size(), 0 );
 
@@ -217,7 +267,7 @@ void DaText::End(void)
 
 HRESULT DaText::DrawFormattedTextLine( const WCHAR* strMsg, ... )
 {
-	WCHAR strBuffer[512];
+	WCHAR strBuffer[512]; 
 
 	va_list args;
 	va_start(args, strMsg);

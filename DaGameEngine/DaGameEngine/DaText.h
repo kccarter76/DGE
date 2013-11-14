@@ -65,6 +65,10 @@ namespace DGE
 		HRESULT DrawFormattedTextLine( const WCHAR* strMsg, ... );
 		HRESULT DrawFormattedTextLine( RECT& rc, const WCHAR* strMsg, ... );
 		HRESULT DrawTextLine( LPRECT rc, const WCHAR* strMsg );
+
+		RELEASE;
+
+		HRESULT reset(void);
 	};
 };
 

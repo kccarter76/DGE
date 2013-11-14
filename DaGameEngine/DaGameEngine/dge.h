@@ -10,3 +10,4 @@
 #include "DaPixelShader.h"
 #include "DaVertexShader.h"
 #include "DaTimer.h"
+#include "DaText.h"

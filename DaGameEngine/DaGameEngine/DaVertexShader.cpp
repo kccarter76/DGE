@@ -54,7 +54,7 @@ DaVertexShader::DaVertexShader(std::wstring filePath)
 																				&_shader );
 
 	// Create an input layout.
-	if( !DaEngine::Get()->Graphics->InputLayout )
+	if( &DaEngine::Get()->Graphics->InputLayout == NULL )
 	{
 		ID3D11InputLayout	*inputLayout	= NULL;
 

@@ -93,7 +93,7 @@
     <ClInclude Include="DaTimer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IText.h">
+    <ClInclude Include="DaText.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -163,7 +163,7 @@
     <ClCompile Include="DaTimer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IText.cpp">
+    <ClCompile Include="DaText.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -15,8 +15,13 @@ namespace DGE{
 
 		RELEASE;
 		
+		READONLY_PROPERTY(bool, windowed);
+		GET(windowed)	{ return m_bWindowed; }
+
 	private:
 		WNDCLASSEXW		m_wWndClassEx;
+
+		bool			m_bWindowed;
 
 		static WNDPROC			m_lpClientWndProc;
 		static WINDOWPLACEMENT	m_WindowPlacement;
