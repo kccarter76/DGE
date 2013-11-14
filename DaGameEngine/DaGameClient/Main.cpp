@@ -67,7 +67,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	try
 	{
-		graphics = new DaGraphics(hWnd, true, 1024, 768, 4);
+		graphics = new DaGraphics(hWnd, window->windowed, 1024, 768, 4);
 
 		DaEngine::RegisterGraphicsService(*graphics);
 
