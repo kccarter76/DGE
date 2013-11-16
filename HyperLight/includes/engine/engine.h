@@ -5,6 +5,7 @@
 #include "singleton.h"
 #include "clock.h"
 #include "input.h"
+#include "hardware.h"
 
 namespace HLE
 {
@@ -33,9 +34,13 @@ namespace HLE
 		LPCWSTR				m_application_name;
 
 		Input*				m_input_ptr;
+		HARDWAREINFO		m_hardware_info;
 	public:
 		Engine( void );
 		~Engine( void );
+
+		READONLY_PROPERTY(HWND, Handle);
+		GET(Handle)	{ return m_hWnd; }
 		
 		READONLY_PROPERTY(Clock*, Timer);
 		GET(Timer)	{ return &m_clock; }

@@ -49,6 +49,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 	hWnd = Engine::Get()->CreateGameWindow(1024, 780, false, &WndProc);
 
+	Engine::Get()->InputMap.Add( key_message(HLE_FULLSCREEN), GUI::KEY_F11, true, false );
+
 	// Main message loop:
 	while (true)
 	{

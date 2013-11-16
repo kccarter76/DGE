@@ -8,3 +8,4 @@
 #include "input_defs.h"
 #include "input.h"
 #include "singleton.h"
+#include "hardware.h"

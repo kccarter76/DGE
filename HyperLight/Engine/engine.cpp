@@ -118,10 +118,10 @@ HWND Engine::CreateGameWindow(const int& width, const int& height, const bool& f
 
 
 	ShowWindow(m_hWnd, TRUE);
-	SetForegroundWindow(m_hWnd);
-	SetFocus(m_hWnd);
 
 	if ( full_screen ) {
+		SetForegroundWindow(m_hWnd);
+		SetFocus(m_hWnd);
 		ShowCursor(FALSE);
 	}
 
@@ -139,7 +139,7 @@ void Engine::ShutDown( void )
 		ChangeDisplaySettings( NULL, 0 );
 	}
 
-	DestroyWindow( m_hWnd );
+	//DestroyWindow( m_hWnd ); // this was causing an endless loop
 
 	m_hWnd = NULL;
 

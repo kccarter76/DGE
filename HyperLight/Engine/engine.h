@@ -38,6 +38,9 @@ namespace HLE
 	public:
 		Engine( void );
 		~Engine( void );
+
+		READONLY_PROPERTY(HWND, Handle);
+		GET(Handle)	{ return m_hWnd; }
 		
 		READONLY_PROPERTY(Clock*, Timer);
 		GET(Timer)	{ return &m_clock; }
