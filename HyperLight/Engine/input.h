@@ -6,7 +6,7 @@ namespace HLE
 	class ENGINE_API Input
 	{
 	private:
-		bool		m_keys[GUI::KEY_KEY_CODES_COUNT];
+		bool	m_keys[GUI::KEY_KEY_CODES_COUNT];
 
 		bool	IsToggleKey( const GUI::EKEY_CODE& code );
 	public:
