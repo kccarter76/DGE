@@ -82,7 +82,7 @@ HWND Engine::CreateGameWindow(const int& width, const int& height, const bool& f
 	wndClassEx.hIcon				= LoadIcon(NULL, IDI_WINLOGO);				// icon type for the window
 	wndClassEx.hIconSm				= wndClassEx.hIcon;
 	wndClassEx.hCursor				= LoadCursor(NULL, IDC_ARROW);				// cursor type for the window
-	wndClassEx.hbrBackground		= (HBRUSH)COLOR_WINDOW;						// background color
+	wndClassEx.hbrBackground		= (HBRUSH)GetStockObject(BLACK_BRUSH);		// background color
 	wndClassEx.lpszClassName		= m_application_name;						// class name
 	
 	RegisterClassEx(&wndClassEx);												// register the window class
@@ -99,7 +99,7 @@ HWND Engine::CreateGameWindow(const int& width, const int& height, const bool& f
 	if(GetMonitorInfo(MonitorFromPoint(p, MONITOR_DEFAULTTOPRIMARY), &mi) && full_screen) {
 		rc = mi.rcMonitor;
 
-		dwStyle = WS_CLIPSIBLINGS | WS_CLIPCHILDREN ;
+		dwStyle = WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP;
 	} else {
 		rc.left		= ( GetSystemMetrics( SM_CXSCREEN ) - width )  / 2;
 		rc.top		= ( GetSystemMetrics( SM_CYSCREEN ) - height ) / 2;
@@ -119,7 +119,7 @@ HWND Engine::CreateGameWindow(const int& width, const int& height, const bool& f
 	SetDisplayFullScreen( full_screen );
 
 	m_hWnd = CreateWindowEx(
-			NULL, //WS_EX_TOPMOST, 
+			WS_EX_APPWINDOW,
 			wndClassEx.lpszClassName,
 			L"Hyper Light Game Engine",
 			dwStyle,
@@ -134,12 +134,18 @@ HWND Engine::CreateGameWindow(const int& width, const int& height, const bool& f
 
 
 
-	ShowWindow(m_hWnd, TRUE);
-
+	ShowWindow(m_hWnd, SW_SHOW);
 	SetForegroundWindow(m_hWnd);
 	SetFocus(m_hWnd);
 
 	return m_hWnd;
+}
+
+void Engine::Initialize( void )
+{
+	if ( m_graphics_ptr && m_graphics_ptr->Initialize( m_hWnd, &m_screen_info, ( GetWindowLong( m_hWnd, GWL_STYLE ) & WS_OVERLAPPEDWINDOW ) == 0 ) ) {
+		// failed to initialize the graphics interface
+	}
 }
 
 void Engine::ShutDown( void )
@@ -160,16 +166,9 @@ void Engine::ShutDown( void )
 	UnregisterClass( m_application_name, m_hInstance );
 }
 
-void Engine::Render( void )
+void Engine::RenderFrame( void )
 {
-	if( m_graphics_ptr->Initialize( m_hWnd, &m_screen_info, ( GetWindowLong( m_hWnd, GWL_STYLE ) & WS_OVERLAPPEDWINDOW ) == 0 ) )
-	{
-		m_graphics_ptr->Begin();
-
-		m_graphics_ptr->Draw();
-
-		m_graphics_ptr->End();
-	}
+	m_graphics_ptr->RenderScene();
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)

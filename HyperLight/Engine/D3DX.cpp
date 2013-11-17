@@ -80,7 +80,7 @@ HRESULT	D3DX::Initialize( HWND hwnd, int width, int height, float fdepth, float 
 	result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL);
 	if(FAILED(result))
 	{
-		return false;
+		return result;
 	}
 
 	displayModeList = new DXGI_MODE_DESC[numModes];
@@ -89,7 +89,7 @@ HRESULT	D3DX::Initialize( HWND hwnd, int width, int height, float fdepth, float 
 	result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
 	if(FAILED(result))
 	{
-		return false;
+		return result;
 	}
 
 	// Now go through all the display modes and find the one that matches the screen width and height.
@@ -111,7 +111,7 @@ HRESULT	D3DX::Initialize( HWND hwnd, int width, int height, float fdepth, float 
 	result = adapter->GetDesc(&adapterDesc);
 	if(FAILED(result))
 	{
-		return false;
+		return result;
 	}
 
 	// Store the dedicated video card memory in megabytes.
@@ -121,7 +121,7 @@ HRESULT	D3DX::Initialize( HWND hwnd, int width, int height, float fdepth, float 
 	error = wcstombs_s(&stringLength, m_videoCardDescription, 128, adapterDesc.Description, 128);
 	if(error != 0)
 	{
-		return false;
+		return result;
 	}
 
 	// Release the display mode list.
@@ -203,21 +203,21 @@ HRESULT	D3DX::Initialize( HWND hwnd, int width, int height, float fdepth, float 
 					       D3D11_SDK_VERSION, &swapChainDesc, &m_swapChain, &m_device, NULL, &m_deviceContext);
 	if(FAILED(result))
 	{
-		return false;
+		return result;
 	}
 
 	// Get the pointer to the back buffer.
 	result = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr);
 	if(FAILED(result))
 	{
-		return false;
+		return result;
 	}
 
 	// Create the render target view with the back buffer pointer.
 	result = m_device->CreateRenderTargetView(backBufferPtr, NULL, &m_renderTargetView);
 	if(FAILED(result))
 	{
-		return false;
+		return result;
 	}
 
 	// Release pointer to the back buffer as we no longer need it.
@@ -244,7 +244,7 @@ HRESULT	D3DX::Initialize( HWND hwnd, int width, int height, float fdepth, float 
 	result = m_device->CreateTexture2D(&depthBufferDesc, NULL, &m_depthStencilBuffer);
 	if(FAILED(result))
 	{
-		return false;
+		return result;
 	}
 
 	// Initialize the description of the stencil state.
@@ -275,7 +275,7 @@ HRESULT	D3DX::Initialize( HWND hwnd, int width, int height, float fdepth, float 
 	result = m_device->CreateDepthStencilState(&depthStencilDesc, &m_depthStencilState);
 	if(FAILED(result))
 	{
-		return false;
+		return result;
 	}
 
 	// Set the depth stencil state.
@@ -293,7 +293,7 @@ HRESULT	D3DX::Initialize( HWND hwnd, int width, int height, float fdepth, float 
 	result = m_device->CreateDepthStencilView(m_depthStencilBuffer, &depthStencilViewDesc, &m_depthStencilView);
 	if(FAILED(result))
 	{
-		return false;
+		return result;
 	}
 
 	// Bind the render target view and depth stencil buffer to the output render pipeline.
@@ -315,7 +315,7 @@ HRESULT	D3DX::Initialize( HWND hwnd, int width, int height, float fdepth, float 
 	result = m_device->CreateRasterizerState(&rasterDesc, &m_rasterState);
 	if(FAILED(result))
 	{
-		return false;
+		return result;
 	}
 
 	// Now set the rasterizer state.

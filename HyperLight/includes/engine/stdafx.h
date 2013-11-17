@@ -15,3 +15,4 @@
 #pragma warning(disable: 4251)
 
 // TODO: reference additional headers your program requires here
+#define SAFE_RELEASE_D3D(X) if(X) X->Release(); X = nullptr

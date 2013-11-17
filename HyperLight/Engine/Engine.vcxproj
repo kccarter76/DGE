@@ -87,6 +87,7 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="camera.h" />
     <ClInclude Include="Clock.h" />
     <ClInclude Include="ColorShader.h" />
     <ClInclude Include="D3DX.h" />
@@ -98,6 +99,7 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
     <ClInclude Include="input.h" />
     <ClInclude Include="input_defs.h" />
     <ClInclude Include="imesh.h" />
+    <ClInclude Include="iobject.h" />
     <ClInclude Include="ishader.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="resource.h" />
@@ -106,6 +108,7 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="camera.cpp" />
     <ClCompile Include="Clock.cpp" />
     <ClCompile Include="ColorShader.cpp" />
     <ClCompile Include="D3DX.cpp" />
@@ -122,6 +125,7 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
     <ClCompile Include="hardware.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="imesh.cpp" />
+    <ClCompile Include="iobject.cpp" />
     <ClCompile Include="ishader.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="stdafx.cpp">

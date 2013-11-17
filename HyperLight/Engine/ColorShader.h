@@ -11,6 +11,6 @@ namespace HLE
 		~ColorShader(void);
 
 		bool	Initialize( HWND hWnd, ID3D11Device* device, WCHAR* vsFilename, WCHAR* psFilename );
-		bool	Render( ID3D11DeviceContext*, int, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection );
+		bool	Render( ID3D11DeviceContext*, int cnt, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection );
 	};
 };

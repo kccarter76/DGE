@@ -6,8 +6,6 @@
 
 using namespace std;
 
-#define SAFE_RELEASE_D3D(X) X->Release(); X = nullptr
-
 namespace HLE
 {
 	class IShader
@@ -44,7 +42,7 @@ namespace HLE
 		~IShader(void);
 
 		virtual	bool	Initialize( HWND hWnd, ID3D11Device* device, WCHAR* vsFilename, WCHAR* psFilename ) = 0;
-		virtual	bool	Render( ID3D11DeviceContext*, int, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection ) = 0;
+		virtual	bool	Render( ID3D11DeviceContext* context, int cnt, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection ) = 0;
 		virtual void	Release( void );
 	};
 };

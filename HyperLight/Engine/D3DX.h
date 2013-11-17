@@ -12,8 +12,6 @@
 #include <d3d11.h>
 #include <d3dx10math.h>
 
-#define SAFE_RELEASE_D3D(X) X->Release(); X = nullptr
-
 namespace HLE
 {
 	class D3DX

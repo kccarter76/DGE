@@ -51,6 +51,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 	Engine::Get()->InputMap.Add( key_message(HLE_FULLSCREEN), GUI::KEY_F11, true, false );
 
+	Engine::Get()->Initialize();
 	// Main message loop:
 	while (true)
 	{
@@ -63,7 +64,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 			{	// if this is the quite message we need to break out of the loop
 				break;
 			} else {
-				Engine::Get()->Render();
+				Engine::Get()->RenderFrame();
 			}
 		}
 	}

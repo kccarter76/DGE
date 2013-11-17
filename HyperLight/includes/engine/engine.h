@@ -24,6 +24,8 @@ namespace HLE
 		Input*				m_input_ptr;
 		Graphics*			m_graphics_ptr;
 		HARDWAREINFO		m_hardware_info;
+
+		
 	public:
 		Engine( void );
 		~Engine( void );
@@ -42,9 +44,10 @@ namespace HLE
 
 
 		HWND	CreateGameWindow(const int& width, const int& height, const bool& fullScreen, WNDPROC lpClientProc);
+		void	Initialize( void );
 		void	ShutDown( void );
 		void	SetDisplayFullScreen( const bool& bFullScreen );
-		void	Render( void );
+		void	RenderFrame( void );
 
 		static	WNDPROC			m_lpClientWndProc;
 		static	WINDOWPLACEMENT	m_wndPlacement;
