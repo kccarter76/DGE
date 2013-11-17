@@ -26,6 +26,9 @@
     <None Include="HLSL\color.vs">
       <Filter>HLSL Files</Filter>
     </None>
+    <None Include="HLSL\texture.vs">
+      <Filter>HLSL Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">

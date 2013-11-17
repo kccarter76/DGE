@@ -84,6 +84,7 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
   <ItemGroup>
     <None Include="HLSL\color.ps" />
     <None Include="HLSL\color.vs" />
+    <None Include="HLSL\texture.vs" />
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
