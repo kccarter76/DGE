@@ -4,7 +4,7 @@
 
 namespace HLE
 {
-	class IMesh
+	class ENGINE_API IMesh
 	{
 	protected:
 		struct VertexType

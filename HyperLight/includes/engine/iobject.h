@@ -4,7 +4,7 @@
 
 namespace HLE
 {
-	class IObject
+	class ENGINE_API IObject
 	{
 	private:
 		bool	m_hasViewMatrix;
