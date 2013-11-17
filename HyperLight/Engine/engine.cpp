@@ -1,7 +1,7 @@
 // Engine.cpp : Defines the exported functions for the DLL application.
 //
 #include "stdafx.h"
-#include "Engine.h"
+#include "engine.h"
 #include "input_defs.h"
 
 using namespace HLE;
@@ -13,11 +13,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 // see Engine.h for the class definition
 Engine::Engine(void)
 {
-	m_input_ptr	=	nullptr;
+	m_input_ptr		= nullptr;
+	m_graphics_ptr	= nullptr;
 
 	m_clock.LimitThreadAffinityToCurrentProc();
 
-	m_input_ptr =	new Input();
+	m_input_ptr		= new Input();
+	m_graphics_ptr	= new Graphics();
 
 	GetHardwareInfo( &m_hardware_info );
 }
@@ -25,27 +27,48 @@ Engine::Engine(void)
 Engine::~Engine( void )
 {
 	SAFE_RELEASE_PTR(m_input_ptr);
+	SAFE_RELEASE_PTR(m_graphics_ptr);
 }
 
 WNDPROC Engine::m_lpClientWndProc = NULL;
 WINDOWPLACEMENT Engine::m_wndPlacement = { sizeof(m_wndPlacement) };
 
+void Engine::SetDisplayFullScreen( const bool& bFullScreen )
+{
+	DEVMODE		dmScreenSetting;
+
+	size_t
+		nScreenSetting	= sizeof( dmScreenSetting );
+
+	ZeroMemory( &dmScreenSetting, nScreenSetting );
+
+	if ( bFullScreen && EnumDisplaySettings( NULL, ENUM_CURRENT_SETTINGS, &dmScreenSetting ) ) {
+		dmScreenSetting.dmPelsWidth		= m_screen_info.width;
+		dmScreenSetting.dmPelsHeight	= m_screen_info.height;
+		dmScreenSetting.dmBitsPerPel	= 32;		
+		dmScreenSetting.dmFields		= DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
+
+		ChangeDisplaySettings( &dmScreenSetting, CDS_FULLSCREEN );
+	} else {
+		ChangeDisplaySettings( NULL, 0 );
+	}
+
+	ShowCursor( !bFullScreen ? TRUE : FALSE );
+}
+
 HWND Engine::CreateGameWindow(const int& width, const int& height, const bool& full_screen, WNDPROC lpClientProc)
 {
 	WNDCLASSEX	wndClassEx;
-	DEVMODE		dmScreenSetting;
 	DWORD		dwStyle;
 
 	size_t 
 		nWndClassEx		= sizeof( wndClassEx ),
-		nWndPlacement	= sizeof( m_wndPlacement ),
-		nScreenSetting	= sizeof( dmScreenSetting );
+		nWndPlacement	= sizeof( m_wndPlacement );
 
 	m_hInstance			= GetModuleHandle(NULL);
 
 	ZeroMemory( &wndClassEx, nWndClassEx );
 	ZeroMemory( &m_wndPlacement, nWndPlacement );
-	ZeroMemory( &dmScreenSetting, nScreenSetting );
 	ZeroMemory( &dwStyle, sizeof( dwStyle ) );
 
 	m_application_name = L"HyperLightEngine";
@@ -76,22 +99,14 @@ HWND Engine::CreateGameWindow(const int& width, const int& height, const bool& f
 	if(GetMonitorInfo(MonitorFromPoint(p, MONITOR_DEFAULTTOPRIMARY), &mi) && full_screen) {
 		rc = mi.rcMonitor;
 
-		dmScreenSetting.dmSize			= sizeof( dmScreenSetting );
-		dmScreenSetting.dmPelsWidth		= (unsigned long)width;
-		dmScreenSetting.dmPelsHeight	= (unsigned long)height;
-		dmScreenSetting.dmBitsPerPel	= 32;			
-		dmScreenSetting.dmFields		= DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
-
-		ChangeDisplaySettings(&dmScreenSetting, CDS_FULLSCREEN);
-
-		dwStyle = WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP;
+		dwStyle = WS_CLIPSIBLINGS | WS_CLIPCHILDREN ;
 	} else {
 		rc.left		= ( GetSystemMetrics( SM_CXSCREEN ) - width )  / 2;
 		rc.top		= ( GetSystemMetrics( SM_CYSCREEN ) - height ) / 2;
-		rc.right	= width;
-		rc.bottom	= height;
+		rc.right	= width + rc.left;
+		rc.bottom	= height + rc.top;
 
-		AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, false);
+		//AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, false);
 
 		dwStyle = WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_OVERLAPPEDWINDOW;
 	}
@@ -101,8 +116,10 @@ HWND Engine::CreateGameWindow(const int& width, const int& height, const bool& f
 	m_screen_info.width			= rc.right - rc.left;
 	m_screen_info.height		= rc.bottom - rc.top;
 
+	SetDisplayFullScreen( full_screen );
+
 	m_hWnd = CreateWindowEx(
-			WS_EX_TOPMOST, 
+			NULL, //WS_EX_TOPMOST, 
 			wndClassEx.lpszClassName,
 			L"Hyper Light Game Engine",
 			dwStyle,
@@ -119,11 +136,8 @@ HWND Engine::CreateGameWindow(const int& width, const int& height, const bool& f
 
 	ShowWindow(m_hWnd, TRUE);
 
-	if ( full_screen ) {
-		SetForegroundWindow(m_hWnd);
-		SetFocus(m_hWnd);
-		ShowCursor(FALSE);
-	}
+	SetForegroundWindow(m_hWnd);
+	SetFocus(m_hWnd);
 
 	return m_hWnd;
 }
@@ -144,6 +158,18 @@ void Engine::ShutDown( void )
 	m_hWnd = NULL;
 
 	UnregisterClass( m_application_name, m_hInstance );
+}
+
+void Engine::Render( void )
+{
+	if( m_graphics_ptr->Initialize( m_hWnd, &m_screen_info, ( GetWindowLong( m_hWnd, GWL_STYLE ) & WS_OVERLAPPEDWINDOW ) == 0 ) )
+	{
+		m_graphics_ptr->Begin();
+
+		m_graphics_ptr->Draw();
+
+		m_graphics_ptr->End();
+	}
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -191,6 +217,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				SetWindowPos(hWnd, NULL, 0, 0, 0, 0,
 					SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
 			}
+
+			oEngine->SetDisplayFullScreen( ( GetWindowLong(hWnd, GWL_STYLE) & WS_OVERLAPPEDWINDOW ) == 0 );
 			break;
 		}
 	case HLE_ENGINE:
@@ -204,7 +232,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			} else if (GUI::STATS == (GUI::EACTION)wParam) 
 			{	// based on the state of the graphics service stat flag we will render engine statistics
 				// toggle the display statistics boolean property
-				//oEngine->Graphics->DisplayStats = !oEngine->Graphics->DisplayStats;
+				oEngine->GraphicsProvider->ShowStatistics = !oEngine->GraphicsProvider->ShowStatistics;
 			}
 			break;
 		}
