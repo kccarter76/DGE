@@ -47,7 +47,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 	//hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CLIENT));
 
-	hWnd = Engine::Get()->CreateGameWindow(1024, 780, false, &WndProc);
+	hWnd = Engine::Get()->CreateGameWindow(1024, 768, false, &WndProc);
 
 	Engine::Get()->InputMap.Add( key_message(HLE_FULLSCREEN), GUI::KEY_F11, true, false );
 
@@ -62,6 +62,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 			if(msg.message == WM_QUIT)
 			{	// if this is the quite message we need to break out of the loop
 				break;
+			} else {
+				Engine::Get()->Render();
 			}
 		}
 	}

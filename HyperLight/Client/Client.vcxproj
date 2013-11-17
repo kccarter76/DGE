@@ -39,8 +39,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>A:\Program Files %28x86%29\JustSoftwareSolutions\JustThread\include;$(IncludePath)</IncludePath>
-    <LibraryPath>A:\Program Files %28x86%29\JustSoftwareSolutions\JustThread\lib;$(SolutionDir)$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>A:\Program Files %28x86%29\JustSoftwareSolutions\JustThread\include;A:\SDK\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>A:\Program Files %28x86%29\JustSoftwareSolutions\JustThread\lib;$(SolutionDir)$(Configuration);A:\SDK\Microsoft DirectX SDK %28June 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
