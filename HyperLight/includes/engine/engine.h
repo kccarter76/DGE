@@ -5,23 +5,11 @@
 #include "singleton.h"
 #include "clock.h"
 #include "input.h"
+#include "graphics.h"
 #include "hardware.h"
 
 namespace HLE
 {
-	struct ENGINE_API SCREENINFO
-	{
-		POINT			position;
-		unsigned long	width;
-		unsigned long	height;
-
-		SCREENINFO( void )
-			: width(0), height(0)
-		{
-			ZeroMemory(&position, sizeof( position ) );
-		}
-	};
-// This class is exported from the Engine.dll
 	class ENGINE_API Engine 
 		: public Singleton<Engine>
 	{
@@ -34,22 +22,29 @@ namespace HLE
 		LPCWSTR				m_application_name;
 
 		Input*				m_input_ptr;
+		Graphics*			m_graphics_ptr;
 		HARDWAREINFO		m_hardware_info;
 	public:
 		Engine( void );
 		~Engine( void );
 
 		READONLY_PROPERTY(HWND, Handle);
-		GET(Handle)	{ return m_hWnd; }
+		GET(Handle)				{ return m_hWnd; }
 		
 		READONLY_PROPERTY(Clock*, Timer);
-		GET(Timer)	{ return &m_clock; }
+		GET(Timer)				{ return &m_clock; }
 
 		READONLY_PROPERTY(Input&, InputMap);
-		GET(InputMap)	{ return *m_input_ptr; }
+		GET(InputMap)			{ return *m_input_ptr; }
+
+		READONLY_PROPERTY(Graphics*, GraphicsProvider);
+		GET(GraphicsProvider)	{ return m_graphics_ptr; }
+
 
 		HWND	CreateGameWindow(const int& width, const int& height, const bool& fullScreen, WNDPROC lpClientProc);
 		void	ShutDown( void );
+		void	SetDisplayFullScreen( const bool& bFullScreen );
+		void	Render( void );
 
 		static	WNDPROC			m_lpClientWndProc;
 		static	WINDOWPLACEMENT	m_wndPlacement;

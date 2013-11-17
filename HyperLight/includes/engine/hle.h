@@ -9,3 +9,4 @@
 #include "input.h"
 #include "singleton.h"
 #include "hardware.h"
+#include "graphics.h"
