@@ -3,7 +3,7 @@
 
 namespace HLE
 {
-	class LightShader
+	class ENGINE_API LightShader
 		: public IShader
 	{
 	protected:

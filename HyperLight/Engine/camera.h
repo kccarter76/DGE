@@ -3,7 +3,7 @@
 
 namespace HLE
 {
-	class Camera
+	class ENGINE_API Camera
 		: public IObject
 	{
 	public:
