@@ -10,10 +10,11 @@ Graphics::Graphics(void)
 	, m_initialized(false)
 	, m_v_sync_enabled(true)
 {
-	m_d3dx			= nullptr;
-	m_camera		= nullptr;
-	m_model			= nullptr;
-	m_color_shader	= nullptr;
+	m_d3dx				= nullptr;
+	m_camera			= nullptr;
+	m_model				= nullptr;
+	m_light_shader		= nullptr;
+	m_light				= nullptr;
 }
 
 Graphics::~Graphics(void)
@@ -21,8 +22,8 @@ Graphics::~Graphics(void)
 	SAFE_RELEASE_D3D(m_d3dx);
 	SAFE_RELEASE_D3D(m_camera);
 	SAFE_RELEASE_D3D(m_model);
-	SAFE_RELEASE_D3D(m_color_shader);
-
+	SAFE_RELEASE_D3D(m_light_shader);
+	SAFE_RELEASE_D3D(m_light);
 }
 
 bool Graphics::Initialize( HWND hWnd, SCREENINFO *info, const bool& fullscreen )
@@ -40,11 +41,11 @@ bool Graphics::Initialize( HWND hWnd, SCREENINFO *info, const bool& fullscreen )
 
 		m_camera		= new Camera();
 
-		m_camera->Position = D3DXVECTOR3( 0.0f, 0.0f, -5.0f );
+		m_camera->Position = D3DXVECTOR3( 0.0f, 0.0f, -10.0f );
 
 		m_model			= new Model();
 
-		result = m_model->Initialize( m_d3dx->Device );
+		result = m_model->Initialize( m_d3dx->Device, L"..\\shaders\\resources\\seafloor.dds" );
 
 		if ( !result )
 		{
@@ -52,15 +53,19 @@ bool Graphics::Initialize( HWND hWnd, SCREENINFO *info, const bool& fullscreen )
 			return false;
 		}
 
-		m_color_shader	= new ColorShader();
+		m_light_shader	= new LightShader();
 
-		result = m_color_shader->Initialize( hWnd, m_d3dx->Device, L"..\\shaders\\color.vs", L"..\\shaders\\color.ps" );
+		result = m_light_shader->Load( hWnd, m_d3dx->Device, "Light", L"..\\shaders\\light.vs", L"..\\shaders\\light.ps" );
 
 		if( !result )
 		{
-			MessageBox(hWnd, L"Could not initialize the color shader object.", L"Error", MB_OK);
+			MessageBox(hWnd, L"Could not initialize the light shader object.", L"Error", MB_OK);
 			return false;
 		}
+
+		m_light			= new Light();
+
+		m_light->DiffuseColor = D3DXVECTOR4( 1.0f, 0.0f, 1.0f, 1.0f );
 
 		// start the clock
 		if ( Engine::Get()->Timer->IsStopped )
@@ -72,16 +77,23 @@ bool Graphics::Initialize( HWND hWnd, SCREENINFO *info, const bool& fullscreen )
 	return result;
 }
 
-void	Graphics::RenderScene( void )
+void	Graphics::RenderScene( float rotation )
 {
 	m_d3dx->BeginScene( 0.0f, 0.0f, 0.0f, 1.0f );
+
+	D3DXMATRIX world;
+
+	world = m_d3dx->WorldMatrix;
 
 	// update the camera
 	m_camera->Update();
 
+	// rotate the world matrix
+	D3DXMatrixRotationY( &m_d3dx->WorldMatrix, rotation );
+
 	m_model->Render( m_d3dx->Context );
 
-	m_color_shader->Render( m_d3dx->Context, m_model->IndexCount, m_d3dx->WorldMatrix, m_camera->ViewMatrix, m_d3dx->ProjectionMatrix );
+	m_light_shader->Render( m_d3dx->Context, m_model->IndexCount, m_d3dx->WorldMatrix, m_camera->ViewMatrix, m_d3dx->ProjectionMatrix, m_model->Texture, m_light->Direction, m_light->DiffuseColor );
 
 	m_d3dx->EndScene();
 }

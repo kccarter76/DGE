@@ -13,7 +13,7 @@ Model::~Model(void)
 {
 }
 
-bool	Model::Initialize( ID3D11Device* device )
+bool	Model::Initialize( ID3D11Device* device, WCHAR* filename )
 {
 	VertexType*				vertices;
 	unsigned long*			indices;
@@ -21,11 +21,18 @@ bool	Model::Initialize( ID3D11Device* device )
 	D3D11_SUBRESOURCE_DATA	vertexData, indexData;
 	HRESULT					result;
 
+	m_texture		= new TextureMap();
+
+	if( FAILED( m_texture->Load( device, filename ) ) )
+	{
+		return false;
+	}
+
 	// Set the number of vertices in the vertex array.
-	m_vertex_cnt = 3;
+	m_vertex_cnt	= 6;
 
 	// Set the number of indices in the index array.
-	m_index_cnt = 3;
+	m_index_cnt		= 6;
 
 	// Create the vertex array.
 	vertices = new VertexType[m_vertex_cnt];
@@ -42,32 +49,38 @@ bool	Model::Initialize( ID3D11Device* device )
 	}
 
 	// Load the vertex array with data.
-	vertices[0].position	= D3DXVECTOR3(-1.0f, -1.0f, 0.0f);  // Bottom left.
-	vertices[0].color		= D3DXVECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
+	vertices[0].position	= D3DXVECTOR3( -1.0f, -1.0f, 0.0f );  // Bottom left.
+	vertices[0].tex_coords	= D3DXVECTOR2( 0.0f, 1.0f );
+	vertices[0].normal		= D3DXVECTOR3( 0.0f, 0.0f, -1.0f );
 
-	vertices[1].position	= D3DXVECTOR3(0.0f, 1.0f, 0.0f);  // Top right.
-	vertices[1].color		= D3DXVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[1].position	= D3DXVECTOR3( 1.0f, 1.0f, 0.0f );  // Top right.
+	vertices[1].tex_coords	= D3DXVECTOR2( 0.5f, 0.0f );
+	vertices[1].normal		= D3DXVECTOR3( 0.0f, 0.0f, -1.0f );
 
-	vertices[2].position	= D3DXVECTOR3(1.0f, -1.0f, 0.0f);  // Bottom right.
-	vertices[2].color		= D3DXVECTOR4(0.0f, 0.0f, 1.0f, 1.0f);
+	vertices[2].position	= D3DXVECTOR3( 1.0f, -1.0f, 0.0f );  // Bottom right.
+	vertices[2].tex_coords	= D3DXVECTOR2( 1.0f, 1.0f );
+	vertices[2].normal		= D3DXVECTOR3( 0.0f, 0.0f, -1.0f );
 
-	//vertices[3].position	= D3DXVECTOR3(1.0f, 1.0f, 0.0f);  // Top right.
-	//vertices[3].color		= D3DXVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[3].position	= D3DXVECTOR3( 1.0f, 1.0f, 0.0f );  // Top right.
+	vertices[3].tex_coords	= D3DXVECTOR2( 0.5f, 0.0f );
+	vertices[3].normal		= D3DXVECTOR3( 0.0f, 0.0f, -1.0f );
 
-	//vertices[4].position	= D3DXVECTOR3(-1.0f, -1.0f, 0.0f);  // Bottom left.
-	//vertices[4].color		= D3DXVECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
+	vertices[4].position	= D3DXVECTOR3( -1.0f, -1.0f, 0.0f );  // Bottom left.
+	vertices[4].tex_coords	= D3DXVECTOR2( 0.0f, 1.0f );
+	vertices[4].normal		= D3DXVECTOR3( 0.0f, 0.0f, -1.0f );
 
-	//vertices[5].position	= D3DXVECTOR3(-1.0f, 1.0f, 0.0f);  // Top left.
-	//vertices[5].color		= D3DXVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[5].position	= D3DXVECTOR3( -1.0f, 1.0f, 0.0f );  // Top left.
+	vertices[5].tex_coords	= D3DXVECTOR2( -0.5f, 0.0f );
+	vertices[5].normal		= D3DXVECTOR3( 0.0f, 0.0f, -1.0f );
 
 
 	// Load the index array with data.
 	indices[0] = 0;  // Bottom left.
 	indices[1] = 1;  // Top right.
 	indices[2] = 2;  // Bottom right.
-	//indices[3] = 3;  // Top right.
-	//indices[4] = 4;  // Bottom left.
-	//indices[5] = 5;  // top left.
+	indices[3] = 3;  // Top right.
+	indices[4] = 4;  // Bottom left.
+	indices[5] = 5;  // top left.
 
 	// Set up the description of the static vertex buffer.
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;

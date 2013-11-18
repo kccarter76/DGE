@@ -168,7 +168,16 @@ void Engine::ShutDown( void )
 
 void Engine::RenderFrame( void )
 {
-	m_graphics_ptr->RenderScene();
+	static float rotation = 0.0f;
+
+	// Update the rotation variable each frame.
+	rotation += (float)D3DX_PI * 0.5f;
+	if(rotation > 360.0f)
+	{
+		rotation -= 360.0f;
+	}
+
+	m_graphics_ptr->RenderScene(rotation);
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)

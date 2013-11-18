@@ -3,7 +3,8 @@
 #include "d3dx.h"
 #include "camera.h"
 #include "model.h"
-#include "colorshader.h"
+#include "lightshader.h"
+#include "light.h"
 
 const float 
 	SCREEN_DEPTH	= 1000.0f,
@@ -32,7 +33,8 @@ namespace HLE
 		D3DX*			m_d3dx;
 		Camera*			m_camera;
 		Model*			m_model;
-		ColorShader*	m_color_shader;
+		LightShader*	m_light_shader;
+		Light*			m_light;
 		
 	public:
 		Graphics( void );
@@ -40,7 +42,7 @@ namespace HLE
 
 		bool Initialize( HWND hWnd, SCREENINFO *info, const bool& fullscreen );
 
-		void	RenderScene( void );
+		void	RenderScene( float rotation );
 
 		PROPERTY(bool, ShowStatistics);
 		GET(ShowStatistics)		{ return m_show_stats;	}

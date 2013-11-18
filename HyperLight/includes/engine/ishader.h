@@ -3,12 +3,15 @@
 #include <d3dx10math.h>
 #include <d3dx11async.h>
 #include <fstream>
+#include <vector>
 
 using namespace std;
 
 namespace HLE
 {
-	class IShader
+	typedef std::vector<D3D11_INPUT_ELEMENT_DESC> input_elements;
+
+	class ENGINE_API IShader
 	{
 	protected:
 		struct MatrixBufferType
@@ -30,19 +33,29 @@ namespace HLE
 			}
 		};
 
+		struct profiles
+		{
+			static LPCSTR	vs_5_0;
+			static LPCSTR	ps_5_0;
+		};
+
 		ID3D11VertexShader*		m_vertex_shader;
 		ID3D11PixelShader*		m_pixel_shader;
 		ID3D11InputLayout*		m_layout;
 		ID3D11Buffer*			m_matrix_buffer;
 
 		void	OutputShaderError( ID3D10Blob* errorMessage, HWND hwnd, WCHAR* filename );
+		void	CopyPolygonArray( D3D11_INPUT_ELEMENT_DESC* desc, unsigned int size, input_elements* inputs );
 		bool	SetShaderParameters( ID3D11DeviceContext* context, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection );
+		bool	SetShaderParameters( ID3D11DeviceContext* context, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection, ID3D11ShaderResourceView* texture );
+		
+		virtual	void	GetPolygonLayout( input_elements* inputs ) = 0;
+		virtual bool	Initialize( ID3D11Device* device ) { UNREFERENCED_PARAMETER(device); return true; }
 	public:
 		IShader(void);
 		~IShader(void);
 
-		virtual	bool	Initialize( HWND hWnd, ID3D11Device* device, WCHAR* vsFilename, WCHAR* psFilename ) = 0;
-		virtual	bool	Render( ID3D11DeviceContext* context, int cnt, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection ) = 0;
+		bool	Load( HWND hWnd, ID3D11Device* device, LPCSTR fnPrefix , WCHAR* vsFilename, WCHAR* psFilename );
 		virtual void	Release( void );
 	};
 };

@@ -22,5 +22,9 @@ void	TextureMap::Release( void )
 
 HRESULT	TextureMap::Load( ID3D11Device* device, WCHAR* filename )
 {
-	return D3DX11CreateShaderResourceViewFromFile( device, filename, NULL, NULL, &m_texture, NULL );
+	HRESULT hr = S_OK;
+
+	hr = D3DX11CreateShaderResourceViewFromFile( device, filename, NULL, NULL, &m_texture, NULL );
+
+	return hr;
 }

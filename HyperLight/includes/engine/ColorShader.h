@@ -10,7 +10,7 @@ namespace HLE
 		ColorShader(void);
 		~ColorShader(void);
 
-		bool	Initialize( HWND hWnd, ID3D11Device* device, WCHAR* vsFilename, WCHAR* psFilename );
-		bool	Render( ID3D11DeviceContext*, int cnt, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection );
+		void	GetPolygonLayout( input_elements* inputs );
+		bool	Render( ID3D11DeviceContext* context, int cnt, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection );
 	};
 };
