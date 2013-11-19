@@ -10,7 +10,8 @@ namespace HLE
 		Model(void);
 		~Model(void);
 
-		bool	Initialize( ID3D11Device* device, WCHAR* filename );
+		bool	Initialize( ID3D11Device* device, CHAR* model, WCHAR* filename );
+		bool	LoadModel( CHAR* filename );
 		void	Render( ID3D11DeviceContext* context );
 	};
 };

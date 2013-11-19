@@ -25,7 +25,8 @@ namespace HLE
 		Graphics*			m_graphics_ptr;
 		HARDWAREINFO		m_hardware_info;
 
-		
+		//statistics
+		float				m_fps;
 	public:
 		Engine( void );
 		~Engine( void );

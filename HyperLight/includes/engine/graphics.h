@@ -3,6 +3,7 @@
 #include "d3dx.h"
 #include "camera.h"
 #include "model.h"
+#include "textureshader.h"
 #include "lightshader.h"
 #include "light.h"
 
@@ -33,6 +34,7 @@ namespace HLE
 		D3DX*			m_d3dx;
 		Camera*			m_camera;
 		Model*			m_model;
+		TextureShader*	m_texture_shader;
 		LightShader*	m_light_shader;
 		Light*			m_light;
 		

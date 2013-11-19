@@ -45,7 +45,12 @@ HRESULT	D3DX::Initialize( HWND hwnd, int width, int height, float fdepth, float 
 	IDXGIFactory*					factory			= nullptr;
 	IDXGIAdapter*					adapter			= nullptr;
 	IDXGIOutput*					adapterOutput	= nullptr;
-	unsigned int					numModes, i, numerator, denominator, stringLength;
+	unsigned int					
+		numModes		= 0, 
+		i				= 0, 
+		numerator		= 0, 
+		denominator		= 0, 
+		stringLength	= 0;
 	DXGI_MODE_DESC*					displayModeList	= nullptr;
 	DXGI_ADAPTER_DESC				adapterDesc;
 	int								error;

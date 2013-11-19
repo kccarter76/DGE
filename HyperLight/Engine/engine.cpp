@@ -11,7 +11,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 // This is the constructor of a class that has been exported.
 // see Engine.h for the class definition
-Engine::Engine(void)
+Engine::Engine( void )
+	: m_fps( 0.0f )
 {
 	m_input_ptr		= nullptr;
 	m_graphics_ptr	= nullptr;
@@ -168,10 +169,12 @@ void Engine::ShutDown( void )
 
 void Engine::RenderFrame( void )
 {
+	++m_fps; //	increment the frame count
+
 	static float rotation = 0.0f;
 
 	// Update the rotation variable each frame.
-	rotation += (float)D3DX_PI * 0.5f;
+	rotation += (float)(D3DX_PI / 180) * 0.5f;
 	if(rotation > 360.0f)
 	{
 		rotation -= 360.0f;

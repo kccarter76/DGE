@@ -6,7 +6,9 @@ using namespace std;
 
 void CPUID( unsigned i, unsigned regs[4] )
 {
-#ifdef _WIN32 || _WIN64
+#ifdef _WIN32
+	__cpuid( (int*)regs, (int)i );
+#elif _WIN64
 	__cpuid( (int*)regs, (int)i );
 #else
 	asm volatile

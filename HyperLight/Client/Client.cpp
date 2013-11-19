@@ -63,10 +63,10 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 			if(msg.message == WM_QUIT)
 			{	// if this is the quite message we need to break out of the loop
 				break;
-			} else {
-				Engine::Get()->RenderFrame();
 			}
 		}
+
+		Engine::Get()->RenderFrame();
 	}
 
 	return (int) msg.wParam;
