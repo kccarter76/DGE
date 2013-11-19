@@ -104,6 +104,7 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
     <ClInclude Include="input_defs.h" />
     <ClInclude Include="imesh.h" />
     <ClInclude Include="iobject.h" />
+    <ClInclude Include="ibitmap.h" />
     <ClInclude Include="ishader.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="LightShader.h" />
@@ -134,6 +135,7 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
     <ClCompile Include="input.cpp" />
     <ClCompile Include="imesh.cpp" />
     <ClCompile Include="iobject.cpp" />
+    <ClCompile Include="ibitmap.cpp" />
     <ClCompile Include="ishader.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="LightShader.cpp" />
