@@ -3,11 +3,12 @@
 #include <d3dx10math.h>
 #include <vector>
 
-#include "texture.h"
+#include "irenderable.h"
 
 namespace HLE
 {
 	class ENGINE_API IMesh
+		: public IRenderable
 	{
 	protected:
 		typedef struct VERTEXTYPE
@@ -34,10 +35,8 @@ namespace HLE
 			float	nx, ny, nz;
 		} MESHTYPE, *LPMESHTYPE;
 
-		ID3D11Buffer			*m_vertex_buffer, *m_index_buffer;
-		TextureMap				*m_texture;
 		std::vector<VERTEXTYPE>  m_vertices;
-		int						 m_vertex_cnt, m_index_cnt;
+		
 		LPMESHTYPE				 m_mesh;
 
 		virtual	bool	LoadModel( CHAR* filename ) = 0;
@@ -46,14 +45,8 @@ namespace HLE
 		~IMesh(void);
 
 		virtual	bool	Initialize( ID3D11Device* device, CHAR* model, WCHAR* filename ) = 0;
-		virtual void	Render( ID3D11DeviceContext* context ) = 0;
 		virtual void	Release( void );
 
-		READONLY_PROPERTY(int, IndexCount);
-		GET(IndexCount)		{ return m_index_cnt; }
-
-		READONLY_PROPERTY(ID3D11ShaderResourceView*, Texture);
-		GET(Texture)		{ return m_texture->Texture; }
 	};
 };
 

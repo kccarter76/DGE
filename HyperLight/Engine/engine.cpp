@@ -44,8 +44,8 @@ void Engine::SetDisplayFullScreen( const bool& bFullScreen )
 	ZeroMemory( &dmScreenSetting, nScreenSetting );
 
 	if ( bFullScreen && EnumDisplaySettings( NULL, ENUM_CURRENT_SETTINGS, &dmScreenSetting ) ) {
-		dmScreenSetting.dmPelsWidth		= m_screen_info.width;
-		dmScreenSetting.dmPelsHeight	= m_screen_info.height;
+		dmScreenSetting.dmPelsWidth		= m_screen_info.size.width;
+		dmScreenSetting.dmPelsHeight	= m_screen_info.size.height;
 		dmScreenSetting.dmBitsPerPel	= 32;		
 		dmScreenSetting.dmFields		= DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
@@ -93,11 +93,11 @@ HWND Engine::CreateGameWindow(const int& width, const int& height, const bool& f
 	// Create the window and use the result as the handle
 	MONITORINFO mi = { sizeof(mi) };
 
-	POINT p = {0,0};
+	POINT p;
 
 	RECT rc = { sizeof( rc ) };
 
-	if(GetMonitorInfo(MonitorFromPoint(p, MONITOR_DEFAULTTOPRIMARY), &mi) && full_screen) {
+	if(GetMonitorInfo(MonitorFromPoint(p.pt, MONITOR_DEFAULTTOPRIMARY), &mi) && full_screen) {
 		rc = mi.rcMonitor;
 
 		dwStyle = WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP;
@@ -112,10 +112,10 @@ HWND Engine::CreateGameWindow(const int& width, const int& height, const bool& f
 		dwStyle = WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_OVERLAPPEDWINDOW;
 	}
 
-	m_screen_info.position.x	= rc.left;
-	m_screen_info.position.y	= rc.top;
-	m_screen_info.width			= rc.right - rc.left;
-	m_screen_info.height		= rc.bottom - rc.top;
+	m_screen_info.pt.x			= rc.left;
+	m_screen_info.pt.y			= rc.top;
+	m_screen_info.size.width	= rc.right - rc.left;
+	m_screen_info.size.height	= rc.bottom - rc.top;
 
 	SetDisplayFullScreen( full_screen );
 
@@ -124,10 +124,10 @@ HWND Engine::CreateGameWindow(const int& width, const int& height, const bool& f
 			wndClassEx.lpszClassName,
 			L"Hyper Light Game Engine",
 			dwStyle,
-			m_screen_info.position.x,
-			m_screen_info.position.y,
-			m_screen_info.width,
-			m_screen_info.height,
+			m_screen_info.pt.x,
+			m_screen_info.pt.y,
+			m_screen_info.size.width,
+			m_screen_info.size.height,
 			NULL,
 			NULL,
 			m_hInstance,
@@ -174,7 +174,7 @@ void Engine::RenderFrame( void )
 	static float rotation = 0.0f;
 
 	// Update the rotation variable each frame.
-	rotation += (float)(D3DX_PI / 180) * 0.5f;
+	rotation += (float)(D3DX_PI) * 0.005f;
 	if(rotation > 360.0f)
 	{
 		rotation -= 360.0f;

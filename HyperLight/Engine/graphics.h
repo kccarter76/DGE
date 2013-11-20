@@ -6,6 +6,7 @@
 #include "textureshader.h"
 #include "lightshader.h"
 #include "light.h"
+#include "ibitmap.h"
 
 const float 
 	SCREEN_DEPTH	= 1000.0f,
@@ -13,19 +14,6 @@ const float
 
 namespace HLE
 {
-	struct ENGINE_API SCREENINFO
-	{
-		POINT			position;
-		unsigned long	width;
-		unsigned long	height;
-
-		SCREENINFO( void )
-			: width(0), height(0)
-		{
-			ZeroMemory(&position, sizeof( position ) );
-		}
-	};
-
 	class ENGINE_API Graphics
 	{
 	private:
@@ -37,12 +25,13 @@ namespace HLE
 		TextureShader*	m_texture_shader;
 		LightShader*	m_light_shader;
 		Light*			m_light;
+		Bitmap*			m_bitmap;
 		
 	public:
 		Graphics( void );
 		~Graphics( void );
 
-		bool Initialize( HWND hWnd, SCREENINFO *info, const bool& fullscreen );
+		bool Initialize( HWND hWnd, HLE::WINDOWINFO *info, const bool& fullscreen );
 
 		void	RenderScene( float rotation );
 

@@ -25,7 +25,8 @@ namespace HLE
 		ID3D11DeviceContext*		m_deviceContext;
 		ID3D11RenderTargetView*		m_renderTargetView;
 		ID3D11Texture2D*			m_depthStencilBuffer;
-		ID3D11DepthStencilState*	m_depthStencilState;
+		ID3D11DepthStencilState*	m_depthEnableStencilState;
+		ID3D11DepthStencilState*	m_depthDisableStencilState;
 		ID3D11DepthStencilView*		m_depthStencilView;
 		ID3D11RasterizerState*		m_rasterState;
 		D3DXMATRIX					m_projectionMatrix;
@@ -43,6 +44,30 @@ namespace HLE
 		void	GetVideoCardInfo( char* name, int& memory );
 
 		void	Release( void );
+
+		PROPERTY(bool, EnableZBuffer);
+		GET(EnableZBuffer)	{
+			ID3D11DepthStencilState* state = nullptr;
+
+			UINT ref;
+
+			D3D11_DEPTH_STENCIL_DESC desc;
+
+			m_deviceContext->OMGetDepthStencilState(&state, &ref);
+
+			state->GetDesc( &desc );
+
+			return state != nullptr && desc.DepthEnable;
+		}
+		SET(EnableZBuffer)	{
+			if ( EnableZBuffer && !value )	{
+				// turn off the z buffer
+				m_deviceContext->OMSetDepthStencilState( m_depthDisableStencilState, 1 );
+			} else if ( !EnableZBuffer && value ) {
+				// turn on the z buffer
+				m_deviceContext->OMSetDepthStencilState( m_depthEnableStencilState, 1 );
+			}
+		}
 
 		READONLY_PROPERTY(ID3D11Device*, Device);
 		GET(Device)	{ return m_device; }

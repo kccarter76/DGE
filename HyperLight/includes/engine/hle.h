@@ -2,6 +2,7 @@
 
 #pragma comment(lib, "engine.lib" )
 
+#include "typedefs.h"
 #include "defs.h"
 #include "engine.h"
 #include "clock.h"

@@ -28,9 +28,8 @@ bool	Model::Initialize( ID3D11Device* device, CHAR* model, WCHAR* filename )
 	}
 
 	indices			= new unsigned long[m_vertex_cnt];
-	m_texture		= new TextureMap();
 
-	if( FAILED( m_texture->Load( device, filename ) ) )
+	if( !LoadTexture( device, filename ) )
 	{
 		return false;
 	}

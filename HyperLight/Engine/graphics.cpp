@@ -16,6 +16,7 @@ Graphics::Graphics(void)
 	m_texture_shader	= nullptr;
 	m_light_shader		= nullptr;
 	m_light				= nullptr;
+	m_bitmap			= nullptr;
 }
 
 Graphics::~Graphics(void)
@@ -26,26 +27,27 @@ Graphics::~Graphics(void)
 	SAFE_RELEASE_D3D(m_texture_shader);
 	SAFE_RELEASE_D3D(m_light_shader);
 	SAFE_RELEASE_D3D(m_light);
+	SAFE_RELEASE_D3D(m_bitmap);
 }
 
-bool Graphics::Initialize( HWND hWnd, SCREENINFO *info, const bool& fullscreen )
+bool Graphics::Initialize( HWND hWnd, HLE::WINDOWINFO *info, const bool& fullscreen )
 {
 	bool result = true;
 
 	if ( !m_initialized )
 	{	// in this block we initialize the graphics interface
 		m_d3dx = new D3DX();
-		if( FAILED(m_d3dx->Initialize( hWnd, info->width, info->height, SCREEN_DEPTH, SCREEN_NEAR, m_v_sync_enabled, fullscreen ) ) )
+		if( FAILED(m_d3dx->Initialize( hWnd, info->size.width, info->size.height, SCREEN_DEPTH, SCREEN_NEAR, m_v_sync_enabled, fullscreen ) ) )
 		{
 			MessageBox(hWnd, L"Could not initialize Direct3D", L"Error", MB_OK);
 			return false;
 		}
 
-		m_camera		= new Camera();
+		m_camera	= new Camera();
 
 		m_camera->Position = D3DXVECTOR3( 0.0f, 0.0f, -10.0f );
 
-		m_model			= new Model();
+		m_model		= new Model();
 
 		result = m_model->Initialize( m_d3dx->Device, "..\\models\\cube.txt", L"..\\shaders\\resources\\seafloor.dds" );
 
@@ -55,9 +57,25 @@ bool Graphics::Initialize( HWND hWnd, SCREENINFO *info, const bool& fullscreen )
 			return false;
 		}
 
+		m_bitmap	= new Bitmap();
+
+		result = m_bitmap->Initialize( m_d3dx->Device, L"..\\shaders\\resources\\seafloor.dds", SIZE( Engine::Get()->Window->size ), SIZE( 100, 100 ) );
+
+		if( !result )
+		{
+			MessageBox(hWnd, L"Could not initialize the bitmap object.", L"Error", MB_OK);
+			return false;
+		}
+
 		m_texture_shader = new TextureShader();
 
-		m_texture_shader->Load( hWnd, m_d3dx->Device, "Texture", L"..\\shaders\\texture.vs", L"..\\shaders\\texture.ps" );
+		result = m_texture_shader->Load( hWnd, m_d3dx->Device, "Texture", L"..\\shaders\\texture.vs", L"..\\shaders\\texture.ps" );
+
+		if( !result )
+		{
+			MessageBox(hWnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
+			return false;
+		}
 
 		m_light_shader	= new LightShader();
 
@@ -98,15 +116,22 @@ void	Graphics::RenderScene( float rotation )
 	D3DXMATRIX 
 		world		= m_d3dx->WorldMatrix, 
 		view		= m_camera->ViewMatrix, 
-		projection	= m_d3dx->ProjectionMatrix;
+		projection	= m_d3dx->ProjectionMatrix,
+		ortho		= m_d3dx->OrthoMatrix;
 
 	// rotate the world matrix
 	D3DXMatrixRotationY( &world, rotation );
 
 	m_model->Render( m_d3dx->Context );
 
-	//m_texture_shader->Render( m_d3dx->Context, m_model->IndexCount, world, m_camera->ViewMatrix, m_d3dx->ProjectionMatrix, m_model->Texture );
 	m_light_shader->Render( m_d3dx->Context, m_model->IndexCount, world, view, projection, m_model->Texture, m_light->Direction, m_camera->Position, m_light->AmbientColor, m_light->DiffuseColor, m_light->SpecularColor, m_light->Power );
+
+	m_d3dx->EnableZBuffer = false;
+	if ( m_bitmap->Render( m_d3dx->Context, POINT( 50, 50 ) ) )
+	{	
+		m_texture_shader->Render( m_d3dx->Context, m_bitmap->IndexCount, m_d3dx->WorldMatrix, view, ortho, m_bitmap->Texture );
+	}
+	m_d3dx->EnableZBuffer = true;
 
 	m_d3dx->EndScene();
 }

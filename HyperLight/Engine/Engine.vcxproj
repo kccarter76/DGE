@@ -97,6 +97,7 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
     <ClInclude Include="D3DX.h" />
     <ClInclude Include="defs.h" />
     <ClInclude Include="Engine.h" />
+    <ClInclude Include="font.h" />
     <ClInclude Include="graphics.h" />
     <ClInclude Include="hardware.h" />
     <ClInclude Include="hle.h" />
@@ -105,6 +106,7 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
     <ClInclude Include="imesh.h" />
     <ClInclude Include="iobject.h" />
     <ClInclude Include="ibitmap.h" />
+    <ClInclude Include="irenderable.h" />
     <ClInclude Include="ishader.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="LightShader.h" />
@@ -115,6 +117,7 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
     <ClInclude Include="targetver.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="TextureShader.h" />
+    <ClInclude Include="typedefs.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="camera.cpp" />
@@ -130,12 +133,14 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="font.cpp" />
     <ClCompile Include="graphics.cpp" />
     <ClCompile Include="hardware.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="imesh.cpp" />
     <ClCompile Include="iobject.cpp" />
     <ClCompile Include="ibitmap.cpp" />
+    <ClCompile Include="irenderable.cpp" />
     <ClCompile Include="ishader.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="LightShader.cpp" />

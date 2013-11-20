@@ -18,7 +18,7 @@ namespace HLE
 
 		HINSTANCE			m_hInstance;
 		HWND				m_hWnd;
-		SCREENINFO			m_screen_info;
+		WINDOWINFO			m_screen_info;
 		LPCWSTR				m_application_name;
 
 		Input*				m_input_ptr;
@@ -42,6 +42,9 @@ namespace HLE
 
 		READONLY_PROPERTY(Graphics*, GraphicsProvider);
 		GET(GraphicsProvider)	{ return m_graphics_ptr; }
+
+		READONLY_PROPERTY(WINDOWINFO*, Window);
+		GET(Window)	{ return &m_screen_info; }
 
 
 		HWND	CreateGameWindow(const int& width, const int& height, const bool& fullScreen, WNDPROC lpClientProc);
