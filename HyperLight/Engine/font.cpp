@@ -96,7 +96,7 @@ void	Font::RenderText( void* vertices, LPCSTR text, HLE::POINT pt )
 	index = 0;
 
 	for ( i = 0; i < num; i++ ) {
-		letter = ( ( int ) text[i] ) - 32 );
+		letter = ( ( int ) text[i] ) - 32;
 
 		if ( letter == 0 ) {	
 			// this is a space just move over 3 pixels
@@ -122,7 +122,7 @@ void	Font::RenderText( void* vertices, LPCSTR text, HLE::POINT pt )
 			ptr[index]	= VTYPE( D3DXVECTOR3( ( x + m_data[letter].size ), ( y - 16 ), z ), D3DXVECTOR2( m_data[letter].right, d1 ) );
 			index++;
 
-			x += ( m_data[letter].size + d1 )
+			x += ( ( float )m_data[letter].size + d1 );
 		}
 	}
 	return;

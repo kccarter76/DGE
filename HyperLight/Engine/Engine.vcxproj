@@ -98,6 +98,7 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
     <ClInclude Include="defs.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="font.h" />
+    <ClInclude Include="FontShader.h" />
     <ClInclude Include="graphics.h" />
     <ClInclude Include="hardware.h" />
     <ClInclude Include="hle.h" />
@@ -134,6 +135,7 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
     </ClCompile>
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="font.cpp" />
+    <ClCompile Include="FontShader.cpp" />
     <ClCompile Include="graphics.cpp" />
     <ClCompile Include="hardware.cpp" />
     <ClCompile Include="input.cpp" />

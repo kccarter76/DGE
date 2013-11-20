@@ -14,6 +14,7 @@ IShader::IShader(void)
 	m_pixel_shader	= nullptr;
 	m_layout		= nullptr;
 	m_matrix_buffer	= nullptr;
+	m_sample_state	= nullptr;
 }
 
 IShader::~IShader(void)
@@ -26,6 +27,7 @@ void	IShader::Release( void )
 	SAFE_RELEASE_D3D(m_pixel_shader);
 	SAFE_RELEASE_D3D(m_layout);
 	SAFE_RELEASE_D3D(m_matrix_buffer);
+	SAFE_RELEASE_D3D(m_sample_state);
 
 	delete this;
 }

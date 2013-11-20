@@ -6,18 +6,10 @@ using namespace HLE;
 TextureShader::TextureShader(void)
 	: IShader()
 {
-	m_sample_state	= nullptr;
 }
 
 TextureShader::~TextureShader(void)
 {
-}
-
-void	TextureShader::Release( void )
-{
-	SAFE_RELEASE_D3D(m_sample_state);
-
-	IShader::Release();
 }
 
 void	TextureShader::GetPolygonLayout( input_elements* inputs )

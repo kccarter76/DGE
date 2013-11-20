@@ -8,7 +8,6 @@ LightShader::LightShader( void )
 {
 	m_light_buffer	= nullptr;
 	m_camera_buffer	= nullptr;
-	m_sample_state	= nullptr;
 }
 
 
@@ -20,7 +19,6 @@ void	LightShader::Release( void )
 {
 	SAFE_RELEASE_D3D(m_light_buffer);
 	SAFE_RELEASE_D3D(m_camera_buffer);
-	SAFE_RELEASE_D3D(m_sample_state);
 
 	IShader::Release();
 }
