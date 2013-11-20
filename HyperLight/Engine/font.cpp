@@ -76,3 +76,54 @@ bool	Font::LoadData( LPCSTR fn_data )
 
 	return true;
 }
+
+void	Font::RenderText( void* vertices, LPCSTR text, HLE::POINT pt )
+{
+	LPVTYPE		ptr	= nullptr;
+	int			num, index, i, letter;
+	float
+		x	= (float)pt.x,
+		y	= (float)pt.y,
+		z	= 0.0f,
+		d0	= 0.0f,
+		d1	= 1.0f,
+		s	= 3.0f;
+
+	ptr	= (LPVTYPE)vertices;
+
+	num = (int)std::strlen(text);
+
+	index = 0;
+
+	for ( i = 0; i < num; i++ ) {
+		letter = ( ( int ) text[i] ) - 32 );
+
+		if ( letter == 0 ) {	
+			// this is a space just move over 3 pixels
+			x = x + s;
+		} else {
+			//first triangle in quad
+			ptr[index]	= VTYPE( D3DXVECTOR3( x, y, z ), D3DXVECTOR2( m_data[letter].left, d0 ) );
+			index++;
+
+			ptr[index]	= VTYPE( D3DXVECTOR3( ( x + m_data[letter].size ), ( y - 16 ), z ), D3DXVECTOR2( m_data[letter].right, d1 ) );
+			index++;
+
+			ptr[index]	= VTYPE( D3DXVECTOR3( x, ( y - 16 ), z ), D3DXVECTOR2( m_data[letter].left, d1 ) );
+			index++;
+
+			//second triangle in quad
+			ptr[index]	= VTYPE( D3DXVECTOR3( x, y, z ), D3DXVECTOR2( m_data[letter].left, d0 ) );
+			index++;
+
+			ptr[index]	= VTYPE( D3DXVECTOR3( ( x + m_data[letter].size ), y, z ), D3DXVECTOR2( m_data[letter].right, d0 ) );
+			index++;
+
+			ptr[index]	= VTYPE( D3DXVECTOR3( ( x + m_data[letter].size ), ( y - 16 ), z ), D3DXVECTOR2( m_data[letter].right, d1 ) );
+			index++;
+
+			x += ( m_data[letter].size + d1 )
+		}
+	}
+	return;
+}

@@ -40,6 +40,7 @@ namespace HLE
 
 		bool	Load( ID3D11Device* device, LPCSTR fn_data, LPWSTR fn_texture );
 		void	Release( void );
+		void	RenderText( void* vertices, LPCSTR text, HLE::POINT pt ); 
 	};
 };
 
