@@ -43,6 +43,7 @@ namespace HLE
 		ID3D11PixelShader*		m_pixel_shader;
 		ID3D11InputLayout*		m_layout;
 		ID3D11Buffer*			m_matrix_buffer;
+		ID3D11SamplerState*		m_sample_state;
 
 		void	OutputShaderError( ID3D10Blob* errorMessage, HWND hwnd, WCHAR* filename );
 		void	CopyPolygonArray( D3D11_INPUT_ELEMENT_DESC* desc, unsigned int size, input_elements* inputs );
