@@ -6,7 +6,6 @@ using namespace HLE;
 
 Graphics::Graphics(void)
 	: m_is_rendering(false)
-	, m_show_stats(false)
 	, m_initialized(false)
 	, m_v_sync_enabled(true)
 {
@@ -17,6 +16,7 @@ Graphics::Graphics(void)
 	m_light_shader		= nullptr;
 	m_light				= nullptr;
 	m_bitmap			= nullptr;
+	m_text				= nullptr;
 }
 
 Graphics::~Graphics(void)
@@ -28,6 +28,7 @@ Graphics::~Graphics(void)
 	SAFE_RELEASE_D3D(m_light_shader);
 	SAFE_RELEASE_D3D(m_light);
 	SAFE_RELEASE_D3D(m_bitmap);
+	SAFE_RELEASE_D3D(m_text);
 }
 
 bool Graphics::Initialize( HWND hWnd, HLE::WINDOWINFO *info, const bool& fullscreen )
@@ -95,6 +96,14 @@ bool Graphics::Initialize( HWND hWnd, HLE::WINDOWINFO *info, const bool& fullscr
 		m_light->SpecularColor	= D3DXVECTOR4( 1.0f, 1.0f, 1.0f, 1.0f );
 		m_light->Power			= 64.0f;
 
+		m_text			= new Text( m_d3dx->Device, Engine::Get()->Handle, Engine::Get()->Window->size, m_camera->DefaultViewMatrix );
+
+		if ( !m_text->Load( m_d3dx->Device, "..\\models\\fonts\\fontdata.txt", L"..\\shaders\\resources\\font.dds" ) )
+		{
+			MessageBox(hWnd, L"Could not load font data.", L"Error", MB_OK);
+			return false;
+		}
+
 		// start the clock
 		if ( Engine::Get()->Timer->IsStopped )
 			Engine::Get()->Timer->Start();
@@ -127,10 +136,14 @@ void	Graphics::RenderScene( float rotation )
 	m_light_shader->Render( m_d3dx->Context, m_model->IndexCount, world, view, projection, m_model->Texture, m_light->Direction, m_camera->Position, m_light->AmbientColor, m_light->DiffuseColor, m_light->SpecularColor, m_light->Power );
 
 	m_d3dx->EnableZBuffer = false;
-	if ( m_bitmap->Render( m_d3dx->Context, POINT( 50, 50 ) ) )
+	m_d3dx->EnableAlphaBlending = true;
+	if ( !m_text->Render( m_d3dx->Context, m_d3dx->WorldMatrix, ortho ) )
 	{	
-		m_texture_shader->Render( m_d3dx->Context, m_bitmap->IndexCount, m_d3dx->WorldMatrix, view, ortho, m_bitmap->Texture );
+		// failure
+		MessageBox( Engine::Get()->Handle, L"Could not render the font objects.", L"Error", MB_OK);
+		PostQuitMessage( 0 );
 	}
+	m_d3dx->EnableAlphaBlending = false;
 	m_d3dx->EnableZBuffer = true;
 
 	m_d3dx->EndScene();

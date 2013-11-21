@@ -53,6 +53,6 @@ void	IObject::Update( void )
 
 		lookAt = m_instance.position + m_instance.lookAt;
 
-		D3DXMatrixLookAtLH( &m_view_matrix, &Position, &lookAt, &up );
+		D3DXMatrixLookAtLH( &m_view_matrix, &m_instance.position, &lookAt, &up );
 	}
 }

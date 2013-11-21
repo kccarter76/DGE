@@ -1,0 +1,272 @@
+#include "StdAfx.h"
+#include "text.h"
+#include "engine.h"
+
+using namespace HLE;
+
+Text::Text( ID3D11Device* device, HWND hWnd, HLE::SIZE screen, D3DXMATRIX default_view )
+	: m_font(nullptr), m_shader(nullptr), m_view(default_view), m_size(screen), m_color(D3DXVECTOR4( 1.0f, 1.0f, 1.0f, 1.0f ))
+{
+	m_shader	= new FontShader();
+
+	if ( m_shader && !m_shader->Load( device, hWnd ) )
+	{	// failed to initialize the font shader
+		
+	}
+}
+
+Text::~Text( void )
+{
+}
+
+void	Text::Release( bool del )
+{
+	SAFE_RELEASE_D3D(m_font);
+	
+	if ( del ) 
+	{	// we only release the shader if we are in fact deleting the text object
+		SAFE_RELEASE_D3D(m_shader);
+		// release the pointers in the text buffer vector
+		std::vector<SENTENCE>::iterator	it;
+		for ( it = m_texts.begin(); it != m_texts.end(); ++it )
+		{
+			SAFE_RELEASE_D3D(it->v_buffer);
+			SAFE_RELEASE_D3D(it->i_buffer);
+		}
+		// purge any text objects that are being tracked.
+		m_texts.clear();
+		// we can now delete this object;
+		delete this;
+	}
+}
+
+void	Text::Release( void )
+{
+	Release( true );
+}
+
+bool	Text::Load( ID3D11Device* device, LPCSTR fn_data, LPWSTR fn_texture )
+{
+	if ( !m_shader || !m_shader->m_pixel_buffer )	return false;
+
+	if ( m_font ) Release( false );	// release the existing font object
+
+	m_font = new Font();
+
+	if ( !m_font )		return false;
+
+	return m_font->Load( device, fn_data, fn_texture );
+}
+
+bool	Text::InitializeText( SENTENCE** obj, int length )
+{
+	std::vector<SENTENCE>::iterator	it;
+	int								i;
+
+	// we need to find a buffer that will fit the text or create a new one.
+	for ( it = m_texts.begin(); it != m_texts.end(); ++it )
+	{
+		if ( (*it).free && (*it).len <= length )
+		{	// this section of code needs to be thread safe
+			// consider refining it so the buffer selected is a tight fit as possible.
+			(*obj)			= it._Ptr;
+			(*obj)->free	= false;
+			break;
+		}
+	}
+
+	if ( *obj ) return true;
+
+	Font::LPVERTEXTYPE				vertices	= nullptr;
+	LPSENTENCE						text		= nullptr;
+	unsigned long*					indices		= nullptr;
+	D3D11_BUFFER_DESC				vb_desc, ib_desc;
+	D3D11_SUBRESOURCE_DATA			v_data, i_data;
+
+	text		= new SENTENCE();
+
+	if ( !text ) return false;
+
+	text->len	= length;
+
+	vertices	= new Font::VERTEXTYPE[text->v_cnt];
+
+	if ( !vertices )	return false;
+
+	indices		= new unsigned long[text->i_cnt];
+
+	if ( !indices )		return false;
+
+	// Set up the description of the dynamic vertex buffer.
+	vb_desc.Usage				= D3D11_USAGE_DYNAMIC;
+	vb_desc.ByteWidth			= sizeof(Font::VERTEXTYPE) * text->v_cnt;
+	vb_desc.BindFlags			= D3D11_BIND_VERTEX_BUFFER;
+	vb_desc.CPUAccessFlags		= D3D11_CPU_ACCESS_WRITE;
+	vb_desc.MiscFlags			= 0;
+	vb_desc.StructureByteStride	= 0;
+
+	// Give the subresource structure a pointer to the vertex data.
+	v_data.pSysMem				= vertices;
+	v_data.SysMemPitch			= 0;
+	v_data.SysMemSlicePitch		= 0;
+
+	// Create the vertex buffer.
+	if(FAILED( Engine::Get()->GraphicsProvider->Device->CreateBuffer(&vb_desc, &v_data, &text->v_buffer) ))
+	{
+		return false;
+	}
+
+	for( i = 0; i < text->i_cnt; i++ )
+	{
+		indices[i] = i;
+	}
+
+	// Set up the description of the static index buffer.
+	ib_desc.Usage				= D3D11_USAGE_DEFAULT;
+	ib_desc.ByteWidth			= sizeof(unsigned long) * text->i_cnt;
+	ib_desc.BindFlags			= D3D11_BIND_INDEX_BUFFER;
+	ib_desc.CPUAccessFlags		= 0;
+	ib_desc.MiscFlags			= 0;
+	ib_desc.StructureByteStride = 0;
+
+	// Give the subresource structure a pointer to the index data.
+	i_data.pSysMem				= indices;
+	i_data.SysMemPitch			= 0;
+	i_data.SysMemSlicePitch		= 0;
+
+	// Create the index buffer.
+	if(FAILED( Engine::Get()->GraphicsProvider->Device->CreateBuffer(&ib_desc, &i_data, &text->i_buffer) ))
+	{
+		return false;
+	}
+
+	delete[] vertices;
+	vertices	= nullptr;
+
+	delete[] indices;
+	indices		= nullptr;
+
+	// add the buffer to the vector list
+	m_texts.push_back( *text );
+
+	*obj = text;
+
+	return true;
+}
+
+bool	Text::UpdateText( LPSENTENCE obj, LPWSTR text, HLE::POINT pt, D3DXCOLOR color )
+{
+	Font::LPVERTEXTYPE				vertices	= nullptr, ptr = nullptr;
+	D3D11_MAPPED_SUBRESOURCE		resource;
+	float							x, y;
+
+	obj->color = color;
+
+	// check for buffer overrun
+	if ( obj->len < (int)std::wcslen( text ) )
+	{
+		return false;
+	}
+
+	vertices	= new Font::VERTEXTYPE[obj->v_cnt];
+
+	memset( (void*)vertices, 0, sizeof( Font::VERTEXTYPE ) * obj->len );
+
+	x = (float)( ( ( m_size.width / 2 ) * -1 ) + pt.x );
+	y = (float)( ( m_size.height / 2 ) - pt.y );
+
+	m_font->RenderText( (void*)vertices, text, POINT( (int)x, (int)y ) );
+
+	if(FAILED( Engine::Get()->GraphicsProvider->Context->Map( obj->v_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource )))
+	{
+		return false;
+	}
+
+	ptr	= (Font::LPVERTEXTYPE)resource.pData;
+
+	memcpy( ptr, (void*)vertices, sizeof( Font::VERTEXTYPE ) * obj->v_cnt );
+
+	Engine::Get()->GraphicsProvider->Context->Unmap( obj->v_buffer, 0 );
+
+	delete[] vertices;
+	vertices = nullptr;
+
+	return true;
+}
+
+bool	Text::DrawFormattedText( LPWSTR text, ... )
+{
+	const int len = 512;
+
+	WCHAR buffer[len];
+	// zero out the buffer
+	ZeroMemory( &buffer, len );
+
+	va_list args;
+	va_start( args, text );
+	vswprintf_s( buffer, len, text, args );
+	buffer[ len - 1 ] = '\0';
+
+	return DrawText( buffer );
+}
+
+bool	Text::DrawText( LPWSTR text )
+{
+	RECT rc;
+	SetRect( &rc, m_pt.x, m_pt.y, m_pt.x - m_size.width, m_pt.y - m_size.height );
+
+	return DrawText( &rc, text );
+}
+
+bool	Text::DrawText( LPRECT rc, LPWSTR text )
+{
+	LPSENTENCE	_text	= nullptr;
+
+	if ( !InitializeText( &_text, std::wcslen( text ) ) )
+		return false;
+
+	if ( !_text || !UpdateText( _text, text, POINT( rc->left, rc->top ), m_color ) )
+		return false;
+
+	// advance the y position by the height of the line.
+	m_pt.y += (int)m_font->LineHeight;
+
+	return true;
+}
+
+bool	Text::Render( ID3D11DeviceContext* context, D3DXMATRIX world, D3DXMATRIX ortho )
+{
+	std::vector<SENTENCE>::iterator	it;
+	bool	result = true;
+
+	unsigned int
+		stride	= sizeof( Font::VERTEXTYPE ),
+		offset	= 0;
+
+	for ( it = m_texts.begin(); it != m_texts.end(); ++it )
+	{
+		if ( !(*it).free )
+		{	// we only want to render the buffers that were used
+			context->IASetVertexBuffers( 0, 1, &(*it).v_buffer, &stride, &offset );
+			context->IASetIndexBuffer( (*it).i_buffer, DXGI_FORMAT_R32_UINT, 0 );
+			context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+			result = m_shader->Render( context, (*it).i_cnt, world, m_view, ortho, m_font->Texture, (*it).color );
+			// free up the buffer for reuse
+			(*it).free = true;
+
+			if ( !result )
+			{
+				break;	// we failed stop rendering
+			}
+		} 
+		else 
+		{	// consider removing any buffer that is not being used.
+		}
+	}
+
+	// reset the y after each full render pass
+	m_pt.y = 0;
+
+	return result;
+}

@@ -25,8 +25,16 @@ namespace HLE
 		Graphics*			m_graphics_ptr;
 		HARDWAREINFO		m_hardware_info;
 
-		//statistics
-		float				m_fps;
+		// Statistics Resources
+		// ====================================
+		bool						m_statistics;
+		double						m_time, m_absTime;
+		float						m_elapsedTime;
+		double						m_lastUpdateTime;	// last time that the statistics where updated
+		DWORD						m_lastUpdateFrames;
+		float						m_fps;
+
+		void	UpdateFrameStatistics( void );
 	public:
 		Engine( void );
 		~Engine( void );
@@ -44,7 +52,11 @@ namespace HLE
 		GET(GraphicsProvider)	{ return m_graphics_ptr; }
 
 		READONLY_PROPERTY(WINDOWINFO*, Window);
-		GET(Window)	{ return &m_screen_info; }
+		GET(Window)				{ return &m_screen_info; }
+
+		PROPERTY(bool, EnableStatistics);
+		GET(EnableStatistics)	{ return m_statistics; }
+		SET(EnableStatistics)	{ m_statistics = value;}
 
 
 		HWND	CreateGameWindow(const int& width, const int& height, const bool& fullScreen, WNDPROC lpClientProc);

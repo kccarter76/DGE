@@ -13,6 +13,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 // see Engine.h for the class definition
 Engine::Engine( void )
 	: m_fps( 0.0f )
+	, m_lastUpdateFrames( 0 )
+	, m_statistics( false )
 {
 	m_input_ptr		= nullptr;
 	m_graphics_ptr	= nullptr;
@@ -167,20 +169,47 @@ void Engine::ShutDown( void )
 	UnregisterClass( m_application_name, m_hInstance );
 }
 
-void Engine::RenderFrame( void )
+void Engine::UpdateFrameStatistics(void)
 {
-	++m_fps; //	increment the frame count
-
-	static float rotation = 0.0f;
-
-	// Update the rotation variable each frame.
-	rotation += (float)(D3DX_PI) * 0.005f;
-	if(rotation > 360.0f)
+	// Update the scene stats once per second
+	if(m_absTime - m_lastUpdateTime > 1.0f)
 	{
-		rotation -= 360.0f;
+		m_fps = ( float )( m_lastUpdateFrames / ( m_absTime - m_lastUpdateTime  ) );
+
+		m_lastUpdateTime = m_absTime;
+
+		m_lastUpdateFrames = 0;
 	}
 
-	m_graphics_ptr->RenderScene(rotation);
+	m_lastUpdateFrames++;
+}
+
+void Engine::RenderFrame( void )
+{
+	Timer->GetTimeValues(&m_time, &m_absTime, &m_elapsedTime);
+
+	if ( m_elapsedTime > 0.0f )
+	{	// time has elapsed since the last frame, so render.
+		if (this->EnableStatistics)
+		{
+			this->UpdateFrameStatistics();
+
+			this->GraphicsProvider->Text2D->DrawFormattedText( L"%0.2f fps", m_fps );
+		}
+
+		static float rotation = 0.0f;
+
+		// Update the rotation variable each frame.
+		rotation += (float)(D3DX_PI) * 0.005f;
+		if(rotation > 360.0f)
+		{
+			rotation -= 360.0f;
+		}
+
+		this->GraphicsProvider->Text2D->DrawText(L"Hello World!!!");
+
+		m_graphics_ptr->RenderScene(rotation);
+	}
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -243,7 +272,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			} else if (GUI::STATS == (GUI::EACTION)wParam) 
 			{	// based on the state of the graphics service stat flag we will render engine statistics
 				// toggle the display statistics boolean property
-				oEngine->GraphicsProvider->ShowStatistics = !oEngine->GraphicsProvider->ShowStatistics;
+				oEngine->EnableStatistics = !oEngine->EnableStatistics;
 			}
 			break;
 		}

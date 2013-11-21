@@ -7,7 +7,9 @@ IRenderable::IRenderable(void)
 	: m_vertex_cnt(0)
 	, m_index_cnt(0)
 {
-	m_texture	= nullptr;
+	m_texture		= nullptr;
+	m_vertex_buffer	= nullptr;
+	m_index_buffer	= nullptr;
 
 	m_texture	= new TextureMap();
 }

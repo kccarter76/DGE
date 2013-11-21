@@ -29,6 +29,8 @@ namespace HLE
 		ID3D11DepthStencilState*	m_depthDisableStencilState;
 		ID3D11DepthStencilView*		m_depthStencilView;
 		ID3D11RasterizerState*		m_rasterState;
+		ID3D11BlendState*			m_alphaEnableBlendingState;
+		ID3D11BlendState*			m_alphaDisableBlendingState;
 		D3DXMATRIX					m_projectionMatrix;
 		D3DXMATRIX					m_worldMatrix;
 		D3DXMATRIX					m_orthoMatrix;
@@ -66,6 +68,37 @@ namespace HLE
 			} else if ( !EnableZBuffer && value ) {
 				// turn on the z buffer
 				m_deviceContext->OMSetDepthStencilState( m_depthEnableStencilState, 1 );
+			}
+		}
+
+		PROPERTY(bool, EnableAlphaBlending);
+		GET(EnableAlphaBlending)	{
+			ID3D11BlendState* state = nullptr;
+
+			UINT ref;
+
+			float blendFactor[4];
+
+			D3D11_BLEND_DESC desc;
+
+			m_deviceContext->OMGetBlendState(&state, blendFactor, &ref);
+
+			state->GetDesc( &desc );
+
+			return state != nullptr && desc.RenderTarget[0].BlendEnable;
+		}
+		SET(EnableAlphaBlending)	{
+			float factor[4];
+
+			for( int i = 0; i < 4; i++ )
+				factor[i]	= 0.0f;
+
+			if ( EnableZBuffer && !value )	{
+				// turn off the alpha blending
+				m_deviceContext->OMSetBlendState( m_alphaDisableBlendingState, factor, 0xffffffff );
+			} else if ( !EnableZBuffer && value ) {
+				// turn on the alpha blending
+				m_deviceContext->OMSetBlendState( m_alphaEnableBlendingState, factor, 0xffffffff );
 			}
 		}
 

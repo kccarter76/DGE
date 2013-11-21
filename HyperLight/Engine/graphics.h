@@ -7,6 +7,7 @@
 #include "lightshader.h"
 #include "light.h"
 #include "ibitmap.h"
+#include "text.h"
 
 const float 
 	SCREEN_DEPTH	= 1000.0f,
@@ -17,7 +18,7 @@ namespace HLE
 	class ENGINE_API Graphics
 	{
 	private:
-		bool			m_is_rendering, m_show_stats, m_initialized, m_v_sync_enabled;
+		bool			m_is_rendering, m_initialized, m_v_sync_enabled;
 
 		D3DX*			m_d3dx;
 		Camera*			m_camera;
@@ -26,6 +27,7 @@ namespace HLE
 		LightShader*	m_light_shader;
 		Light*			m_light;
 		Bitmap*			m_bitmap;
+		Text*			m_text;
 		
 	public:
 		Graphics( void );
@@ -35,9 +37,15 @@ namespace HLE
 
 		void	RenderScene( float rotation );
 
-		PROPERTY(bool, ShowStatistics);
-		GET(ShowStatistics)		{ return m_show_stats;	}
-		SET(ShowStatistics)		{ m_show_stats = value;	}
+		READONLY_PROPERTY(ID3D11Device*, Device);
+		GET(Device)		{ return m_d3dx->Device; }
+
+		READONLY_PROPERTY(ID3D11DeviceContext*, Context);
+		GET(Context)	{ return m_d3dx->Context; }
+
+		READONLY_PROPERTY(Text*, Text2D);
+		GET(Text2D)	{ return m_text; }
+
 	};
 };
 

@@ -5,6 +5,7 @@ using namespace HLE;
 
 Font::Font(void)
 	: IRenderable()
+	, m_line_height(16.0f)
 {
 	m_data	= nullptr;
 }
@@ -77,10 +78,10 @@ bool	Font::LoadData( LPCSTR fn_data )
 	return true;
 }
 
-void	Font::RenderText( void* vertices, LPCSTR text, HLE::POINT pt )
+void	Font::RenderText( void* vertices, LPWSTR text, HLE::POINT pt )
 {
-	LPVTYPE		ptr	= nullptr;
-	int			num, index, i, letter;
+	LPVERTEXTYPE	ptr	= nullptr;
+	int				num, index, i, letter;
 	float
 		x	= (float)pt.x,
 		y	= (float)pt.y,
@@ -89,9 +90,9 @@ void	Font::RenderText( void* vertices, LPCSTR text, HLE::POINT pt )
 		d1	= 1.0f,
 		s	= 3.0f;
 
-	ptr	= (LPVTYPE)vertices;
+	ptr	= (LPVERTEXTYPE)vertices;
 
-	num = (int)std::strlen(text);
+	num = (int)std::wcslen( text );
 
 	index = 0;
 
@@ -103,23 +104,23 @@ void	Font::RenderText( void* vertices, LPCSTR text, HLE::POINT pt )
 			x = x + s;
 		} else {
 			//first triangle in quad
-			ptr[index]	= VTYPE( D3DXVECTOR3( x, y, z ), D3DXVECTOR2( m_data[letter].left, d0 ) );
+			ptr[index]	= VERTEXTYPE( D3DXVECTOR3( x, y, z ), D3DXVECTOR2( m_data[letter].left, d0 ) );
 			index++;
 
-			ptr[index]	= VTYPE( D3DXVECTOR3( ( x + m_data[letter].size ), ( y - 16 ), z ), D3DXVECTOR2( m_data[letter].right, d1 ) );
+			ptr[index]	= VERTEXTYPE( D3DXVECTOR3( ( x + m_data[letter].size ), ( y - m_line_height ), z ), D3DXVECTOR2( m_data[letter].right, d1 ) );
 			index++;
 
-			ptr[index]	= VTYPE( D3DXVECTOR3( x, ( y - 16 ), z ), D3DXVECTOR2( m_data[letter].left, d1 ) );
+			ptr[index]	= VERTEXTYPE( D3DXVECTOR3( x, ( y - m_line_height ), z ), D3DXVECTOR2( m_data[letter].left, d1 ) );
 			index++;
 
 			//second triangle in quad
-			ptr[index]	= VTYPE( D3DXVECTOR3( x, y, z ), D3DXVECTOR2( m_data[letter].left, d0 ) );
+			ptr[index]	= VERTEXTYPE( D3DXVECTOR3( x, y, z ), D3DXVECTOR2( m_data[letter].left, d0 ) );
 			index++;
 
-			ptr[index]	= VTYPE( D3DXVECTOR3( ( x + m_data[letter].size ), y, z ), D3DXVECTOR2( m_data[letter].right, d0 ) );
+			ptr[index]	= VERTEXTYPE( D3DXVECTOR3( ( x + m_data[letter].size ), y, z ), D3DXVECTOR2( m_data[letter].right, d0 ) );
 			index++;
 
-			ptr[index]	= VTYPE( D3DXVECTOR3( ( x + m_data[letter].size ), ( y - 16 ), z ), D3DXVECTOR2( m_data[letter].right, d1 ) );
+			ptr[index]	= VERTEXTYPE( D3DXVECTOR3( ( x + m_data[letter].size ), ( y - m_line_height ), z ), D3DXVECTOR2( m_data[letter].right, d1 ) );
 			index++;
 
 			x += ( ( float )m_data[letter].size + d1 );

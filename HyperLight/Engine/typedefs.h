@@ -35,6 +35,16 @@ namespace HLE
 		{
 			return width == r.width && height == r.height;
 		}
+
+		READONLY_PROPERTY(int, area);
+		GET(area)	{ 
+			return width * height;
+		}
+
+		READONLY_PROPERTY(int, perimeter);
+		GET(perimeter)	{ 
+			return ( width * 2 ) + ( height * 2 );
+		}
 	} SIZE, *LPSIZE;
 
 	typedef struct ENGINE_API POINT

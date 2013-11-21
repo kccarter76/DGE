@@ -37,6 +37,8 @@ void	D3DX::Release( void )
 	SAFE_RELEASE_D3D(m_depthDisableStencilState);
 	SAFE_RELEASE_D3D(m_depthStencilView);		
 	SAFE_RELEASE_D3D(m_rasterState);
+	SAFE_RELEASE_D3D(m_alphaEnableBlendingState);
+	SAFE_RELEASE_D3D(m_alphaDisableBlendingState);
 
 	delete this;
 }
@@ -60,9 +62,10 @@ HRESULT	D3DX::Initialize( HWND hwnd, int width, int height, float fdepth, float 
 	D3D_FEATURE_LEVEL				featureLevel;
 	ID3D11Texture2D*				backBufferPtr	= nullptr;
 	D3D11_TEXTURE2D_DESC			depthBufferDesc;
-	D3D11_DEPTH_STENCIL_DESC		depthEnableStencilDesc, depthDisableStencilDesc;
+	D3D11_DEPTH_STENCIL_DESC		depthStencilDesc;
 	D3D11_DEPTH_STENCIL_VIEW_DESC	depthStencilViewDesc;
 	D3D11_RASTERIZER_DESC			rasterDesc;
+	D3D11_BLEND_DESC				blendStateDescription;
 	D3D11_VIEWPORT					viewport;
 	float							fieldOfView, screenAspect;
 
@@ -255,31 +258,31 @@ HRESULT	D3DX::Initialize( HWND hwnd, int width, int height, float fdepth, float 
 	}
 
 	// Initialize the description of the stencil state.
-	ZeroMemory(&depthEnableStencilDesc, sizeof(depthEnableStencilDesc));
+	ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
 
 	// Set up the description of the stencil state.
-	depthEnableStencilDesc.DepthEnable					= true;
-	depthEnableStencilDesc.DepthWriteMask				= D3D11_DEPTH_WRITE_MASK_ALL;
-	depthEnableStencilDesc.DepthFunc					= D3D11_COMPARISON_LESS;
+	depthStencilDesc.DepthEnable					= true;
+	depthStencilDesc.DepthWriteMask					= D3D11_DEPTH_WRITE_MASK_ALL;
+	depthStencilDesc.DepthFunc						= D3D11_COMPARISON_LESS;
 
-	depthEnableStencilDesc.StencilEnable				= true;
-	depthEnableStencilDesc.StencilReadMask				= 0xFF;
-	depthEnableStencilDesc.StencilWriteMask				= 0xFF;
+	depthStencilDesc.StencilEnable					= true;
+	depthStencilDesc.StencilReadMask				= 0xFF;
+	depthStencilDesc.StencilWriteMask				= 0xFF;
 
 	// Stencil operations if pixel is front-facing.
-	depthEnableStencilDesc.FrontFace.StencilFailOp		= D3D11_STENCIL_OP_KEEP;
-	depthEnableStencilDesc.FrontFace.StencilDepthFailOp	= D3D11_STENCIL_OP_INCR;
-	depthEnableStencilDesc.FrontFace.StencilPassOp		= D3D11_STENCIL_OP_KEEP;
-	depthEnableStencilDesc.FrontFace.StencilFunc		= D3D11_COMPARISON_ALWAYS;
+	depthStencilDesc.FrontFace.StencilFailOp		= D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.FrontFace.StencilDepthFailOp	= D3D11_STENCIL_OP_INCR;
+	depthStencilDesc.FrontFace.StencilPassOp		= D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.FrontFace.StencilFunc			= D3D11_COMPARISON_ALWAYS;
 
 	// Stencil operations if pixel is back-facing.
-	depthEnableStencilDesc.BackFace.StencilFailOp		= D3D11_STENCIL_OP_KEEP;
-	depthEnableStencilDesc.BackFace.StencilDepthFailOp	= D3D11_STENCIL_OP_DECR;
-	depthEnableStencilDesc.BackFace.StencilPassOp		= D3D11_STENCIL_OP_KEEP;
-	depthEnableStencilDesc.BackFace.StencilFunc			= D3D11_COMPARISON_ALWAYS;
+	depthStencilDesc.BackFace.StencilFailOp			= D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.BackFace.StencilDepthFailOp	= D3D11_STENCIL_OP_DECR;
+	depthStencilDesc.BackFace.StencilPassOp			= D3D11_STENCIL_OP_KEEP;
+	depthStencilDesc.BackFace.StencilFunc			= D3D11_COMPARISON_ALWAYS;
 
 	// Create the depth stencil state.
-	result = m_device->CreateDepthStencilState(&depthEnableStencilDesc, &m_depthEnableStencilState);
+	result = m_device->CreateDepthStencilState(&depthStencilDesc, &m_depthEnableStencilState);
 	if(FAILED(result))
 	{
 		return result;
@@ -289,31 +292,10 @@ HRESULT	D3DX::Initialize( HWND hwnd, int width, int height, float fdepth, float 
 	m_deviceContext->OMSetDepthStencilState(m_depthEnableStencilState, 1);
 
 	// Initialize the description of the stencil state.
-	ZeroMemory(&depthDisableStencilDesc, sizeof(depthDisableStencilDesc));
-
-	// Set up the description of the stencil state.
-	depthDisableStencilDesc.DepthEnable						= false;
-	depthDisableStencilDesc.DepthWriteMask					= D3D11_DEPTH_WRITE_MASK_ALL;
-	depthDisableStencilDesc.DepthFunc						= D3D11_COMPARISON_LESS;
-
-	depthDisableStencilDesc.StencilEnable					= true;
-	depthDisableStencilDesc.StencilReadMask					= 0xFF;
-	depthDisableStencilDesc.StencilWriteMask				= 0xFF;
-
-	// Stencil operations if pixel is front-facing.
-	depthDisableStencilDesc.FrontFace.StencilFailOp			= D3D11_STENCIL_OP_KEEP;
-	depthDisableStencilDesc.FrontFace.StencilDepthFailOp	= D3D11_STENCIL_OP_INCR;
-	depthDisableStencilDesc.FrontFace.StencilPassOp			= D3D11_STENCIL_OP_KEEP;
-	depthDisableStencilDesc.FrontFace.StencilFunc			= D3D11_COMPARISON_ALWAYS;
-
-	// Stencil operations if pixel is back-facing.
-	depthDisableStencilDesc.BackFace.StencilFailOp			= D3D11_STENCIL_OP_KEEP;
-	depthDisableStencilDesc.BackFace.StencilDepthFailOp		= D3D11_STENCIL_OP_DECR;
-	depthDisableStencilDesc.BackFace.StencilPassOp			= D3D11_STENCIL_OP_KEEP;
-	depthDisableStencilDesc.BackFace.StencilFunc			= D3D11_COMPARISON_ALWAYS;
+	depthStencilDesc.DepthEnable					= false;
 
 	// Create the state using the device.
-	result = m_device->CreateDepthStencilState(&depthDisableStencilDesc, &m_depthDisableStencilState);
+	result = m_device->CreateDepthStencilState(&depthStencilDesc, &m_depthDisableStencilState);
 	if(FAILED(result))
 	{
 		return false;
@@ -358,6 +340,36 @@ HRESULT	D3DX::Initialize( HWND hwnd, int width, int height, float fdepth, float 
 
 	// Now set the rasterizer state.
 	m_deviceContext->RSSetState(m_rasterState);
+
+	// Clear the blend state description.
+	ZeroMemory(&blendStateDescription, sizeof(D3D11_BLEND_DESC));
+
+	// Create an alpha enabled blend state description.
+	blendStateDescription.RenderTarget[0].BlendEnable			= TRUE;
+	blendStateDescription.RenderTarget[0].SrcBlend				= D3D11_BLEND_ONE;
+	blendStateDescription.RenderTarget[0].DestBlend				= D3D11_BLEND_INV_SRC_ALPHA;
+	blendStateDescription.RenderTarget[0].BlendOp				= D3D11_BLEND_OP_ADD;
+	blendStateDescription.RenderTarget[0].SrcBlendAlpha			= D3D11_BLEND_ONE;
+	blendStateDescription.RenderTarget[0].DestBlendAlpha		= D3D11_BLEND_ZERO;
+	blendStateDescription.RenderTarget[0].BlendOpAlpha			= D3D11_BLEND_OP_ADD;
+	blendStateDescription.RenderTarget[0].RenderTargetWriteMask = 0x0f;
+
+	// Create the blend state using the description.
+	result = m_device->CreateBlendState(&blendStateDescription, &m_alphaEnableBlendingState);
+	if(FAILED(result))
+	{
+		return false;
+	}
+
+	// Modify the description to create an alpha disabled blend state description.
+	blendStateDescription.RenderTarget[0].BlendEnable = FALSE;
+
+	// Create the blend state using the description.
+	result = m_device->CreateBlendState(&blendStateDescription, &m_alphaDisableBlendingState);
+	if(FAILED(result))
+	{
+		return false;
+	}
 
 	// Setup the viewport for rendering.
 	viewport.Width = (float)width;

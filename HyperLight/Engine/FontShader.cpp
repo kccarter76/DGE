@@ -110,9 +110,9 @@ bool	FontShader::SetShaderParameters( ID3D11DeviceContext* context, D3DXMATRIX w
 	return true;
 }
 
-void	FontShader::Render( ID3D11DeviceContext* context, int cnt, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX ortho, ID3D11ShaderResourceView* texture, D3DXVECTOR4 color )
+bool	FontShader::Render( ID3D11DeviceContext* context, int cnt, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX ortho, ID3D11ShaderResourceView* texture, D3DXCOLOR color )
 {
-	if ( SetShaderParameters( context, world, view, ortho, texture, color ) )
+	if ( SetShaderParameters( context, world, view, ortho, texture, D3DXVECTOR4( color.r, color.g, color.b, color.a ) ) )
 	{
 		context->IASetInputLayout(m_layout);
 
@@ -125,5 +125,13 @@ void	FontShader::Render( ID3D11DeviceContext* context, int cnt, D3DXMATRIX world
 
 		// Render the triangles.
 		context->DrawIndexed( cnt, 0, 0 );
+
+		return true;
 	}
+	return false;
+}
+
+bool	FontShader::Load( ID3D11Device* device, HWND hWnd )
+{
+	return IShader::Load( hWnd, device, "Font", L"..\\shaders\\font.vs", L"..\\shaders\\font.ps" );
 }

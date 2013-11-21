@@ -6,6 +6,7 @@ namespace HLE
 	class FontShader
 		: public IShader
 	{
+		friend class Text;
 	private:
 		typedef struct PTYPE
 		{
@@ -31,7 +32,8 @@ namespace HLE
 		~FontShader(void);
 
 		void	Release( void );
-		void	Render( ID3D11DeviceContext* context, int cnt, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX ortho, ID3D11ShaderResourceView* texture, D3DXVECTOR4 color );
+		bool	Render( ID3D11DeviceContext* context, int cnt, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX ortho, ID3D11ShaderResourceView* texture, D3DXCOLOR color );
+		bool	Load( ID3D11Device* device, HWND hWnd );
 
 	};
 };
