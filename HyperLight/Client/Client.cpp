@@ -50,6 +50,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	hWnd = Engine::Get()->CreateGameWindow(1024, 768, false, &WndProc);
 
 	Engine::Get()->InputMap.Add( key_message(HLE_FULLSCREEN), GUI::KEY_F11, true, false );
+	Engine::Get()->InputMap.Add( key_message(HLE_ENGINE, GUI::STATS), GUI::KEY_F12, false, false );
+	Engine::Get()->InputMap.Add( key_message(HLE_ENGINE, GUI::PAUSE), GUI::KEY_PAUSE, false, false );
 
 	Engine::Get()->Initialize();
 	// Main message loop:
