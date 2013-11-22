@@ -53,11 +53,11 @@ HRESULT	D3DX::Initialize( HWND hwnd, int width, int height, float fdepth, float 
 		numModes		= 0, 
 		i				= 0, 
 		numerator		= 0, 
-		denominator		= 0, 
-		stringLength	= 0;
+		denominator		= 0; 
+		//stringLength	= 0;
 	DXGI_MODE_DESC*					displayModeList	= nullptr;
 	DXGI_ADAPTER_DESC				adapterDesc;
-	int								error;
+	int								error			= 0;
 	DXGI_SWAP_CHAIN_DESC			swapChainDesc;
 	D3D_FEATURE_LEVEL				featureLevel;
 	ID3D11Texture2D*				backBufferPtr	= nullptr;
@@ -128,7 +128,8 @@ HRESULT	D3DX::Initialize( HWND hwnd, int width, int height, float fdepth, float 
 	m_videoCardMemory = (int)(adapterDesc.DedicatedVideoMemory / 1024 / 1024);
 
 	// Convert the name of the video card to a character array and store it.
-	error = wcstombs_s(&stringLength, m_videoCardDescription, 128, adapterDesc.Description, 128);
+	m_videoCardDescription = adapterDesc.Description;
+	//error = wcstombs_s(&stringLength, m_videoCardDescription, 128, adapterDesc.Description, 128);
 	if(error != 0)
 	{
 		return result;
@@ -434,9 +435,10 @@ void	D3DX::EndScene( void )
 	return;
 }
 
-void	D3DX::GetVideoCardInfo( std::string* name, int* memory )
+void	D3DX::GetVideoCardInfo( std::wstring* name, int* memory )
 {
-	name->assign(m_videoCardDescription);
+	*name = m_videoCardDescription;
+	//memcpy((void*)name, (void*)m_videoCardDescription, len );
 	*memory = m_videoCardMemory;
 	return;
 }

@@ -3,6 +3,7 @@
 #include "fontshader.h"
 
 #include <mutex>
+#include <string>
 #include <vector>
 
 namespace HLE
@@ -54,24 +55,24 @@ namespace HLE
 		// we need to keep track of all sentences created by this object
 		std::vector<SENTENCE>			m_texts;
 
-		bool	SetText( LPRECTINFO rc, D3DXCOLOR color, LPWSTR text );
+		bool	SetText( LPRECTINFO rc, D3DXCOLOR color, wstring text );
 		bool	InitializeText( SENTENCE** sentence, int length );
-		bool	UpdateText( LPSENTENCE sentence, LPWSTR text, HLE::POINT pt, D3DXCOLOR color );
+		bool	UpdateText( LPSENTENCE sentence, wstring text, HLE::POINT pt, D3DXCOLOR color );
 	public:
 		// Text( void);
 		Text( ID3D11Device* device, HWND hWnd, HLE::SIZE screen, D3DXMATRIX default_view );
 		~Text( void );
 
 		bool	Load( ID3D11Device* device, LPCSTR fn_data, LPWSTR fn_texture );
-		bool	DrawFormattedText( LPWSTR text, ... );
-		bool	DrawFormattedText( D3DXCOLOR color, LPWSTR text, ... );
-		bool	DrawFormattedText( RECTINFO& rc, LPWSTR text, ... );
-		bool	DrawFormattedText( RECTINFO& rc, D3DXCOLOR color, LPWSTR text, ... );
-		bool	DrawFormattedText( RECTINFO& rc, D3DXCOLOR color, LPWSTR text, va_list args );
-		bool	DrawText( LPWSTR text );
-		bool	DrawText( D3DXCOLOR color, LPWSTR text );
-		bool	DrawText( RECTINFO& rc, LPWSTR text );
-		bool	DrawText( RECTINFO& rc, D3DXCOLOR color, LPWSTR text );
+		bool	DrawFormattedText( wstring text, ... );
+		bool	DrawFormattedText( D3DXCOLOR color, wstring text, ... );
+		bool	DrawFormattedText( RECTINFO& rc, wstring text, ... );
+		bool	DrawFormattedText( RECTINFO& rc, D3DXCOLOR color, wstring text, ... );
+		bool	DrawFormattedText( RECTINFO& rc, D3DXCOLOR color, wstring text, va_list args );
+		bool	DrawText( wstring text );
+		bool	DrawText( D3DXCOLOR color, wstring text );
+		bool	DrawText( RECTINFO& rc, wstring text );
+		bool	DrawText( RECTINFO& rc, D3DXCOLOR color, wstring text );
 		void	Release( void );
 		void	Release( bool del ); 
 		bool	Render( ID3D11DeviceContext* context, D3DXMATRIX world, D3DXMATRIX ortho );

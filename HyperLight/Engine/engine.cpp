@@ -193,9 +193,9 @@ void Engine::RenderFrame( void )
 		if (this->EnableStatistics)
 		{
 			this->UpdateFrameStatistics();
-			
-			this->GraphicsProvider->Text2D->DrawFormattedText( L"FPS %0.2f | %i MB", m_fps, m_hardware_info.v_mem );
-			this->GraphicsProvider->Text2D->DrawFormattedText( L"%i CORES", m_hardware_info.cpu_core_cnt);
+
+			this->GraphicsProvider->Text2D->DrawFormattedText( L"FPS %0.1f | %s | %i MB", m_fps, m_hardware_info.video.c_str(), m_hardware_info.v_mem );
+			this->GraphicsProvider->Text2D->DrawFormattedText( L"%s | %i CORES", m_hardware_info.vendor.c_str(), m_hardware_info.cpu_core_cnt);
 		}
 
 		static float rotation = 0.0f;

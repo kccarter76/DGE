@@ -25,6 +25,13 @@ namespace HLE
 		{
 		}
 
+		SIZE padding( const int& padding )
+		{
+			int p = padding * 2;
+
+			return SIZE( width - p, height - p );
+		}
+
 		void operator=( const SIZE& r )
 		{
 			width	= r.width;

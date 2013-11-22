@@ -78,17 +78,18 @@ bool	Font::LoadData( LPCSTR fn_data )
 	return true;
 }
 
-void	Font::RenderText( void* vertices, LPWSTR text, HLE::POINT pt )
+void	Font::RenderText( void* vertices, const wchar_t* text, HLE::POINT pt )
 {
 	LPVERTEXTYPE	ptr	= nullptr;
 	int				num, index, i, letter;
 	float
-		x	= (float)pt.x,
-		y	= (float)pt.y,
-		z	= 0.0f,
-		d0	= 0.0f,
-		d1	= 1.0f,
-		s	= 3.0f;
+		spacing		= 3.0f,
+		padding		= 2.0f,
+		x			= (float)pt.x + ( padding / 2 ),
+		y			= (float)pt.y,
+		z			= 0.0f,
+		d0			= 0.0f,
+		d1			= 1.0f;
 
 	ptr	= (LPVERTEXTYPE)vertices;
 
@@ -101,7 +102,7 @@ void	Font::RenderText( void* vertices, LPWSTR text, HLE::POINT pt )
 
 		if ( letter == 0 ) {	
 			// this is a space just move over 3 pixels
-			x = x + s;
+			x = x + spacing;
 		} else {
 			//first triangle in quad
 			ptr[index]	= VERTEXTYPE( D3DXVECTOR3( x, y, z ), D3DXVECTOR2( m_data[letter].left, d0 ) );
@@ -122,8 +123,8 @@ void	Font::RenderText( void* vertices, LPWSTR text, HLE::POINT pt )
 
 			ptr[index]	= VERTEXTYPE( D3DXVECTOR3( ( x + m_data[letter].size ), ( y - m_line_height ), z ), D3DXVECTOR2( m_data[letter].right, d1 ) );
 			index++;
-
-			x += ( ( float )m_data[letter].size + d1 );
+			// add additional padding between characters
+			x += ( ( float )m_data[letter].size ) + padding;
 		}
 	}
 	return;

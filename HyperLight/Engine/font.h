@@ -44,7 +44,7 @@ namespace HLE
 
 		bool	Load( ID3D11Device* device, LPCSTR fn_data, LPWSTR fn_texture );
 		void	Release( void );
-		void	RenderText( void* vertices, LPWSTR text, HLE::POINT pt ); 
+		void	RenderText( void* vertices, const wchar_t* text, HLE::POINT pt ); 
 
 		PROPERTY(float, LineHeight);
 		GET(LineHeight)	{ return m_line_height; }

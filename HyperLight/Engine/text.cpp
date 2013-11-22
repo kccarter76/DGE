@@ -160,7 +160,7 @@ bool	Text::InitializeText( SENTENCE** obj, int length )
 	return true;
 }
 
-bool	Text::UpdateText( LPSENTENCE obj, LPWSTR text, HLE::POINT pt, D3DXCOLOR color )
+bool	Text::UpdateText( LPSENTENCE obj, wstring text, HLE::POINT pt, D3DXCOLOR color )
 {
 	Font::LPVERTEXTYPE				vertices	= nullptr, ptr = nullptr;
 	D3D11_MAPPED_SUBRESOURCE		resource;
@@ -169,7 +169,7 @@ bool	Text::UpdateText( LPSENTENCE obj, LPWSTR text, HLE::POINT pt, D3DXCOLOR col
 	obj->color = color;
 
 	// check for buffer overrun
-	if ( obj->len < (int)std::wcslen( text ) )
+	if ( obj->len < (int)text.size() )
 	{
 		return false;
 	}
@@ -181,7 +181,7 @@ bool	Text::UpdateText( LPSENTENCE obj, LPWSTR text, HLE::POINT pt, D3DXCOLOR col
 	x = (float)( ( ( m_size.width / 2 ) * -1 ) + pt.x );
 	y = (float)( ( m_size.height / 2 ) - pt.y );
 
-	m_font->RenderText( (void*)vertices, text, POINT( (int)x, (int)y ) );
+	m_font->RenderText( (void*)vertices, text.c_str(), POINT( (int)x, (int)y ) );
 
 	if(FAILED( Engine::Get()->GraphicsProvider->Context->Map( obj->v_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource )))
 	{
@@ -200,7 +200,7 @@ bool	Text::UpdateText( LPSENTENCE obj, LPWSTR text, HLE::POINT pt, D3DXCOLOR col
 	return true;
 }
 
-bool	Text::DrawFormattedText( LPWSTR text, ... )
+bool	Text::DrawFormattedText( wstring text, ... )
 {
 	bool		result				= false;
 	RECTINFO	ri( m_pt, m_size );
@@ -213,7 +213,7 @@ bool	Text::DrawFormattedText( LPWSTR text, ... )
 	return result;
 }
 
-bool	Text::DrawFormattedText( RECTINFO& rc, LPWSTR text, ... )
+bool	Text::DrawFormattedText( RECTINFO& rc, wstring text, ... )
 {
 	bool		result				= false;
 	va_list		args;
@@ -225,7 +225,7 @@ bool	Text::DrawFormattedText( RECTINFO& rc, LPWSTR text, ... )
 	return result;
 }
 
-bool	Text::DrawFormattedText( RECTINFO& rc, D3DXCOLOR color, LPWSTR text, ... )
+bool	Text::DrawFormattedText( RECTINFO& rc, D3DXCOLOR color, wstring text, ... )
 {
 	bool		result				= false;
 	va_list		args;
@@ -237,7 +237,7 @@ bool	Text::DrawFormattedText( RECTINFO& rc, D3DXCOLOR color, LPWSTR text, ... )
 	return result;
 }
 
-bool	Text::DrawFormattedText( RECTINFO& rc, D3DXCOLOR color, LPWSTR text, va_list args )
+bool	Text::DrawFormattedText( RECTINFO& rc, D3DXCOLOR color, wstring text, va_list args )
 {
 	const int len = 512;
 
@@ -245,41 +245,41 @@ bool	Text::DrawFormattedText( RECTINFO& rc, D3DXCOLOR color, LPWSTR text, va_lis
 	// zero out the buffer
 	ZeroMemory( &buffer, len );
 
-	vswprintf_s( buffer, len, text, args );
+	vswprintf_s( buffer, len, text.c_str(), args );
 	buffer[ len - 1 ] = '\0';
 
 	return SetText( &rc, color, buffer );
 }
 
-bool	Text::DrawText( LPWSTR text )
+bool	Text::DrawText( wstring text )
 {
 	RECTINFO rc( m_pt, m_size );
 
 	return SetText( &rc, m_color, text );
 }
 
-bool	Text::DrawText( D3DXCOLOR color, LPWSTR text )
+bool	Text::DrawText( D3DXCOLOR color, wstring text )
 {
 	RECTINFO rc( m_pt, m_size );
 
 	return SetText( &rc, color, text );
 }
 
-bool	Text::DrawText( RECTINFO& rc, LPWSTR text )
+bool	Text::DrawText( RECTINFO& rc, wstring text )
 {
 	return SetText( &rc, m_color, text );
 }
 
-bool	Text::DrawText( RECTINFO& rc, D3DXCOLOR color, LPWSTR text )
+bool	Text::DrawText( RECTINFO& rc, D3DXCOLOR color, wstring text )
 {
 	return SetText( &rc, color, text );
 }
 
-bool	Text::SetText( LPRECTINFO rc, D3DXCOLOR color, LPWSTR text )
+bool	Text::SetText( LPRECTINFO rc, D3DXCOLOR color, wstring text )
 {
 	LPSENTENCE	_text	= nullptr;
 
-	if ( !InitializeText( &_text, std::wcslen( text ) ) )
+	if ( !InitializeText( &_text, text.size() ) )
 		return false;
 
 	if ( !_text || !UpdateText( _text, text, rc->pt, color ) )
@@ -323,7 +323,7 @@ bool	Text::Render( ID3D11DeviceContext* context, D3DXMATRIX world, D3DXMATRIX or
 	}
 
 	// reset the y after each full render pass
-	m_pt.y = 0;
+	m_pt.y = 3;
 
 	return result;
 }

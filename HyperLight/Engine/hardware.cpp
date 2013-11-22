@@ -24,14 +24,17 @@ HRESULT GetHardwareInfo(HARDWAREINFO* info_ptr)
 
 	try
 	{
+		size_t converted = 0;
 		unsigned regs[4];
 		//	Get vendor
-		char vendor[12];
+		CHAR vendor[12];
+		WCHAR w_vendor[13];
 		CPUID( 0, regs );
 		((unsigned *)vendor)[0]		= regs[1];	// EBX
 		((unsigned *)vendor)[1]		= regs[3];	// EDX
 		((unsigned *)vendor)[2]		= regs[2];	// ECX
-		info_ptr->vendor			= string(vendor, 12);
+		mbstowcs_s( &converted, w_vendor, 13, vendor, 12 );
+		info_ptr->vendor			= wstring(w_vendor, 12);
 
 		//	Get CPU features
 		CPUID( 1, regs );
@@ -39,11 +42,11 @@ HRESULT GetHardwareInfo(HARDWAREINFO* info_ptr)
 		info_ptr->logical_cpu_cnt	= ( regs[1] >> 16 ) & 0xff;	// EBX[23:16]
 		info_ptr->cpu_core_cnt		= info_ptr->logical_cpu_cnt;
 
-		if ( info_ptr->vendor == "GenuineIntel" )
+		if ( info_ptr->vendor == L"GenuineIntel" )
 		{	// Get DCP cache info
 			CPUID( 4, regs );
 			info_ptr->cpu_core_cnt	= ( ( regs[0] >> 26 ) & 0x3f ) + 1;	// EAX[31:26] + 1
-		} else if ( info_ptr->vendor == "AuthenticAMD" )
+		} else if ( info_ptr->vendor == L"AuthenticAMD" )
 		{	// Get NC: Number of CPU cores - 1
 			CPUID(0x80000008, regs);
 			info_ptr->cpu_core_cnt	= ( ( unsigned )( regs[2] & 0xff ) ) + 1; // ECX[7:0] + 1

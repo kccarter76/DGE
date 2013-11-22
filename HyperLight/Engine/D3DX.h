@@ -20,7 +20,7 @@ namespace HLE
 	private:
 		bool						m_vsync_enabled;
 		int							m_videoCardMemory;
-		char						m_videoCardDescription[128];
+		std::wstring				m_videoCardDescription;
 		IDXGISwapChain*				m_swapChain;
 		ID3D11Device*				m_device;
 		ID3D11DeviceContext*		m_deviceContext;
@@ -44,7 +44,7 @@ namespace HLE
 		void	BeginScene( float red, float green, float blue, float alpha );
 		void	EndScene( void );
 
-		void	GetVideoCardInfo( std::string* name, int* memory );
+		void	GetVideoCardInfo( std::wstring* name, int* memory );
 
 		void	Release( void );
 
