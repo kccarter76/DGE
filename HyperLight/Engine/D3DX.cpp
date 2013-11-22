@@ -434,9 +434,9 @@ void	D3DX::EndScene( void )
 	return;
 }
 
-void	D3DX::GetVideoCardInfo( char* name, int& memory )
+void	D3DX::GetVideoCardInfo( std::string* name, int* memory )
 {
-	strcpy_s(name, 128, m_videoCardDescription);
-	memory = m_videoCardMemory;
+	name->assign(m_videoCardDescription);
+	*memory = m_videoCardMemory;
 	return;
 }

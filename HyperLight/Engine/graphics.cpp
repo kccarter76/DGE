@@ -31,18 +31,20 @@ Graphics::~Graphics(void)
 	SAFE_RELEASE_D3D(m_text);
 }
 
-bool Graphics::Initialize( HWND hWnd, HLE::WINDOWINFO *info, const bool& fullscreen )
+bool Graphics::Initialize( HWND hWnd, LPRECTINFO ri, LPHARDWAREINFO hi, const bool& fullscreen )
 {
 	bool result = true;
 
 	if ( !m_initialized )
 	{	// in this block we initialize the graphics interface
 		m_d3dx = new D3DX();
-		if( FAILED(m_d3dx->Initialize( hWnd, info->size.width, info->size.height, SCREEN_DEPTH, SCREEN_NEAR, m_v_sync_enabled, fullscreen ) ) )
+		if( FAILED(m_d3dx->Initialize( hWnd, ri->size.width, ri->size.height, SCREEN_DEPTH, SCREEN_NEAR, m_v_sync_enabled, fullscreen ) ) )
 		{
 			MessageBox(hWnd, L"Could not initialize Direct3D", L"Error", MB_OK);
 			return false;
 		}
+
+		m_d3dx->GetVideoCardInfo( &hi->video, &hi->v_mem );
 
 		m_camera	= new Camera();
 
@@ -60,7 +62,7 @@ bool Graphics::Initialize( HWND hWnd, HLE::WINDOWINFO *info, const bool& fullscr
 
 		m_bitmap	= new Bitmap();
 
-		result = m_bitmap->Initialize( m_d3dx->Device, L"..\\shaders\\resources\\seafloor.dds", SIZE( Engine::Get()->Window->size ), SIZE( 100, 100 ) );
+		result = m_bitmap->Initialize( m_d3dx->Device, L"..\\shaders\\resources\\seafloor.dds", SIZE( ri->size ), SIZE( 100, 100 ) );
 
 		if( !result )
 		{
@@ -96,7 +98,7 @@ bool Graphics::Initialize( HWND hWnd, HLE::WINDOWINFO *info, const bool& fullscr
 		m_light->SpecularColor	= D3DXVECTOR4( 1.0f, 1.0f, 1.0f, 1.0f );
 		m_light->Power			= 64.0f;
 
-		m_text			= new Text( m_d3dx->Device, Engine::Get()->Handle, Engine::Get()->Window->size, m_camera->DefaultViewMatrix );
+		m_text			= new Text( m_d3dx->Device, Engine::Get()->Handle, ri->size, m_camera->DefaultViewMatrix );
 
 		if ( !m_text->Load( m_d3dx->Device, "..\\models\\fonts\\fontdata.txt", L"..\\shaders\\resources\\font.dds" ) )
 		{
@@ -116,7 +118,7 @@ bool Graphics::Initialize( HWND hWnd, HLE::WINDOWINFO *info, const bool& fullscr
 
 void	Graphics::RenderScene( float rotation )
 {
-	m_d3dx->BeginScene( 0.0f, 0.0f, 0.0f, 1.0f );
+	m_d3dx->BeginScene( 0.0f, 0.0f, 1.0f, 1.0f );
 	
 	// update the camera
 	m_camera->Update();

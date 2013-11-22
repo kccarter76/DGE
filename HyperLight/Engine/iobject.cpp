@@ -38,20 +38,22 @@ void	IObject::Update( void )
 			yaw		= ( float )D3DXToRadian( m_instance.rotation.y ),
 			roll	= ( float )D3DXToRadian( m_instance.rotation.z );
 
-		D3DXVECTOR3	
-			lookAt	= D3DXVECTOR3( 0.0f, 0.0f, 1.0f ),
-			up		= D3DXVECTOR3( 0.0f, 1.0f, 0.0f );
-
 		D3DXMATRIX	rotation_matrix;
 
 		D3DXMatrixIdentity( &rotation_matrix );
 
 		D3DXMatrixRotationYawPitchRoll( &rotation_matrix, yaw, pitch, roll );
 
+		D3DXVECTOR3
+			up		= D3DXVECTOR3( 0.0f, 1.0f, 0.0f ),
+			lookAt	= D3DXVECTOR3(	( sinf( yaw ) + m_instance.position.y ),
+									m_instance.position.y,
+									( cosf( yaw ) + m_instance.position.z ) );
+
 		D3DXVec3TransformCoord( &m_instance.lookAt, &m_instance.lookAt, &rotation_matrix ); 
 		D3DXVec3TransformCoord( &up, &up, &rotation_matrix );
 
-		lookAt = m_instance.position + m_instance.lookAt;
+		//lookAt = m_instance.position + m_instance.lookAt;
 
 		D3DXMatrixLookAtLH( &m_view_matrix, &m_instance.position, &lookAt, &up );
 	}

@@ -8,6 +8,7 @@
 #include "light.h"
 #include "ibitmap.h"
 #include "text.h"
+#include "hardware.h"
 
 const float 
 	SCREEN_DEPTH	= 1000.0f,
@@ -33,7 +34,7 @@ namespace HLE
 		Graphics( void );
 		~Graphics( void );
 
-		bool Initialize( HWND hWnd, HLE::WINDOWINFO *info, const bool& fullscreen );
+		bool Initialize( HWND hWnd, LPRECTINFO ri, LPHARDWAREINFO hi, const bool& fullscreen );
 
 		void	RenderScene( float rotation );
 

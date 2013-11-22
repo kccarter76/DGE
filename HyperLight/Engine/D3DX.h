@@ -11,6 +11,7 @@
 #include <d3dcommon.h>
 #include <d3d11.h>
 #include <d3dx10math.h>
+#include <string>
 
 namespace HLE
 {
@@ -43,7 +44,7 @@ namespace HLE
 		void	BeginScene( float red, float green, float blue, float alpha );
 		void	EndScene( void );
 
-		void	GetVideoCardInfo( char* name, int& memory );
+		void	GetVideoCardInfo( std::string* name, int* memory );
 
 		void	Release( void );
 

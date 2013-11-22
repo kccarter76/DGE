@@ -13,12 +13,13 @@ namespace HLE
 	class ENGINE_API Engine 
 		: public Singleton<Engine>
 	{
+		friend class Graphics;
 	private:
 		Clock				m_clock;
 
 		HINSTANCE			m_hInstance;
 		HWND				m_hWnd;
-		WINDOWINFO			m_screen_info;
+		RECTINFO			m_screen_info;
 		LPCWSTR				m_application_name;
 
 		Input*				m_input_ptr;
@@ -51,7 +52,7 @@ namespace HLE
 		READONLY_PROPERTY(Graphics*, GraphicsProvider);
 		GET(GraphicsProvider)	{ return m_graphics_ptr; }
 
-		READONLY_PROPERTY(WINDOWINFO*, Window);
+		READONLY_PROPERTY(RECTINFO*, Window);
 		GET(Window)				{ return &m_screen_info; }
 
 		PROPERTY(bool, EnableStatistics);

@@ -146,7 +146,7 @@ HWND Engine::CreateGameWindow(const int& width, const int& height, const bool& f
 
 void Engine::Initialize( void )
 {
-	if ( m_graphics_ptr && m_graphics_ptr->Initialize( m_hWnd, &m_screen_info, ( GetWindowLong( m_hWnd, GWL_STYLE ) & WS_OVERLAPPEDWINDOW ) == 0 ) ) {
+	if ( m_graphics_ptr && m_graphics_ptr->Initialize( m_hWnd, &m_screen_info, &m_hardware_info, ( GetWindowLong( m_hWnd, GWL_STYLE ) & WS_OVERLAPPEDWINDOW ) == 0 ) ) {
 		// failed to initialize the graphics interface
 	}
 }
@@ -193,8 +193,9 @@ void Engine::RenderFrame( void )
 		if (this->EnableStatistics)
 		{
 			this->UpdateFrameStatistics();
-
-			this->GraphicsProvider->Text2D->DrawFormattedText( L"%0.2f fps", m_fps );
+			
+			this->GraphicsProvider->Text2D->DrawFormattedText( L"FPS %0.2f | %i MB", m_fps, m_hardware_info.v_mem );
+			this->GraphicsProvider->Text2D->DrawFormattedText( L"%i CORES", m_hardware_info.cpu_core_cnt);
 		}
 
 		static float rotation = 0.0f;
@@ -206,9 +207,11 @@ void Engine::RenderFrame( void )
 			rotation -= 360.0f;
 		}
 
-		this->GraphicsProvider->Text2D->DrawText(L"Hello World!!!");
+		RECTINFO ri( POINT( 100, 85 ), SIZE() );
 
 		m_graphics_ptr->RenderScene(rotation);
+	} else {
+		Sleep(50);
 	}
 }
 

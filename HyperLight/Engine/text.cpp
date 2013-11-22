@@ -64,14 +64,20 @@ bool	Text::InitializeText( SENTENCE** obj, int length )
 	int								i;
 
 	// we need to find a buffer that will fit the text or create a new one.
+	// at some point executing this concurrently may be advantageous
 	for ( it = m_texts.begin(); it != m_texts.end(); ++it )
 	{
-		if ( (*it).free && (*it).len <= length )
-		{	// this section of code needs to be thread safe
-			// consider refining it so the buffer selected is a tight fit as possible.
-			(*obj)			= it._Ptr;
-			(*obj)->free	= false;
-			break;
+		if ( (*obj) ) break;	// once the pointer is assigned this looping stops
+
+		if ( (*it).free && (*it).len >= length )
+		{	// consider refining it so the buffer selected is a tight fit as possible.
+			m_mutex.lock();
+			if ( !(*obj) ) 
+			{
+				(*obj)			= it._Ptr;
+				(*obj)->free	= false;
+			}
+			m_mutex.unlock();
 		}
 	}
 
@@ -196,36 +202,87 @@ bool	Text::UpdateText( LPSENTENCE obj, LPWSTR text, HLE::POINT pt, D3DXCOLOR col
 
 bool	Text::DrawFormattedText( LPWSTR text, ... )
 {
+	bool		result				= false;
+	RECTINFO	ri( m_pt, m_size );
+	va_list		args;
+
+	va_start( args, text );
+	result = DrawFormattedText( ri, m_color, text, args );
+	va_end( args );
+
+	return result;
+}
+
+bool	Text::DrawFormattedText( RECTINFO& rc, LPWSTR text, ... )
+{
+	bool		result				= false;
+	va_list		args;
+
+	va_start( args, text );
+	result = DrawFormattedText( rc, m_color, text, args );
+	va_end( args );
+
+	return result;
+}
+
+bool	Text::DrawFormattedText( RECTINFO& rc, D3DXCOLOR color, LPWSTR text, ... )
+{
+	bool		result				= false;
+	va_list		args;
+
+	va_start( args, text );
+	result = DrawFormattedText( rc, color, text, args );
+	va_end( args );
+
+	return result;
+}
+
+bool	Text::DrawFormattedText( RECTINFO& rc, D3DXCOLOR color, LPWSTR text, va_list args )
+{
 	const int len = 512;
 
 	WCHAR buffer[len];
 	// zero out the buffer
 	ZeroMemory( &buffer, len );
 
-	va_list args;
-	va_start( args, text );
 	vswprintf_s( buffer, len, text, args );
 	buffer[ len - 1 ] = '\0';
 
-	return DrawText( buffer );
+	return SetText( &rc, color, buffer );
 }
 
 bool	Text::DrawText( LPWSTR text )
 {
-	RECT rc;
-	SetRect( &rc, m_pt.x, m_pt.y, m_pt.x - m_size.width, m_pt.y - m_size.height );
+	RECTINFO rc( m_pt, m_size );
 
-	return DrawText( &rc, text );
+	return SetText( &rc, m_color, text );
 }
 
-bool	Text::DrawText( LPRECT rc, LPWSTR text )
+bool	Text::DrawText( D3DXCOLOR color, LPWSTR text )
+{
+	RECTINFO rc( m_pt, m_size );
+
+	return SetText( &rc, color, text );
+}
+
+bool	Text::DrawText( RECTINFO& rc, LPWSTR text )
+{
+	return SetText( &rc, m_color, text );
+}
+
+bool	Text::DrawText( RECTINFO& rc, D3DXCOLOR color, LPWSTR text )
+{
+	return SetText( &rc, color, text );
+}
+
+bool	Text::SetText( LPRECTINFO rc, D3DXCOLOR color, LPWSTR text )
 {
 	LPSENTENCE	_text	= nullptr;
 
 	if ( !InitializeText( &_text, std::wcslen( text ) ) )
 		return false;
 
-	if ( !_text || !UpdateText( _text, text, POINT( rc->left, rc->top ), m_color ) )
+	if ( !_text || !UpdateText( _text, text, rc->pt, color ) )
 		return false;
 
 	// advance the y position by the height of the line.

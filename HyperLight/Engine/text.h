@@ -2,6 +2,7 @@
 #include "font.h"
 #include "fontshader.h"
 
+#include <mutex>
 #include <vector>
 
 namespace HLE
@@ -48,11 +49,12 @@ namespace HLE
 		D3DXCOLOR				 m_color;
 		POINT					 m_pt;
 		SIZE					 m_size;
-
+		// thread locking resource
+		mutex					 m_mutex;
 		// we need to keep track of all sentences created by this object
 		std::vector<SENTENCE>			m_texts;
 
-		bool	DrawText( LPRECT rc, LPWSTR text );
+		bool	SetText( LPRECTINFO rc, D3DXCOLOR color, LPWSTR text );
 		bool	InitializeText( SENTENCE** sentence, int length );
 		bool	UpdateText( LPSENTENCE sentence, LPWSTR text, HLE::POINT pt, D3DXCOLOR color );
 	public:
@@ -62,7 +64,14 @@ namespace HLE
 
 		bool	Load( ID3D11Device* device, LPCSTR fn_data, LPWSTR fn_texture );
 		bool	DrawFormattedText( LPWSTR text, ... );
-		bool	DrawText( LPWSTR );
+		bool	DrawFormattedText( D3DXCOLOR color, LPWSTR text, ... );
+		bool	DrawFormattedText( RECTINFO& rc, LPWSTR text, ... );
+		bool	DrawFormattedText( RECTINFO& rc, D3DXCOLOR color, LPWSTR text, ... );
+		bool	DrawFormattedText( RECTINFO& rc, D3DXCOLOR color, LPWSTR text, va_list args );
+		bool	DrawText( LPWSTR text );
+		bool	DrawText( D3DXCOLOR color, LPWSTR text );
+		bool	DrawText( RECTINFO& rc, LPWSTR text );
+		bool	DrawText( RECTINFO& rc, D3DXCOLOR color, LPWSTR text );
 		void	Release( void );
 		void	Release( bool del ); 
 		bool	Render( ID3D11DeviceContext* context, D3DXMATRIX world, D3DXMATRIX ortho );

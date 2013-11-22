@@ -86,26 +86,49 @@ namespace HLE
 		}
 	} POINT, *LPPOINT;
 
-	typedef struct ENGINE_API WINDOWINFO
+	typedef struct ENGINE_API RECTINFO
 	{
 		POINT		pt;
 		SIZE		size;
 
-		WINDOWINFO( void )
+		RECTINFO( void )
 		{
 			ZeroMemory(&pt, sizeof( pt ) );
 			ZeroMemory(&size, sizeof( size ) );
 		}
 
-		void operator=( const WINDOWINFO& r )
+		RECTINFO( const RECTINFO& rc )
+		{
+			(*this) = rc;
+		}
+
+		RECTINFO( POINT pt, SIZE sz )
+			: pt(pt)
+			, size(sz)
+		{
+		}
+
+		READONLY_PROPERTY(tagRECT, rect);
+		GET(rect)	{ 
+			tagRECT _rc;
+
+			_rc.left	= ( ( size.width / 2 ) * -1 ) + pt.x;
+			_rc.right	= _rc.left + size.width;
+			_rc.top		= ( size.height / 2 ) - pt.y;
+			_rc.bottom	= _rc.top - size.height;
+
+			return _rc;
+		}
+
+		void operator=( const RECTINFO& r )
 		{
 			pt		= r.pt;
 			size	= r.size;
 		}
 
-		bool operator==( const WINDOWINFO& r )
+		bool operator==( const RECTINFO& r )
 		{
 			return pt == r.pt && size == r.size;
 		}
-	} WINDOWINFO, *LPWINDOWINFO;
+	} RECTINFO, *LPRECTINFO;
 };
