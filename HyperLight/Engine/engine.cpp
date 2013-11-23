@@ -21,7 +21,6 @@ Engine::Engine( void )
 
 	m_clock.LimitThreadAffinityToCurrentProc();
 
-	m_input_ptr		= new Input();
 	m_graphics_ptr	= new Graphics();
 
 	GetHardwareInfo( &m_hardware_info );
@@ -29,7 +28,7 @@ Engine::Engine( void )
 
 Engine::~Engine( void )
 {
-	SAFE_RELEASE_PTR(m_input_ptr);
+	SAFE_RELEASE_D3D(m_input_ptr);
 	SAFE_RELEASE_PTR(m_graphics_ptr);
 }
 
@@ -149,6 +148,12 @@ void Engine::Initialize( void )
 	if ( m_graphics_ptr && m_graphics_ptr->Initialize( m_hWnd, &m_screen_info, &m_hardware_info, ( GetWindowLong( m_hWnd, GWL_STYLE ) & WS_OVERLAPPEDWINDOW ) == 0 ) ) {
 		// failed to initialize the graphics interface
 	}
+
+	m_input_ptr		= new Input( m_hWnd, m_hInstance, m_screen_info.size );
+
+	if ( !m_input_ptr ) {
+		// failed to instanciate direct input
+	}
 }
 
 void Engine::ShutDown( void )
@@ -190,6 +195,9 @@ void Engine::RenderFrame( void )
 {
 	Timer->GetTimeValues(&m_time, &m_absTime, &m_elapsedTime);
 
+	// update the input mappings
+	Engine::Get()->InputMap.Update();
+
 	this->UpdateFrameStatistics();
 
 	if ( m_elapsedTime > 0.0f )
@@ -199,6 +207,7 @@ void Engine::RenderFrame( void )
 			this->GraphicsProvider->Text2D->DrawFormattedText( L"FPS %0.2f | %s | %i MB", m_fps, m_hardware_info.video.c_str(), m_hardware_info.v_mem );
 			this->GraphicsProvider->Text2D->DrawFormattedText( L"%s | %i CORES | %i%%", m_hardware_info.vendor.c_str(), m_hardware_info.cpu_core_cnt, m_hardware_info.cpu_percentage);
 		}
+		
 
 		static float rotation = 0.0f;
 
@@ -210,6 +219,8 @@ void Engine::RenderFrame( void )
 		}
 
 		RECTINFO ri( POINT( 100, 85 ), SIZE() );
+
+		GraphicsProvider->Text2D->DrawFormattedText( ri, L"Mouse Coordinates\n\tX: %i\n\tY: %i", InputMap.Mouse.x, InputMap.Mouse.y );
 
 		m_graphics_ptr->RenderScene(rotation);
 	} else {
