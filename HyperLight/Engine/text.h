@@ -5,6 +5,7 @@
 #include <mutex>
 #include <string>
 #include <vector>
+#include <list>
 
 namespace HLE
 {
@@ -20,14 +21,15 @@ namespace HLE
 			int				len;
 			bool			free;
 			D3DXCOLOR		color;
+			double			last_used;
 
 			SENTENCE( void )
-				: len(0), free(true), v_buffer(nullptr), i_buffer(nullptr) {
+				: len(0), free(true), v_buffer(nullptr), i_buffer(nullptr), last_used(0) {
 				ZeroMemory( &color, sizeof( color ) );
 			}
 
 			SENTENCE( D3DXCOLOR color )
-				:  len(0), free(true), v_buffer(nullptr), i_buffer(nullptr), color(color) {
+				:  len(0), free(true), v_buffer(nullptr), i_buffer(nullptr), last_used(0), color(color) {
 			}
 
 			READONLY_PROPERTY(int, v_cnt);
@@ -43,6 +45,11 @@ namespace HLE
 
 		} SENTENCE, *LPSENTENCE;
 
+		typedef std::list<SENTENCE>					l_texts;
+		typedef std::list<SENTENCE>::iterator		l_text_itr;
+		typedef std::vector<l_text_itr>				v_text_arr;
+		typedef std::vector<l_text_itr>::iterator	v_text_itr;
+
 		Font					*m_font;
 		FontShader				*m_shader;
 		// the default view for 2D space
@@ -53,7 +60,7 @@ namespace HLE
 		// thread locking resource
 		mutex					 m_mutex;
 		// we need to keep track of all sentences created by this object
-		std::vector<SENTENCE>			m_texts;
+		l_texts					 m_texts;
 
 		bool	SetText( LPRECTINFO rc, D3DXCOLOR color, wstring text );
 		bool	InitializeText( SENTENCE** sentence, int length );

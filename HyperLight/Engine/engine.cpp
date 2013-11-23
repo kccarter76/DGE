@@ -174,6 +174,8 @@ void Engine::UpdateFrameStatistics(void)
 	// Update the scene stats once per second
 	if(m_absTime - m_lastUpdateTime > 1.0f)
 	{
+		m_hardware_info.sample();
+
 		m_fps = ( float )( m_lastUpdateFrames / ( m_absTime - m_lastUpdateTime  ) );
 
 		m_lastUpdateTime = m_absTime;
@@ -188,14 +190,14 @@ void Engine::RenderFrame( void )
 {
 	Timer->GetTimeValues(&m_time, &m_absTime, &m_elapsedTime);
 
+	this->UpdateFrameStatistics();
+
 	if ( m_elapsedTime > 0.0f )
 	{	// time has elapsed since the last frame, so render.
 		if (this->EnableStatistics)
 		{
-			this->UpdateFrameStatistics();
-
-			this->GraphicsProvider->Text2D->DrawFormattedText( L"FPS %0.1f | %s | %i MB", m_fps, m_hardware_info.video.c_str(), m_hardware_info.v_mem );
-			this->GraphicsProvider->Text2D->DrawFormattedText( L"%s | %i CORES", m_hardware_info.vendor.c_str(), m_hardware_info.cpu_core_cnt);
+			this->GraphicsProvider->Text2D->DrawFormattedText( L"FPS %0.2f | %s | %i MB", m_fps, m_hardware_info.video.c_str(), m_hardware_info.v_mem );
+			this->GraphicsProvider->Text2D->DrawFormattedText( L"%s | %i CORES | %i%%", m_hardware_info.vendor.c_str(), m_hardware_info.cpu_core_cnt, m_hardware_info.cpu_percentage);
 		}
 
 		static float rotation = 0.0f;

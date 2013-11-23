@@ -78,13 +78,12 @@ bool	Font::LoadData( LPCSTR fn_data )
 	return true;
 }
 
-void	Font::RenderText( void* vertices, const wchar_t* text, HLE::POINT pt )
+int	Font::RenderText( void* vertices, const wchar_t* text, HLE::POINT pt )
 {
 	LPVERTEXTYPE	ptr	= nullptr;
-	int				num, index, i, letter;
+	int				num, index, i, letter, lines = 1;
 	float
-		spacing		= 3.0f,
-		padding		= 2.0f,
+		padding		= 6.0f,
 		x			= (float)pt.x + ( padding / 2 ),
 		y			= (float)pt.y,
 		z			= 0.0f,
@@ -98,34 +97,59 @@ void	Font::RenderText( void* vertices, const wchar_t* text, HLE::POINT pt )
 	index = 0;
 
 	for ( i = 0; i < num; i++ ) {
-		letter = ( ( int ) text[i] ) - 32;
+		
+		if( ( ( int ) text[i] ) > 31 && ( ( int ) text[i] ) < 128 )
+		{	// this covers the valid range of characters that are supported at this time.
+			letter = ( ( int ) text[i] ) - 32;
 
-		if ( letter == 0 ) {	
-			// this is a space just move over 3 pixels
-			x = x + spacing;
-		} else {
-			//first triangle in quad
-			ptr[index]	= VERTEXTYPE( D3DXVECTOR3( x, y, z ), D3DXVECTOR2( m_data[letter].left, d0 ) );
-			index++;
+			if ( letter == 0 ) {	
+				// this is a space just move over 3 pixels
+				x += padding - 1;
+			} else {
+				//first triangle in quad
+				ptr[index]	= VERTEXTYPE( D3DXVECTOR3( x, y, z ), D3DXVECTOR2( m_data[letter].left, d0 ) );
+				index++;
 
-			ptr[index]	= VERTEXTYPE( D3DXVECTOR3( ( x + m_data[letter].size ), ( y - m_line_height ), z ), D3DXVECTOR2( m_data[letter].right, d1 ) );
-			index++;
+				ptr[index]	= VERTEXTYPE( D3DXVECTOR3( ( x + m_data[letter].size ), ( y - m_line_height ), z ), D3DXVECTOR2( m_data[letter].right, d1 ) );
+				index++;
 
-			ptr[index]	= VERTEXTYPE( D3DXVECTOR3( x, ( y - m_line_height ), z ), D3DXVECTOR2( m_data[letter].left, d1 ) );
-			index++;
+				ptr[index]	= VERTEXTYPE( D3DXVECTOR3( x, ( y - m_line_height ), z ), D3DXVECTOR2( m_data[letter].left, d1 ) );
+				index++;
 
-			//second triangle in quad
-			ptr[index]	= VERTEXTYPE( D3DXVECTOR3( x, y, z ), D3DXVECTOR2( m_data[letter].left, d0 ) );
-			index++;
+				//second triangle in quad
+				ptr[index]	= VERTEXTYPE( D3DXVECTOR3( x, y, z ), D3DXVECTOR2( m_data[letter].left, d0 ) );
+				index++;
 
-			ptr[index]	= VERTEXTYPE( D3DXVECTOR3( ( x + m_data[letter].size ), y, z ), D3DXVECTOR2( m_data[letter].right, d0 ) );
-			index++;
+				ptr[index]	= VERTEXTYPE( D3DXVECTOR3( ( x + m_data[letter].size ), y, z ), D3DXVECTOR2( m_data[letter].right, d0 ) );
+				index++;
 
-			ptr[index]	= VERTEXTYPE( D3DXVECTOR3( ( x + m_data[letter].size ), ( y - m_line_height ), z ), D3DXVECTOR2( m_data[letter].right, d1 ) );
-			index++;
-			// add additional padding between characters
-			x += ( ( float )m_data[letter].size ) + padding;
+				ptr[index]	= VERTEXTYPE( D3DXVECTOR3( ( x + m_data[letter].size ), ( y - m_line_height ), z ), D3DXVECTOR2( m_data[letter].right, d1 ) );
+				index++;
+				// add additional padding between characters
+				x += ( ( float )m_data[letter].size ) + ( padding / 2 );
+			}
+		}
+		else
+		{
+			switch( (int) text[i] )
+			{
+			case 9:	// tab character was encounted
+				x	+= (padding * 5 );					// tab is typicaly 5 spaces
+				break;
+			case 13:	// carriage return
+			case 10:	// line feed character
+				lines++;								// increment the number of lines drawn.
+				x	= (float)pt.x + ( padding / 2 );	// reset the X value to the beginning of the paragraph.
+				y	-= m_line_height;					// move the line down one on the screen.
+				break;
+			case 11:
+				y	-= m_line_height;					// move the line down one on the screen.
+				break;
+			default:
+				continue;
+			}
 		}
 	}
-	return;
+	//	return the next y position
+	return (int)( lines * m_line_height );
 }

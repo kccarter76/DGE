@@ -61,4 +61,46 @@ HRESULT GetHardwareInfo(HARDWAREINFO* info_ptr)
 	}
 
 	return hr;
+};
+
+HARDWAREINFO::HARDWAREINFO( void )
+	: logical_cpu_cnt(0), cpu_core_cnt(0), s_mem(0), v_mem(0), hyper_threaded(false)
+	, can_read(false), cpu_usage(0)
+{
+	ZeroMemory(&vendor, sizeof( vendor ));
+	ZeroMemory(&video, sizeof( video ));
+
+	LPCWSTR	path = L"\\Processor(_Total)\\% processor time";
+
+	if( PdhOpenQuery( NULL, 0, &q_handle ) == ERROR_SUCCESS &&
+		PdhValidatePath( path ) == ERROR_SUCCESS )
+	{
+		can_read = PdhAddCounter(q_handle, path, 0, &c_handle) == ERROR_SUCCESS;	
+	}
+}
+
+HARDWAREINFO::~HARDWAREINFO( void )
+{
+	if ( can_read )
+	{
+		PdhCloseQuery( &q_handle );
+	}
+}
+
+void	HARDWAREINFO::sample( void )
+{
+	PDH_FMT_COUNTERVALUE  usage;
+
+	if ( can_read )
+	{
+		PdhCollectQueryData( q_handle );
+		PdhGetFormattedCounterValue( c_handle, PDH_FMT_LONG, 0, &usage );
+
+		cpu_usage = usage.longValue;
+	}
+}
+
+GET_DEF(HARDWAREINFO, cpu_percentage)
+{
+	return (int)cpu_usage;
 }

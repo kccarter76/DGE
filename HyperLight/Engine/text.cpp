@@ -27,7 +27,7 @@ void	Text::Release( bool del )
 	{	// we only release the shader if we are in fact deleting the text object
 		SAFE_RELEASE_D3D(m_shader);
 		// release the pointers in the text buffer vector
-		std::vector<SENTENCE>::iterator	it;
+		std::list<SENTENCE>::iterator	it;
 		for ( it = m_texts.begin(); it != m_texts.end(); ++it )
 		{
 			SAFE_RELEASE_D3D(it->v_buffer);
@@ -60,7 +60,7 @@ bool	Text::Load( ID3D11Device* device, LPCSTR fn_data, LPWSTR fn_texture )
 
 bool	Text::InitializeText( SENTENCE** obj, int length )
 {
-	std::vector<SENTENCE>::iterator	it;
+	std::list<SENTENCE>::iterator	it;
 	int								i;
 
 	// we need to find a buffer that will fit the text or create a new one.
@@ -74,7 +74,7 @@ bool	Text::InitializeText( SENTENCE** obj, int length )
 			m_mutex.lock();
 			if ( !(*obj) ) 
 			{
-				(*obj)			= it._Ptr;
+				*obj			= &it._Ptr->_Myval;
 				(*obj)->free	= false;
 			}
 			m_mutex.unlock();
@@ -93,7 +93,8 @@ bool	Text::InitializeText( SENTENCE** obj, int length )
 
 	if ( !text ) return false;
 
-	text->len	= length;
+	text->len		= length;
+	text->last_used	= Engine::Get()->Timer->Time;
 
 	vertices	= new Font::VERTEXTYPE[text->v_cnt];
 
@@ -181,7 +182,7 @@ bool	Text::UpdateText( LPSENTENCE obj, wstring text, HLE::POINT pt, D3DXCOLOR co
 	x = (float)( ( ( m_size.width / 2 ) * -1 ) + pt.x );
 	y = (float)( ( m_size.height / 2 ) - pt.y );
 
-	m_font->RenderText( (void*)vertices, text.c_str(), POINT( (int)x, (int)y ) );
+	m_pt.y += m_font->RenderText( (void*)vertices, text.c_str(), POINT( (int)x, (int)y ) );
 
 	if(FAILED( Engine::Get()->GraphicsProvider->Context->Map( obj->v_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource )))
 	{
@@ -285,15 +286,13 @@ bool	Text::SetText( LPRECTINFO rc, D3DXCOLOR color, wstring text )
 	if ( !_text || !UpdateText( _text, text, rc->pt, color ) )
 		return false;
 
-	// advance the y position by the height of the line.
-	m_pt.y += (int)m_font->LineHeight;
-
 	return true;
 }
 
 bool	Text::Render( ID3D11DeviceContext* context, D3DXMATRIX world, D3DXMATRIX ortho )
 {
-	std::vector<SENTENCE>::iterator	it;
+	v_text_arr	cleanup;
+	l_text_itr	it;
 	bool	result = true;
 
 	unsigned int
@@ -310,20 +309,31 @@ bool	Text::Render( ID3D11DeviceContext* context, D3DXMATRIX world, D3DXMATRIX or
 
 			result = m_shader->Render( context, (*it).i_cnt, world, m_view, ortho, m_font->Texture, (*it).color );
 			// free up the buffer for reuse
-			(*it).free = true;
+			(*it).free		= true;
+			(*it).last_used	= Engine::Get()->Timer->Time;
 
 			if ( !result )
 			{
 				break;	// we failed stop rendering
 			}
 		} 
-		else 
-		{	// consider removing any buffer that is not being used.
+		else if ( (float)( Engine::Get()->Timer->Time - (*it).last_used ) > 5.0f )
+		{	// consider removing any buffer that is not being used after 5 seconds.
+			cleanup.push_back(it);
 		}
 	}
 
+	for ( v_text_itr dit = cleanup.begin(); dit != cleanup.end(); dit++)
+	{
+		SAFE_RELEASE_D3D( (*dit)->i_buffer );
+		SAFE_RELEASE_D3D( (*dit)->v_buffer );
+		m_texts.erase( *dit );
+	}
+
+	cleanup.clear();
+
 	// reset the y after each full render pass
-	m_pt.y = 3;
+	m_pt.y = 0;
 
 	return result;
 }
