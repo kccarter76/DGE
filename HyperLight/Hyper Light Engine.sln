@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine\Engine.vcxproj", "{534ED817-A630-47C4-85CA-3690D0EF4E6C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client\Client.vcxproj", "{98C6AC5D-3C11-423B-ACF3-5478D25966EA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{534ED817-A630-47C4-85CA-3690D0EF4E6C} = {534ED817-A630-47C4-85CA-3690D0EF4E6C}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ModelConvert", "ModelConvert\ModelConvert.vcxproj", "{ED70871C-8B08-482D-BFA5-E8CD3B48C96F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{534ED817-A630-47C4-85CA-3690D0EF4E6C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{534ED817-A630-47C4-85CA-3690D0EF4E6C}.Debug|Win32.Build.0 = Debug|Win32
+		{534ED817-A630-47C4-85CA-3690D0EF4E6C}.Release|Win32.ActiveCfg = Release|Win32
+		{534ED817-A630-47C4-85CA-3690D0EF4E6C}.Release|Win32.Build.0 = Release|Win32
+		{98C6AC5D-3C11-423B-ACF3-5478D25966EA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{98C6AC5D-3C11-423B-ACF3-5478D25966EA}.Debug|Win32.Build.0 = Debug|Win32
+		{98C6AC5D-3C11-423B-ACF3-5478D25966EA}.Release|Win32.ActiveCfg = Release|Win32
+		{98C6AC5D-3C11-423B-ACF3-5478D25966EA}.Release|Win32.Build.0 = Release|Win32
+		{ED70871C-8B08-482D-BFA5-E8CD3B48C96F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{ED70871C-8B08-482D-BFA5-E8CD3B48C96F}.Debug|Win32.Build.0 = Debug|Win32
+		{ED70871C-8B08-482D-BFA5-E8CD3B48C96F}.Release|Win32.ActiveCfg = Release|Win32
+		{ED70871C-8B08-482D-BFA5-E8CD3B48C96F}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
