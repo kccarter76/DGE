@@ -185,7 +185,7 @@ bool Input::Update( void )
 		DIK_ESCAPE; DIK_W;
 		GUI::KEY_ESCAPE;
 		key_mapping mapping = (*m_key_map_iter).second;
-		if( m_key_state[mapping.code] != ( m_keys[mapping.code] & 0x80 ) != 0) 
+		if( m_key_state[mapping.code] != ( ( m_keys[mapping.code] & 0x80 ) != 0) ) 
 		{	// Set key state, only if it has changed for a key that is being tracked.
 			SetKeyCode( mapping.code, ( m_keys[mapping.code] & 0x80 ) != 0 );
 			continue;

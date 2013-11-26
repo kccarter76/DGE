@@ -18,6 +18,8 @@ Engine::Engine( void )
 {
 	m_input_ptr		= nullptr;
 	m_graphics_ptr	= nullptr;
+	m_sound			= nullptr;
+	m_util			= nullptr;
 
 	m_clock.LimitThreadAffinityToCurrentProc();
 
@@ -30,6 +32,8 @@ Engine::~Engine( void )
 {
 	SAFE_RELEASE_D3D(m_input_ptr);
 	SAFE_RELEASE_PTR(m_graphics_ptr);
+	SAFE_RELEASE_PTR(m_sound);
+	SAFE_RELEASE_D3D(m_util);
 }
 
 WNDPROC Engine::m_lpClientWndProc = NULL;
@@ -150,9 +154,15 @@ void Engine::Initialize( void )
 	}
 
 	m_input_ptr		= new Input( m_hWnd, m_hInstance, m_screen_info.size );
+	m_sound			= new Sound( m_hWnd );
+	m_util			= new CUtility(&m_hardware_info);
 
 	if ( !m_input_ptr ) {
 		// failed to instanciate direct input
+	}
+
+	if ( !m_sound ) {
+		// failed to instanciate direct sound
 	}
 }
 
@@ -195,6 +205,10 @@ void Engine::RenderFrame( void )
 {
 	Timer->GetTimeValues(&m_time, &m_absTime, &m_elapsedTime);
 
+	// update the camera with the current frame time
+	GraphicsProvider->Camera->Time = (float)m_time;
+	// update position
+	GraphicsProvider->Camera->Position	= D3DXVECTOR3(0.0f, 0.0f, -10.0f);
 	// update the input mappings
 	Engine::Get()->InputMap.Update();
 
@@ -207,22 +221,16 @@ void Engine::RenderFrame( void )
 			this->GraphicsProvider->Text2D->DrawFormattedText( L"FPS %0.2f | %s | %i MB", m_fps, m_hardware_info.video.c_str(), m_hardware_info.v_mem );
 			this->GraphicsProvider->Text2D->DrawFormattedText( L"%s | %i CORES | %i%%", m_hardware_info.vendor.c_str(), m_hardware_info.cpu_core_cnt, m_hardware_info.cpu_percentage);
 		}
-		
 
-		static float rotation = 0.0f;
-
-		// Update the rotation variable each frame.
-		rotation += (float)(D3DX_PI) * 0.005f;
-		if(rotation > 360.0f)
-		{
-			rotation -= 360.0f;
-		}
+		GraphicsProvider->Camera->Turn(GUI::RIGHT, InputMap[GUI::KEY_RIGHT]);
+		GraphicsProvider->Camera->Turn(GUI::LEFT, InputMap[GUI::KEY_LEFT]);
 
 		RECTINFO ri( POINT( 100, 85 ), SIZE() );
 
-		GraphicsProvider->Text2D->DrawFormattedText( ri, L"Mouse Coordinates\n\tX: %i\n\tY: %i", InputMap.Mouse.x, InputMap.Mouse.y );
+		GraphicsProvider->Text2D->DrawFormattedText(L"Rotation Yaw: %0.2f", GraphicsProvider->Camera->Rotation.y );
+		GraphicsProvider->Text2D->DrawFormattedText(L"Mouse Coordinates\n\tX: %i\n\tY: %i", InputMap.Mouse.x, InputMap.Mouse.y );
 
-		m_graphics_ptr->RenderScene(rotation);
+		m_graphics_ptr->RenderScene( 0.0f );
 	} else {
 		Sleep(50);
 	}

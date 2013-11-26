@@ -384,7 +384,7 @@ HRESULT	D3DX::Initialize( HWND hwnd, int width, int height, float fdepth, float 
 	m_deviceContext->RSSetViewports(1, &viewport);
 
 	// Setup the projection matrix.
-	fieldOfView = (float)D3DX_PI / 4.0f;
+	fieldOfView = (float)D3DX_PI / 5.0f;
 	screenAspect = (float)width / (float)height;
 
 	// Create the projection matrix for 3D rendering.

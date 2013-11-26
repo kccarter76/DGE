@@ -11,3 +11,4 @@
 #include "singleton.h"
 #include "hardware.h"
 #include "graphics.h"
+#include "sound.h"

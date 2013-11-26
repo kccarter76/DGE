@@ -25,14 +25,14 @@ void	Font::Release( void )
 	IRenderable::Release();
 }
 
-bool	Font::Load( ID3D11Device* device, LPCSTR fn_data, LPWSTR fn_texture )
+bool	Font::Load( LPCSTR fn_data, LPWSTR fn_texture )
 {
 	if ( !LoadData( fn_data ) )
 	{
 		return false;
 	}
 
-	if ( !LoadTexture( device, fn_texture ) )
+	if ( !LoadTexture( fn_texture ) )
 	{
 		return false;
 	}

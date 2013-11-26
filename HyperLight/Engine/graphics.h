@@ -9,6 +9,7 @@
 #include "ibitmap.h"
 #include "text.h"
 #include "hardware.h"
+#include "scene_manager.h"
 
 const float 
 	SCREEN_DEPTH	= 1000.0f,
@@ -22,13 +23,13 @@ namespace HLE
 		bool			m_is_rendering, m_initialized, m_v_sync_enabled;
 
 		D3DX*			m_d3dx;
-		Camera*			m_camera;
-		Model*			m_model;
+		CCamera*		m_camera;
 		TextureShader*	m_texture_shader;
 		LightShader*	m_light_shader;
 		Light*			m_light;
 		Bitmap*			m_bitmap;
 		Text*			m_text;
+		CSceneManager*	m_manager;
 		
 	public:
 		Graphics( void );
@@ -44,8 +45,17 @@ namespace HLE
 		READONLY_PROPERTY(ID3D11DeviceContext*, Context);
 		GET(Context)	{ return m_d3dx->Context; }
 
+		READONLY_PROPERTY(CSceneManager*, SceneManager);
+		GET(SceneManager)	{ return m_manager; }
+
+		READONLY_PROPERTY(CCamera*, Camera);
+		GET(Camera)	{ return m_camera; }
+
 		READONLY_PROPERTY(Text*, Text2D);
 		GET(Text2D)	{ return m_text; }
+
+		READONLY_PROPERTY(D3DXMATRIX, WorldMatrix);
+		GET(WorldMatrix)	{ return m_d3dx->WorldMatrix; }
 
 	};
 };

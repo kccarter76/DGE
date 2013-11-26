@@ -18,6 +18,7 @@
 #define GET(n) property__tmp_type_##n property__get_##n( void )
 #define GET_DEF(class, property) class::property__tmp_type_##property class::property__get_##property( void )
 #define SET(n) void property__set_##n(const property__tmp_type_##n& value)
+#define SET_DEF(class, property) void class::property__set_##n(const class::property__tmp_type_##n& value)
 
 #define SAFE_RELEASE_PTR(x) if ( x ) delete x; x = nullptr
 

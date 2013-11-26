@@ -25,13 +25,13 @@ namespace HLE
 		} VERTEXTYPE, *LPVERTEXTYPE;
 
 		SIZE	m_window, m_bitmap;
-		POINT	m_prev;
+		POINT	m_point;
 		
 	public:
 		Bitmap(void);
 		~Bitmap(void);
 
-		virtual	bool	Initialize( ID3D11Device* device, LPWSTR filename, const HLE::SIZE& window, const HLE::SIZE& bitmap );
+		virtual	bool	Initialize( LPWSTR filename, const HLE::SIZE& window, const HLE::SIZE& bitmap );
 		virtual bool	Update( ID3D11DeviceContext* context, HLE::POINT pt );
 		virtual	bool	Render( ID3D11DeviceContext* context, HLE::POINT pt );
 

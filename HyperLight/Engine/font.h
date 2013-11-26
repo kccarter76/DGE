@@ -42,7 +42,7 @@ namespace HLE
 		Font(void);
 		~Font(void);
 
-		bool	Load( ID3D11Device* device, LPCSTR fn_data, LPWSTR fn_texture );
+		bool	Load( LPCSTR fn_data, LPWSTR fn_texture );
 		void	Release( void );
 		int		RenderText( void* vertices, const wchar_t* text, HLE::POINT pt ); 
 

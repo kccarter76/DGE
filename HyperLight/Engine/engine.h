@@ -6,7 +6,9 @@
 #include "clock.h"
 #include "input.h"
 #include "graphics.h"
+#include "sound.h"
 #include "hardware.h"
+#include "utility\utility.h"
 
 namespace HLE
 {
@@ -24,6 +26,8 @@ namespace HLE
 
 		Input*				m_input_ptr;
 		Graphics*			m_graphics_ptr;
+		Sound*				m_sound;
+		CUtility*			m_util;
 		HARDWAREINFO		m_hardware_info;
 
 		// Statistics Resources
@@ -52,8 +56,14 @@ namespace HLE
 		READONLY_PROPERTY(Graphics*, GraphicsProvider);
 		GET(GraphicsProvider)	{ return m_graphics_ptr; }
 
+		READONLY_PROPERTY(Sound*, SoundProvider);
+		GET(SoundProvider)		{ return m_sound; }
+
 		READONLY_PROPERTY(RECTINFO*, Window);
 		GET(Window)				{ return &m_screen_info; }
+
+		READONLY_PROPERTY(CUtility*, Utility);
+		GET(Utility)			{ return m_util; }
 
 		PROPERTY(bool, EnableStatistics);
 		GET(EnableStatistics)	{ return m_statistics; }

@@ -17,12 +17,12 @@ namespace HLE
 		int						 m_vertex_cnt, m_index_cnt;
 
 	public:
-		IRenderable(void);
-		~IRenderable(void);
+		IRenderable	( void );
+		~IRenderable( void );
 
-		bool	LoadTexture( ID3D11Device* device, LPWSTR filename );
+		bool	LoadTexture( LPWSTR filename );
 
-		virtual void	Release( void );
+		virtual void	Release	( void );
 
 		READONLY_PROPERTY(int, IndexCount);
 		GET(IndexCount)		{ return m_index_cnt; }

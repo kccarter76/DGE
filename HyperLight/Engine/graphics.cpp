@@ -11,24 +11,24 @@ Graphics::Graphics(void)
 {
 	m_d3dx				= nullptr;
 	m_camera			= nullptr;
-	m_model				= nullptr;
 	m_texture_shader	= nullptr;
 	m_light_shader		= nullptr;
 	m_light				= nullptr;
 	m_bitmap			= nullptr;
 	m_text				= nullptr;
+	m_manager			= nullptr;
 }
 
 Graphics::~Graphics(void)
 {
 	SAFE_RELEASE_D3D(m_d3dx);
 	SAFE_RELEASE_D3D(m_camera);
-	SAFE_RELEASE_D3D(m_model);
 	SAFE_RELEASE_D3D(m_texture_shader);
 	SAFE_RELEASE_D3D(m_light_shader);
 	SAFE_RELEASE_D3D(m_light);
 	SAFE_RELEASE_D3D(m_bitmap);
 	SAFE_RELEASE_D3D(m_text);
+	SAFE_RELEASE_D3D(m_manager);
 }
 
 bool Graphics::Initialize( HWND hWnd, LPRECTINFO ri, LPHARDWAREINFO hi, const bool& fullscreen )
@@ -46,23 +46,21 @@ bool Graphics::Initialize( HWND hWnd, LPRECTINFO ri, LPHARDWAREINFO hi, const bo
 
 		m_d3dx->GetVideoCardInfo( &hi->video, &hi->v_mem );
 
-		m_camera	= new Camera();
+		m_camera	= new CCamera();
 
-		m_camera->Position = D3DXVECTOR3( 0.0f, 0.0f, -10.0f );
+		//m_camera->Position	= D3DXVECTOR3(0.0f, 0.0f, -10.0f);
 
-		m_model		= new Model();
+		m_manager	= new CSceneManager();
 
-		result = m_model->Initialize( m_d3dx->Device, "..\\models\\cube.txt", L"..\\shaders\\resources\\seafloor.dds" );
-
-		if ( !result )
+		if ( !m_manager )
 		{
-			MessageBox(hWnd, L"Could not initialize the model object.", L"Error", MB_OK);
+			MessageBox(hWnd, L"Could not initialize the scene manager.", L"Error", MB_OK);
 			return false;
 		}
 
 		m_bitmap	= new Bitmap();
 
-		result = m_bitmap->Initialize( m_d3dx->Device, L"..\\shaders\\resources\\seafloor.dds", SIZE( ri->size ), SIZE( 100, 100 ) );
+		result = m_bitmap->Initialize( L"..\\shaders\\resources\\seafloor.dds", SIZE( ri->size ), SIZE( 100, 100 ) );
 
 		if( !result )
 		{
@@ -100,7 +98,7 @@ bool Graphics::Initialize( HWND hWnd, LPRECTINFO ri, LPHARDWAREINFO hi, const bo
 
 		m_text			= new Text( m_d3dx->Device, Engine::Get()->Handle, ri->size, m_camera->DefaultViewMatrix );
 
-		if ( !m_text->Load( m_d3dx->Device, "..\\models\\fonts\\fontdata.txt", L"..\\shaders\\resources\\font.dds" ) )
+		if ( !m_text->Load( "..\\models\\fonts\\fontdata.txt", L"..\\shaders\\resources\\font.dds" ) )
 		{
 			MessageBox(hWnd, L"Could not load font data.", L"Error", MB_OK);
 			return false;
@@ -118,6 +116,8 @@ bool Graphics::Initialize( HWND hWnd, LPRECTINFO ri, LPHARDWAREINFO hi, const bo
 
 void	Graphics::RenderScene( float rotation )
 {
+	UNREFERENCED_PARAMETER( rotation );
+
 	m_d3dx->BeginScene( 0.0f, 0.0f, 1.0f, 1.0f );
 	
 	// update the camera
@@ -130,12 +130,11 @@ void	Graphics::RenderScene( float rotation )
 		projection	= m_d3dx->ProjectionMatrix,
 		ortho		= m_d3dx->OrthoMatrix;
 
-	// rotate the world matrix
-	D3DXMatrixRotationY( &world, rotation );
-
-	m_model->Render( m_d3dx->Context );
-
-	m_light_shader->Render( m_d3dx->Context, m_model->IndexCount, world, view, projection, m_model->Texture, m_light->Direction, m_camera->Position, m_light->AmbientColor, m_light->DiffuseColor, m_light->SpecularColor, m_light->Power );
+	if ( !m_manager->Render( m_d3dx->Context, m_light, m_light_shader, SCREEN_DEPTH, world, view, projection ) )
+	{	// failure
+		MessageBox( Engine::Get()->Handle, L"Could not render the scene.", L"Error", MB_OK);
+		PostQuitMessage( 0 );
+	}
 
 	m_d3dx->EnableZBuffer = false;
 	m_d3dx->EnableAlphaBlending = true;

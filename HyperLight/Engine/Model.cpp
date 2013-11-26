@@ -1,7 +1,8 @@
 #include "StdAfx.h"
+#include "engine.h"
 #include "Model.h"
 
-#include <fstream>
+
 
 using namespace HLE;
 
@@ -15,21 +16,22 @@ Model::~Model(void)
 {
 }
 
-bool	Model::Initialize( ID3D11Device* device, CHAR* model, WCHAR* filename )
+bool	Model::Initialize( CHAR* model, WCHAR* texture )
 {
 	unsigned long*			indices;
+	ID3D11Device*			device	= Engine::Get()->GraphicsProvider->Device;
 	D3D11_BUFFER_DESC		vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA	vertexData, indexData;
 	HRESULT					result;
 
-	if( !this->LoadModel( model ) )
+	if( !this->Load( model ) )
 	{	// failed to load the model
 		return false;
 	}
 
 	indices			= new unsigned long[m_vertex_cnt];
 
-	if( !LoadTexture( device, filename ) )
+	if( !LoadTexture( texture ) )
 	{
 		return false;
 	}
@@ -90,70 +92,13 @@ bool	Model::Initialize( ID3D11Device* device, CHAR* model, WCHAR* filename )
 	return true;
 }
 
-bool	Model::LoadModel( CHAR* model )
+void	Model::Render( void )
 {
-	std::ifstream fin;
-	char input;
-	int i;
-
-	// Open the model file.
-	fin.open( model );
-	
-	// If it could not open the file then exit.
-	if(fin.fail())
-	{
-		return false;
-	}
-
-	// Read up to the value of vertex count.
-	fin.get(input);
-	while(input != ':')
-	{
-		fin.get(input);
-	}
-
-	// Read in the vertex count.
-	fin >> m_vertex_cnt;
-
-	// Set the number of indices to be the same as the vertex count.
-	m_index_cnt = m_vertex_cnt;
-
-	// Create the model using the vertex count that was read in.
-	m_mesh = new MESHTYPE[m_vertex_cnt];
-
-	if(!m_mesh)
-	{
-		return false;
-	}
-
-	// Read up to the beginning of the data.
-	fin.get(input);
-	while(input != ':')
-	{
-		fin.get(input);
-	}
-	fin.get(input);
-	fin.get(input);
-
-	// Read in the vertex data.
-	for(i=0; i<m_vertex_cnt; i++)
-	{
-		fin >> m_mesh[i].x >> m_mesh[i].y >> m_mesh[i].z;
-		fin >> m_mesh[i].tu >> m_mesh[i].tv;
-		fin >> m_mesh[i].nx >> m_mesh[i].ny >> m_mesh[i].nz;
-	}
-
-	// Close the model file.
-	fin.close();
-
-	return true;
-}
-
-void	Model::Render( ID3D11DeviceContext* context )
-{
+	ID3D11DeviceContext* 
+		context	= Engine::Get()->GraphicsProvider->Context;
 	unsigned int 
-		stride = sizeof(VERTEXTYPE), 
-		offset = 0;
+		stride	= sizeof(VERTEXTYPE), 
+		offset	= 0;
     
 	// Set the vertex buffer to active in the input assembler so it can be rendered.
 	context->IASetVertexBuffers(0, 1, &m_vertex_buffer, &stride, &offset);

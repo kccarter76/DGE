@@ -45,7 +45,7 @@ void	Text::Release( void )
 	Release( true );
 }
 
-bool	Text::Load( ID3D11Device* device, LPCSTR fn_data, LPWSTR fn_texture )
+bool	Text::Load( LPCSTR fn_data, LPWSTR fn_texture )
 {
 	if ( !m_shader || !m_shader->m_pixel_buffer )	return false;
 
@@ -55,7 +55,7 @@ bool	Text::Load( ID3D11Device* device, LPCSTR fn_data, LPWSTR fn_texture )
 
 	if ( !m_font )		return false;
 
-	return m_font->Load( device, fn_data, fn_texture );
+	return m_font->Load( fn_data, fn_texture );
 }
 
 bool	Text::InitializeText( SENTENCE** obj, int length )

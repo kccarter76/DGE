@@ -70,7 +70,7 @@ namespace HLE
 		Text( ID3D11Device* device, HWND hWnd, HLE::SIZE screen, D3DXMATRIX default_view );
 		~Text( void );
 
-		bool	Load( ID3D11Device* device, LPCSTR fn_data, LPWSTR fn_texture );
+		bool	Load( LPCSTR fn_data, LPWSTR fn_texture );
 		bool	DrawFormattedText( wstring text, ... );
 		bool	DrawFormattedText( D3DXCOLOR color, wstring text, ... );
 		bool	DrawFormattedText( RECTINFO& rc, wstring text, ... );

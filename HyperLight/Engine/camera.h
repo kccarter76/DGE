@@ -1,14 +1,23 @@
 #pragma once
 #include "iobject.h"
+#include "input_defs.h"
 
 namespace HLE
 {
-	class ENGINE_API Camera
+	class ENGINE_API CCamera
 		: public IObject
 	{
+	private:
+		float	m_time, m_speed_right, m_speed_left;
+
+		float	Accelerate( bool down, float* direction );
 	public:
-		Camera(void);
-		~Camera(void);
+		CCamera ( void );
+		~CCamera( void );
+
+		PROPERTY(float, Time);
+		GET(Time)	{ return m_time; }
+		SET(Time)	{ m_time = value;}
 
 		READONLY_PROPERTY(D3DXMATRIX, DefaultViewMatrix);
 		GET(DefaultViewMatrix)	{
@@ -33,6 +42,8 @@ namespace HLE
 
 			return view_matrix;
 		}
+
+		void	Turn( GUI::EACTION action, bool down );
 	};
 };
 

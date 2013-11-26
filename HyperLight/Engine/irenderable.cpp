@@ -1,9 +1,10 @@
 #include "StdAfx.h"
+#include "engine.h"
 #include "irenderable.h"
 
 using namespace HLE;
 
-IRenderable::IRenderable(void)
+IRenderable::IRenderable( void )
 	: m_vertex_cnt(0)
 	, m_index_cnt(0)
 {
@@ -13,7 +14,6 @@ IRenderable::IRenderable(void)
 
 	m_texture	= new TextureMap();
 }
-
 
 IRenderable::~IRenderable(void)
 {
@@ -28,7 +28,7 @@ void	IRenderable::Release( void )
 	delete this;
 }
 
-bool	IRenderable::LoadTexture( ID3D11Device* device, LPWSTR filename )
+bool	IRenderable::LoadTexture( LPWSTR filename )
 {
-	return  m_texture->Load( device, filename ) == S_OK;
+	return  m_texture->Load( Engine::Get()->GraphicsProvider->Device, filename ) == S_OK;
 }

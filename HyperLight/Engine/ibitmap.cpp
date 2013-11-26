@@ -1,4 +1,5 @@
 #include "StdAfx.h"
+#include "engine.h"
 #include "ibitmap.h"
 
 using namespace HLE;
@@ -13,13 +14,20 @@ Bitmap::~Bitmap(void)
 {
 }
 
-bool	Bitmap::Initialize( ID3D11Device* device, LPWSTR filename, const HLE::SIZE& window, const HLE::SIZE& bitmap )
+//////////////////////////////
+///	Begin Property Definitions
+
+
+///	End Property Definitions
+//////////////////////////////
+
+bool	Bitmap::Initialize( LPWSTR filename, const HLE::SIZE& window, const HLE::SIZE& bitmap )
 {
 	m_window	= window;
 	m_bitmap	= bitmap;
-	m_prev		= POINT( -1, -1 );
+	m_point		= POINT( -1, -1 );
 
-	if( !LoadTexture( device, filename ) ) {
+	if( !LoadTexture( filename ) ) {
 		return false;
 	}
 
@@ -54,7 +62,7 @@ bool	Bitmap::Initialize( ID3D11Device* device, LPWSTR filename, const HLE::SIZE&
 	vertex_data.SysMemSlicePitch = 0;
 
 	// Now create the vertex buffer.
-	hr = device->CreateBuffer(&vertex_desc, &vertex_data, &m_vertex_buffer);
+	hr = Engine::Get()->GraphicsProvider->Device->CreateBuffer(&vertex_desc, &vertex_data, &m_vertex_buffer);
 	if( FAILED( hr ) )
 	{
 		return false;
@@ -74,7 +82,7 @@ bool	Bitmap::Initialize( ID3D11Device* device, LPWSTR filename, const HLE::SIZE&
 	index_data.SysMemSlicePitch = 0;
 
 	// Create the index buffer.
-	hr = device->CreateBuffer(&index_desc, &index_data, &m_index_buffer);
+	hr = Engine::Get()->GraphicsProvider->Device->CreateBuffer(&index_desc, &index_data, &m_index_buffer);
 	if( FAILED( hr ) ) 
 	{
 		return false;
@@ -84,7 +92,7 @@ bool	Bitmap::Initialize( ID3D11Device* device, LPWSTR filename, const HLE::SIZE&
 	vertices	= nullptr;
 
 	delete[] indices;
-	indices	= nullptr;
+	indices		= nullptr;
 
 	return true;
 }
@@ -97,16 +105,16 @@ bool	Bitmap::Update( ID3D11DeviceContext* context, HLE::POINT pt )
 	D3D11_MAPPED_SUBRESOURCE	mapped_resource;
 	HRESULT						hr;
 
-	if ( m_prev == pt )
+	if ( m_point == pt )
 	{	// if the point has not changed then immediatly return
 		return true;
 	}
 
-	m_prev = pt;
+	m_point = pt;
 
-	left		= (float)( ( m_window.width / 2 ) * -1 ) + (float)m_prev.x;
+	left		= (float)( ( m_window.width / 2 ) * -1 ) + (float)this->m_point.x;
 	right		= left + (float)m_bitmap.width;
-	top			= (float)( m_window.height / 2 ) - (float)m_prev.y;
+	top			= (float)( m_window.height / 2 ) - (float)this->m_point.y;
 	bottom		= top - (float)m_bitmap.height;
 
 	vertices	= new VERTEXTYPE[m_vertex_cnt];
