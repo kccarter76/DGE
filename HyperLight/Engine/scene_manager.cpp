@@ -75,7 +75,7 @@ bool	CSceneManager::Render( ID3D11DeviceContext* context, Light* light, IShader*
 
 	for( it = m_assets.begin(); it != m_assets.end(); it++ )
 	{
-		if ( false || m_frustum->CheckPoint( it->Position ) > Frustum::OUTSIDE )
+		if ( false || m_frustum->CheckSphere( it->Position, radius ) > Frustum::OUTSIDE )
 		{
 			position = it->Position;
 

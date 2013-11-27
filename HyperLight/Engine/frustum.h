@@ -44,7 +44,7 @@ namespace HLE
 
 		int		CheckPoint		( D3DXVECTOR3 point );
 		bool	CheckCube		( D3DXVECTOR3 center, float radius );
-		bool	CheckSphere		( D3DXVECTOR3 center, float radius );
+		int		CheckSphere		( D3DXVECTOR3 center, float radius );
 		bool	CheckRectangle	( D3DXVECTOR3 center, D3DXVECTOR3 size );
 
 	} FRUSTUM, *LPFRUSTUM;

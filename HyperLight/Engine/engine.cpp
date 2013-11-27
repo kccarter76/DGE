@@ -39,7 +39,7 @@ Engine::~Engine( void )
 WNDPROC Engine::m_lpClientWndProc = NULL;
 WINDOWPLACEMENT Engine::m_wndPlacement = { sizeof(m_wndPlacement) };
 
-void Engine::SetDisplayFullScreen( const bool& bFullScreen )
+void Engine::SetDisplayFullScreen( const bool& bFullScreen, HLE::SIZE sz )
 {
 	DEVMODE		dmScreenSetting;
 
@@ -49,8 +49,8 @@ void Engine::SetDisplayFullScreen( const bool& bFullScreen )
 	ZeroMemory( &dmScreenSetting, nScreenSetting );
 
 	if ( bFullScreen && EnumDisplaySettings( NULL, ENUM_CURRENT_SETTINGS, &dmScreenSetting ) ) {
-		dmScreenSetting.dmPelsWidth		= m_screen_info.size.width;
-		dmScreenSetting.dmPelsHeight	= m_screen_info.size.height;
+		dmScreenSetting.dmPelsWidth		= sz.width;
+		dmScreenSetting.dmPelsHeight	= sz.height;
 		dmScreenSetting.dmBitsPerPel	= 32;		
 		dmScreenSetting.dmFields		= DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
@@ -59,7 +59,7 @@ void Engine::SetDisplayFullScreen( const bool& bFullScreen )
 		ChangeDisplaySettings( NULL, 0 );
 	}
 
-	GraphicsProvider->Video->ChangePerspective( m_screen_info.size, SCREEN_NEAR, SCREEN_DEPTH );
+	GraphicsProvider->Video->ChangePerspective( bFullScreen ? sz : m_screen_info.size, SCREEN_NEAR, SCREEN_DEPTH );
 
 	ShowCursor( !bFullScreen ? TRUE : FALSE );
 }
@@ -124,7 +124,7 @@ HWND Engine::CreateGameWindow(const int& width, const int& height, const bool& f
 	m_screen_info.size.width	= rc.right - rc.left;
 	m_screen_info.size.height	= rc.bottom - rc.top;
 
-	SetDisplayFullScreen( full_screen );
+	SetDisplayFullScreen( full_screen, m_screen_info.size );
 
 	m_hWnd = CreateWindowEx(
 			WS_EX_APPWINDOW,
@@ -260,7 +260,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		}
 	case HLE_FULLSCREEN:
 		{
-			DWORD dwStyle = GetWindowLong(hWnd, GWL_STYLE);
+			DWORD		dwStyle = GetWindowLong(hWnd, GWL_STYLE);
+			HLE::SIZE	sz;
 			
 			if(dwStyle & WS_OVERLAPPEDWINDOW)
 			{
@@ -275,6 +276,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 						mi.rcMonitor.bottom - mi.rcMonitor.top,
 						SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
 				}
+
+				sz.width	= mi.rcMonitor.right - mi.rcMonitor.left;
+				sz.height	= mi.rcMonitor.bottom - mi.rcMonitor.top;
 			}
 			else 
 			{
@@ -282,9 +286,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				SetWindowPlacement(hWnd, &Engine::m_wndPlacement);
 				SetWindowPos(hWnd, NULL, 0, 0, 0, 0,
 					SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+
+				sz.width	= 1024;
+				sz.height	= 768;
 			}
 
-			oEngine->SetDisplayFullScreen( ( GetWindowLong(hWnd, GWL_STYLE) & WS_OVERLAPPEDWINDOW ) == 0 );
+			oEngine->SetDisplayFullScreen( ( GetWindowLong(hWnd, GWL_STYLE) & WS_OVERLAPPEDWINDOW ) == 0, sz );
 			break;
 		}
 	case HLE_ENGINE:

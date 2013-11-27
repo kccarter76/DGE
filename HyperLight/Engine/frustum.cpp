@@ -237,18 +237,40 @@ bool	Frustum::CheckCube( D3DXVECTOR3 center, float radius )
 	return true;
 }
 
-bool	Frustum::CheckSphere( D3DXVECTOR3 center, float radius )
+int	Frustum::CheckSphere( D3DXVECTOR3 center, float radius )
 {
-	// Check if the radius of the sphere is inside the view frustum.
-	for(int i=0; i<6; i++) 
-	{
-		if(D3DXPlaneDotCoord(&m_planes[i], &center) < -radius)
-		{
-			return false;
-		}
-	}
+	float d;
+	float az,ax,ay;
 
-	return true;
+	D3DXVECTOR3
+		v	= center - CPOS;
+
+	az	= D3DXVec3Dot( &v, &(-Z) );
+	
+	if ( az > m_depth + radius || az < m_near - radius )
+		return OUTSIDE;
+	else if ( az > m_depth - radius || az < m_near - radius )
+		return INTERSECT;
+
+	ay	= D3DXVec3Dot( &v, &Y );
+	d	= m_sphere_y * radius;
+	az	*= m_tang;
+
+	if ( ay > az + d || ay < -az - d )
+		return OUTSIDE;
+	else if ( ay > az - d || ay < -az + d )
+		return INTERSECT;
+
+	ax	= D3DXVec3Dot( &v, &X );
+ 	az	*= m_ratio;
+ 	d	= m_sphere_x * radius;
+
+	if (ax > az+d || ax < -az-d)
+ 		return OUTSIDE;
+	else if (ax > az-d || ax < -az+d)
+		return INTERSECT;
+	
+	return INSIDE;
 }
 
 bool	Frustum::CheckRectangle( D3DXVECTOR3 center, D3DXVECTOR3 size )

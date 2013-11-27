@@ -17,20 +17,20 @@ float	CCamera::Accelerate( bool down, float* accelerate, float* speed )
 {
 	if(down)
 	{
-		*accelerate += m_time * 0.15f;
+		*accelerate += m_time * 0.01f;
 
-		if( *accelerate > (m_time * 0.25f))
+		if( *accelerate > (m_time * 0.15f))
 		{
-			*accelerate = m_time * 0.25f;
+			*accelerate = m_time * 0.15f;
 		}
 	}
 	else
 	{
 		*accelerate -= m_time * 0.005f;
 
-		if( ( *speed + *accelerate ) <= 0.0f)
+		if( ( *accelerate + *speed ) < 0.0f)
 		{
-			*speed = *accelerate = 0.0f ;
+			 *accelerate = *speed ;
 		}
 	}
 
