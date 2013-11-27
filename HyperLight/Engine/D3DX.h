@@ -13,6 +13,8 @@
 #include <d3dx10math.h>
 #include <string>
 
+#include "typedefs.h"
+
 namespace HLE
 {
 	class D3DX
@@ -35,6 +37,8 @@ namespace HLE
 		D3DXMATRIX					m_projectionMatrix;
 		D3DXMATRIX					m_worldMatrix;
 		D3DXMATRIX					m_orthoMatrix;
+
+		INTERNALS					m_intern;
 	public:
 		D3DX(void);
 		~D3DX(void);
@@ -47,6 +51,8 @@ namespace HLE
 		void	GetVideoCardInfo( std::wstring* name, int* memory );
 
 		void	Release( void );
+
+		void	ChangePerspective( HLE::SIZE sz, float fnear, float fdepth );
 
 		PROPERTY(bool, EnableZBuffer);
 		GET(EnableZBuffer)	{
@@ -104,19 +110,22 @@ namespace HLE
 		}
 
 		READONLY_PROPERTY(ID3D11Device*, Device);
-		GET(Device)	{ return m_device; }
+		GET(Device)				{ return m_device; }
 
 		READONLY_PROPERTY(ID3D11DeviceContext*, Context);
-		GET(Context)	{ return m_deviceContext; }
+		GET(Context)			{ return m_deviceContext; }
 
 		READONLY_PROPERTY(D3DXMATRIX, ProjectionMatrix);
 		GET(ProjectionMatrix)	{ return m_projectionMatrix; }
 
 		READONLY_PROPERTY(D3DXMATRIX, WorldMatrix);
-		GET(WorldMatrix)	{ return m_worldMatrix; }
+		GET(WorldMatrix)		{ return m_worldMatrix; }
 
 		READONLY_PROPERTY(D3DXMATRIX, OrthoMatrix);
-		GET(OrthoMatrix)	{ return m_orthoMatrix; }
+		GET(OrthoMatrix)		{ return m_orthoMatrix; }
+
+		READONLY_PROPERTY(LPINTERNALS, Internals);
+		GET(Internals)			{ return &m_intern; }
 
 	};
 };

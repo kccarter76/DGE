@@ -13,28 +13,28 @@ CCamera::~CCamera(void)
 {
 }
 
-float	CCamera::Accelerate( bool down, float* direction )
+float	CCamera::Accelerate( bool down, float* accelerate, float* speed )
 {
 	if(down)
 	{
-		*direction += m_time * 0.15f;
+		*accelerate += m_time * 0.15f;
 
-		if(*direction > (m_time * 0.25f))
+		if( *accelerate > (m_time * 0.25f))
 		{
-			*direction = m_time * 0.25f;
+			*accelerate = m_time * 0.25f;
 		}
 	}
 	else
 	{
-		*direction -= m_time* 0.005f;
+		*accelerate -= m_time * 0.005f;
 
-		if(*direction < 0.0f)
+		if( ( *speed + *accelerate ) <= 0.0f)
 		{
-			*direction = 0.0f;
+			*speed = *accelerate = 0.0f ;
 		}
 	}
 
-	return *direction;
+	return *accelerate;
 }
 
 void	CCamera::Turn( GUI::EACTION action, bool down )
@@ -47,21 +47,21 @@ void	CCamera::Turn( GUI::EACTION action, bool down )
 
 	if ( ( action & GUI::LEFT ) != 0 )
 	{
-		y -= Accelerate( down, &m_speed_left );
+		y -= Accelerate( down, &m_speed_left, &y );
 	}
 	else if ( ( action & GUI::RIGHT ) != 0 )
 	{
-		y += Accelerate( down, &m_speed_left );
+		y += Accelerate( down, &m_speed_left, &y );
 	}
 
-	if ( ( action & GUI::LEFT ) != 0 && y < 0.0f )
+	if ( ( action & GUI::LEFT ) == 0 && y < 0.0f )
 	{
 		y +=  360.0f;
 	}
-	else if ( ( action & GUI::RIGHT ) != 0 && y > 360.0f )
+	else if ( ( action & GUI::RIGHT ) == 0 && y > 360.0f )
 	{
 		y -= 360.0f;
 	}
 
-	Rotation = D3DXVECTOR3( Rotation.x, y, Rotation.z );
+	m_instance.rotation.y = y;
 }

@@ -68,12 +68,15 @@ bool	CSceneManager::Render( ID3D11DeviceContext* context, Light* light, IShader*
 	float
 		radius		= 1.0f;
 	//	update the frustum with the current view space
-	m_frustum->Create( depth, projection, view );
+	m_frustum->Create( 
+		view * projection, 
+		Engine::Get()->GraphicsProvider->Camera,
+		Engine::Get()->GraphicsProvider->Video->Internals );
 
 	for( it = m_assets.begin(); it != m_assets.end(); it++ )
 	{
-		//if ( m_frustum->CheckPoint( it->Position ) )
-		//{
+		if ( false || m_frustum->CheckPoint( it->Position ) > Frustum::OUTSIDE )
+		{
 			position = it->Position;
 
 			D3DXMatrixTranslation( &world, position.x, position.y, position.z );
@@ -88,10 +91,10 @@ bool	CSceneManager::Render( ID3D11DeviceContext* context, Light* light, IShader*
 			}
 
 			// we need to grab a copy of the original world matrix
-			world = Engine::Get()->GraphicsProvider->WorldMatrix;
+			world = Engine::Get()->GraphicsProvider->Video->WorldMatrix;
 
 			render_cnt++;
-		//}
+		}
 	}
 
 	Engine::Get()->GraphicsProvider->Text2D->DrawFormattedText(L"Rendered: %i out of %i", render_cnt, m_assets.size() );

@@ -54,8 +54,8 @@ namespace HLE
 		READONLY_PROPERTY(Text*, Text2D);
 		GET(Text2D)	{ return m_text; }
 
-		READONLY_PROPERTY(D3DXMATRIX, WorldMatrix);
-		GET(WorldMatrix)	{ return m_d3dx->WorldMatrix; }
+		READONLY_PROPERTY(D3DX*, Video);
+		GET(Video)	{ return m_d3dx; }
 
 	};
 };

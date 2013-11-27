@@ -138,4 +138,13 @@ namespace HLE
 			return pt == r.pt && size == r.size;
 		}
 	} RECTINFO, *LPRECTINFO;
+
+	typedef struct ENGINE_API INTERNALS
+	{
+		float	angle, ratio, fnear, fdepth;
+
+		INTERNALS( void ) 
+			: angle(0.0f), ratio(0.0f), fnear(0.0f), fdepth(0.0f) 
+		{ }
+	} INTERNALS, *LPINTERNALS;
 };

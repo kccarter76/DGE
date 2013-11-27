@@ -33,6 +33,12 @@ void	IObject::Update( void )
 {
 	if( m_hasViewMatrix )
 	{
+		D3DXVECTOR3
+			*up			= &m_instance.up,
+			direction;
+
+		D3DXVec3Normalize(&direction, &(m_instance.lookAt - m_instance.position)); //create direction vector
+
 		float
 			pitch	= ( float )D3DXToRadian( m_instance.rotation.x ),
 			yaw		= ( float )D3DXToRadian( m_instance.rotation.y ),
@@ -44,17 +50,13 @@ void	IObject::Update( void )
 
 		D3DXMatrixRotationYawPitchRoll( &rotation_matrix, yaw, pitch, roll );
 
-		D3DXVECTOR3
-			up		= D3DXVECTOR3( 0.0f, 1.0f, 0.0f ),
-			lookAt	= D3DXVECTOR3(	( sinf( yaw ) + m_instance.position.y ),
-									m_instance.position.y,
-									( cosf( yaw ) + m_instance.position.z ) );
+		D3DXVec3TransformCoord( &direction, &direction, &rotation_matrix ); 
+		D3DXVec3TransformCoord( up, up, &rotation_matrix );
 
-		D3DXVec3TransformCoord( &m_instance.lookAt, &m_instance.lookAt, &rotation_matrix ); 
-		D3DXVec3TransformCoord( &up, &up, &rotation_matrix );
+		m_instance.lookAt = direction + m_instance.position;
 
-		//lookAt = m_instance.position + m_instance.lookAt;
+		D3DXMatrixLookAtLH( &m_view_matrix, &m_instance.position, &m_instance.lookAt, up );
 
-		D3DXMatrixLookAtLH( &m_view_matrix, &m_instance.position, &lookAt, &up );
+
 	}
 }

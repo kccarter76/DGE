@@ -66,8 +66,6 @@ HRESULT	D3DX::Initialize( HWND hwnd, int width, int height, float fdepth, float 
 	D3D11_DEPTH_STENCIL_VIEW_DESC	depthStencilViewDesc;
 	D3D11_RASTERIZER_DESC			rasterDesc;
 	D3D11_BLEND_DESC				blendStateDescription;
-	D3D11_VIEWPORT					viewport;
-	float							fieldOfView, screenAspect;
 
 	m_vsync_enabled = vsync;
 
@@ -372,31 +370,71 @@ HRESULT	D3DX::Initialize( HWND hwnd, int width, int height, float fdepth, float 
 		return false;
 	}
 
-	// Setup the viewport for rendering.
-	viewport.Width = (float)width;
-	viewport.Height = (float)height;
-	viewport.MinDepth = 0.0f;
-	viewport.MaxDepth = 1.0f;
-	viewport.TopLeftX = 0.0f;
-	viewport.TopLeftY = 0.0f;
-
-	// Create the viewport.
-	m_deviceContext->RSSetViewports(1, &viewport);
-
-	// Setup the projection matrix.
-	fieldOfView = (float)D3DX_PI / 5.0f;
-	screenAspect = (float)width / (float)height;
-
-	// Create the projection matrix for 3D rendering.
-	D3DXMatrixPerspectiveFovLH(&m_projectionMatrix, fieldOfView, screenAspect, fnear, fdepth);
+	ChangePerspective( SIZE( width, height ), fnear, fdepth );
 
 	// Initialize the world matrix to the identity matrix.
 	D3DXMatrixIdentity(&m_worldMatrix);
+	// Setup the viewport for rendering.
+	//viewport.Width = (float)width;
+	//viewport.Height = (float)height;
+	//viewport.MinDepth = 0.0f;
+	//viewport.MaxDepth = 1.0f;
+	//viewport.TopLeftX = 0.0f;
+	//viewport.TopLeftY = 0.0f;
 
-	// Create an orthographic projection matrix for 2D rendering.
-	D3DXMatrixOrthoLH(&m_orthoMatrix, (float)width, (float)height, fnear, fdepth);
+	//// Create the viewport.
+	//m_deviceContext->RSSetViewports(1, &viewport);
+
+	//// Setup the projection matrix.
+	//fieldOfView = 45.0f;
+	//screenAspect = (float)width * ( 1.0f / (float)height );
+
+	//// Create the projection matrix for 3D rendering.
+	//D3DXMatrixPerspectiveFovLH(&m_projectionMatrix, fieldOfView, screenAspect, fnear, fdepth);
+
+	//// Initialize the world matrix to the identity matrix.
+	//D3DXMatrixIdentity(&m_worldMatrix);
+
+	//// Create an orthographic projection matrix for 2D rendering.
+	//D3DXMatrixOrthoLH(&m_orthoMatrix, (float)width, (float)height, fnear, fdepth);
 
 	return result;
+}
+
+void	D3DX::ChangePerspective( HLE::SIZE sz, float fnear, float fdepth )
+{
+	if ( !this )
+		return;	// if we are not initialized abort
+
+	if (sz.height <= 0)
+		sz.height = 1;
+
+	D3D11_VIEWPORT	view;
+	float			
+		fov				= 45.0f, // 45 degree angle from camera position
+		aspect			= (float)sz.width * ( 1.0f / (float)sz.height );
+
+	view.Height			= (float)sz.height;
+	view.Width			= (float)sz.width;
+	view.MaxDepth		= 1.0f;
+	view.MinDepth		= 0.0f;
+	view.TopLeftX		= 0.0f;
+	view.TopLeftY		= 0.0f;
+	// store these values because they are used elsewhere in the system.
+	m_intern.angle		= fov;
+	m_intern.ratio		= aspect;
+	m_intern.fnear		= fnear;
+	m_intern.fdepth		= fdepth;
+
+	m_deviceContext->RSSetViewports( 1, &view );
+	//	We need to set the perspective matrix to the identity.
+	D3DXMatrixIdentity( &m_projectionMatrix );
+	D3DXMatrixIdentity( &m_orthoMatrix );
+	//	Create the projection matrix which defines the view frustum
+	D3DXMatrixPerspectiveFovLH( &m_projectionMatrix, fov, aspect, fnear, fdepth );
+	//	Create an orthographic projection matrix for 2D rendering.
+	D3DXMatrixOrthoLH( &m_orthoMatrix, (float)sz.width, (float)sz.height, fnear, fdepth );
+	return;
 }
 
 void	D3DX::BeginScene( float red, float green, float blue, float alpha )

@@ -4,13 +4,14 @@
 
 namespace HLE
 {
+	typedef
 	class ENGINE_API CCamera
 		: public IObject
 	{
 	private:
 		float	m_time, m_speed_right, m_speed_left;
 
-		float	Accelerate( bool down, float* direction );
+		float	Accelerate( bool down, float* accelerate, float* speed );
 	public:
 		CCamera ( void );
 		~CCamera( void );
@@ -44,6 +45,6 @@ namespace HLE
 		}
 
 		void	Turn( GUI::EACTION action, bool down );
-	};
+	} CAMERA, *LPCAMERA;
 };
 

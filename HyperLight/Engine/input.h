@@ -25,6 +25,7 @@ namespace HLE
 		unsigned char			m_keys[256];
 
 		bool	IsToggleKey( const GUI::EKEY_CODE& code );
+		void	SyncKeyState( void );
 
 		DIMOUSESTATE			m_mouse_state;
 		HLE::SIZE				m_screen;

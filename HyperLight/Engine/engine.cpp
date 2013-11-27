@@ -59,6 +59,8 @@ void Engine::SetDisplayFullScreen( const bool& bFullScreen )
 		ChangeDisplaySettings( NULL, 0 );
 	}
 
+	GraphicsProvider->Video->ChangePerspective( m_screen_info.size, SCREEN_NEAR, SCREEN_DEPTH );
+
 	ShowCursor( !bFullScreen ? TRUE : FALSE );
 }
 

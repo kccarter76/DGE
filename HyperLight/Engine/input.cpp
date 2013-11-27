@@ -94,12 +94,23 @@ bool Input::operator[]( const GUI::EKEY_CODE& code )
 	return m_key_state[code];
 }
 
-bool Input::IsToggleKey( const GUI::EKEY_CODE& code )
+bool	Input::IsToggleKey( const GUI::EKEY_CODE& code )
 {
 	return code == GUI::KEY_NUMLOCK || code == GUI::KEY_CAPITAL || code == GUI::KEY_SCROLL;
 }
 
-void Input::SetKeyCode( const GUI::EKEY_CODE& code, const bool& down )
+void	Input::SyncKeyState( void )
+{
+	// key modifiers
+	m_key_state[GUI::KEY_LSHIFT]	= (m_keys[GUI::KEY_LSHIFT] & 0x80) != 0;
+	m_key_state[GUI::KEY_RSHIFT]	= (m_keys[GUI::KEY_RSHIFT] & 0x80) != 0;
+	m_key_state[GUI::KEY_LCONTROL]	= (m_keys[GUI::KEY_LCONTROL] & 0x80) != 0;
+	m_key_state[GUI::KEY_RCONTROL]	= (m_keys[GUI::KEY_RCONTROL] & 0x80) != 0;
+	m_key_state[GUI::KEY_LMENU]	= (m_keys[GUI::KEY_LMENU] & 0x80) != 0;
+	m_key_state[GUI::KEY_RMENU]	= (m_keys[GUI::KEY_RMENU] & 0x80) != 0;
+}
+
+void	Input::SetKeyCode( const GUI::EKEY_CODE& code, const bool& down )
 {
 	if ( down && !m_key_state[code] && !IsToggleKey( code ) )
 	{	// the key is being set key_down
@@ -179,6 +190,9 @@ bool Input::Update( void )
 
 	// we need to iterate the list of mapped keys and trigger any messages that are identified
 	key_message key;
+
+	//we need to update the state for the key modifiers
+	SyncKeyState();
 
 	for(m_key_map_iter = m_key_map.begin(); m_key_map_iter != m_key_map.end(); ++m_key_map_iter)
 	{
