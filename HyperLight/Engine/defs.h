@@ -9,15 +9,15 @@
 #define ENGINE_API __declspec(dllimport)
 #endif
 
-#define PROPERTY(t,n) __declspec( property (put = property__set_##n, get = property__get_##n) ) t n;\
-	typedef t property__tmp_type_##n
-#define READONLY_PROPERTY(t,n) __declspec( property (get = property__get_##n) ) t n;\
-	typedef t property__tmp_type_##n
-#define WRITEONLY_PROPERTY(t,n) __declspec( property (put = property__set_##n) ) t n;\
-	typedef t property__tmp_type_##n
-#define GET(n) property__tmp_type_##n property__get_##n( void )
+#define PROPERTY(type, name) __declspec( property (put = property__set_##name, get = property__get_##name) ) type name;\
+	typedef type property__tmp_type_##name
+#define READONLY_PROPERTY(type, name) __declspec( property ( get = property__get_##name ) ) type name;\
+	typedef type property__tmp_type_##name
+#define WRITEONLY_PROPERTY(type, name) __declspec( property (put = property__set_##name) ) type name;\
+	typedef type property__tmp_type_##name
+#define GET(property) property__tmp_type_##property property__get_##property( void )
 #define GET_DEF(class, property) class::property__tmp_type_##property class::property__get_##property( void )
-#define SET(n) void property__set_##n(const property__tmp_type_##n& value)
+#define SET(property) void property__set_##property(const property__tmp_type_##property& value)
 #define SET_DEF(class, property) void class::property__set_##n(const class::property__tmp_type_##n& value)
 
 #define SAFE_RELEASE_PTR(x) if ( x ) delete x; x = nullptr

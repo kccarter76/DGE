@@ -9,14 +9,18 @@ using namespace HLE;
 Model::Model(void)
 	: IMesh()
 {
+	
 }
 
 
 Model::~Model(void)
 {
+	
 }
 
-bool	Model::Initialize( CHAR* model, WCHAR* texture )
+
+
+bool	Model::Initialize( CHAR* model )
 {
 	unsigned long*			indices;
 	ID3D11Device*			device	= Engine::Get()->GraphicsProvider->Device;
@@ -24,17 +28,10 @@ bool	Model::Initialize( CHAR* model, WCHAR* texture )
 	D3D11_SUBRESOURCE_DATA	vertexData, indexData;
 	HRESULT					result;
 
-	if( !this->Load( model ) )
-	{	// failed to load the model
+	if ( !Load( model ) )
 		return false;
-	}
 
-	indices			= new unsigned long[m_vertex_cnt];
-
-	if( !LoadTexture( texture ) )
-	{
-		return false;
-	}
+	indices	= new unsigned long[m_vertex_cnt];
 
 	for ( int i = 0; i < m_vertex_cnt; i++ )
 	{

@@ -6,6 +6,7 @@
 #include <string>
 
 #include "irenderable.h"
+#include "graphics\texturearray.h"
 
 namespace HLE
 {
@@ -14,6 +15,7 @@ namespace HLE
 	{
 	private:
 		std::string				m_identifier;
+		CTextureArray*			m_textures;
 	protected:
 		typedef struct VERTEXTYPE
 		{
@@ -48,18 +50,23 @@ namespace HLE
 		IMesh ( void );
 		~IMesh( void );
 
+		READONLY_PROPERTY(CTextureArray*, textures);
+		GET(textures)	{ return m_textures; }
+
 		PROPERTY(std::string, ID);
 		GET(ID)	{ return m_identifier; }
 		SET(ID)	{ m_identifier = value;}
 
-		virtual	bool	Initialize( CHAR* model, WCHAR* texture ) = 0;
+		virtual	bool	SetTexture( WCHAR* filename );
+		// initialize with multiple textures
+		virtual bool	Initialize( CHAR* model ) = 0;
 
 		virtual void	Release	( void );
 		virtual	void	Render	( void ) = 0;	// this method will be defined in each model class
 
 	} MESH, *LPMESH;
 
-	typedef std::map<std::string, LPMESH>		hle_meshs;
+	typedef std::map<std::string, LPMESH>	hle_meshs;
 	typedef std::pair<std::string, LPMESH>	hle_mesh;
 };
 

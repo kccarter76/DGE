@@ -5,7 +5,7 @@
 #include "singleton.h"
 #include "clock.h"
 #include "input.h"
-#include "graphics.h"
+#include "graphics\graphics.h"
 #include "sound.h"
 #include "hardware.h"
 #include "utility\utility.h"

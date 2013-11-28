@@ -1,6 +1,6 @@
 #pragma once
 #include <list>
-#include <d3dx10math.h>
+#include "typedefs.h"
 
 namespace HLE
 {

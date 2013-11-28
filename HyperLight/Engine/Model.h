@@ -6,11 +6,14 @@ namespace HLE
 	class Model
 		: public IMesh
 	{
+	private:
+		
 	public:
 		Model(void);
 		~Model(void);
-
-		bool	Initialize( CHAR* model, WCHAR* texture );
+		
+		// initialize with multiple textures
+		bool	Initialize( CHAR* model );
 		void	Render( void );
 	};
 };

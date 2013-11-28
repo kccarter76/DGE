@@ -1,10 +1,9 @@
 #pragma once
-#include <d3d11.h>
-#include <d3dx10math.h>
 #include <exception>
 
-#include "texture.h"
 #include "typedefs.h"
+#include "texture.h"
+
 
 namespace HLE
 {
@@ -27,7 +26,7 @@ namespace HLE
 		READONLY_PROPERTY(int, IndexCount);
 		GET(IndexCount)		{ return m_index_cnt; }
 
-		READONLY_PROPERTY(ID3D11ShaderResourceView*, Texture);
+		READONLY_PROPERTY(LPSHADERRESOURCE, Texture);
 		GET(Texture)		{ return m_texture->Texture; }
 	};
 };

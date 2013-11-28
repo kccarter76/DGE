@@ -61,6 +61,8 @@
     </Link>
     <PostBuildEvent>
       <Command>XCOPY $(ProjectDir)*.h $(SolutionDir)includes\engine\ /Y
+XCOPY $(ProjectDir)graphics\*.h $(SolutionDir)includes\engine\graphics\ /Y
+XCOPY $(ProjectDir)graphics\shaders\*.h $(SolutionDir)includes\engine\graphics\shaders\ /Y
 XCOPY $(ProjectDir)utility\*.h $(SolutionDir)includes\engine\utility\ /Y
 XCOPY $(ProjectDir)utility\generators\*.h $(SolutionDir)includes\engine\utility\generators\ /Y
 XCOPY $(ProjectDir)hlsl\*.ps $(SolutionDir)shaders\ /Y
@@ -90,53 +92,64 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
     <None Include="HLSL\font.vs" />
     <None Include="HLSL\light.ps" />
     <None Include="HLSL\light.vs" />
+    <None Include="HLSL\multitexture.ps" />
+    <None Include="HLSL\multitexture.vs" />
     <None Include="HLSL\texture.ps" />
     <None Include="HLSL\texture.vs" />
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Asset.h" />
-    <ClInclude Include="camera.h" />
+    <ClInclude Include="graphics\camera.h" />
     <ClInclude Include="Clock.h" />
+    <ClInclude Include="graphics\shaders\multitexture.h" />
     <ClInclude Include="ColorShader.h" />
-    <ClInclude Include="D3DX.h" />
+    <ClInclude Include="graphics\D3DX.h" />
     <ClInclude Include="defs.h" />
     <ClInclude Include="Engine.h" />
-    <ClInclude Include="font.h" />
-    <ClInclude Include="FontShader.h" />
-    <ClInclude Include="frustum.h" />
-    <ClInclude Include="graphics.h" />
+    <ClInclude Include="graphics\font.h" />
+    <ClInclude Include="graphics\shaders\FontShader.h" />
+    <ClInclude Include="graphics\frustum.h" />
+    <ClInclude Include="graphics\graphics.h" />
     <ClInclude Include="hardware.h" />
     <ClInclude Include="hle.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="input_defs.h" />
     <ClInclude Include="imesh.h" />
     <ClInclude Include="iobject.h" />
-    <ClInclude Include="ibitmap.h" />
+    <ClInclude Include="graphics\bitmap.h" />
     <ClInclude Include="irenderable.h" />
     <ClInclude Include="ishader.h" />
-    <ClInclude Include="light.h" />
-    <ClInclude Include="LightShader.h" />
+    <ClInclude Include="graphics\light.h" />
+    <ClInclude Include="graphics\shaders\LightShader.h" />
+    <ClInclude Include="graphics\TextureArray.h" />
     <ClInclude Include="utility\generators\Mersenne.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="scene_manager.h" />
+    <ClInclude Include="graphics\scene_manager.h" />
     <ClInclude Include="singleton.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="text.h" />
+    <ClInclude Include="graphics\text.h" />
     <ClInclude Include="texture.h" />
-    <ClInclude Include="TextureShader.h" />
+    <ClInclude Include="graphics\shaders\TextureShader.h" />
     <ClInclude Include="typedefs.h" />
     <ClInclude Include="utility\Utility.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Asset.cpp" />
-    <ClCompile Include="camera.cpp" />
+    <ClCompile Include="graphics\camera.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Clock.cpp" />
+    <ClCompile Include="graphics\shaders\multitexture.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="ColorShader.cpp" />
-    <ClCompile Include="D3DX.cpp" />
+    <ClCompile Include="graphics\D3DX.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -146,30 +159,41 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Engine.cpp" />
-    <ClCompile Include="font.cpp" />
-    <ClCompile Include="FontShader.cpp" />
-    <ClCompile Include="frustum.cpp" />
-    <ClCompile Include="graphics.cpp" />
+    <ClCompile Include="graphics\font.cpp" />
+    <ClCompile Include="graphics\shaders\FontShader.cpp" />
+    <ClCompile Include="graphics\frustum.cpp" />
+    <ClCompile Include="graphics\graphics.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="hardware.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="imesh.cpp" />
     <ClCompile Include="iobject.cpp" />
-    <ClCompile Include="ibitmap.cpp" />
+    <ClCompile Include="graphics\bitmap.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="irenderable.cpp" />
     <ClCompile Include="ishader.cpp" />
-    <ClCompile Include="light.cpp" />
-    <ClCompile Include="LightShader.cpp" />
+    <ClCompile Include="graphics\light.cpp" />
+    <ClCompile Include="graphics\shaders\LightShader.cpp" />
+    <ClCompile Include="graphics\TextureArray.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="utility\generators\Mersenne.cpp" />
     <ClCompile Include="Model.cpp" />
-    <ClCompile Include="scene_manager.cpp" />
+    <ClCompile Include="graphics\scene_manager.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="text.cpp" />
+    <ClCompile Include="graphics\text.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="texture.cpp" />
-    <ClCompile Include="TextureShader.cpp" />
+    <ClCompile Include="graphics\shaders\TextureShader.cpp" />
     <ClCompile Include="utility\Utility.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>

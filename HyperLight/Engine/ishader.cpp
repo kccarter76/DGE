@@ -1,4 +1,5 @@
 #include "StdAfx.h"
+#include "engine.h"
 #include "ishader.h"
 
 #include <string>
@@ -216,5 +217,27 @@ bool	IShader::SetShaderParameters( ID3D11DeviceContext* context, D3DXMATRIX worl
 	context->PSSetShaderResources( 0, 1, &texture );
 
 	return result;
+}
+
+void	IShader::Render( int num_indices )
+{
+	ID3D11DeviceContext* oContext = Engine::Get()->GraphicsProvider->Context;
+	// Set the vertex input layout.
+	oContext->IASetInputLayout(m_layout);
+
+	// Set the vertex and pixel shaders that will be used to render this triangle.
+	oContext->VSSetShader(m_vertex_shader, NULL, 0);
+	oContext->PSSetShader(m_pixel_shader, NULL, 0);
+
+	if ( m_sample_state )
+	{
+		// Set the sampler state in the pixel shader.
+		oContext->PSSetSamplers(0, 1, &m_sample_state);
+	}
+
+	// Render the triangles.
+	oContext->DrawIndexed(num_indices, 0, 0);
+
+	return;
 }
 

@@ -35,9 +35,9 @@ void	IObject::Update( void )
 	{
 		D3DXVECTOR3
 			*up			= &m_instance.up,
-			direction;
+			direction	= ( m_instance.lookAt - m_instance.position );
 
-		D3DXVec3Normalize(&direction, &(m_instance.lookAt - m_instance.position)); //create direction vector
+		D3DXVec3Normalize(&direction, &direction); //create direction vector
 
 		float
 			pitch	= ( float )D3DXToRadian( m_instance.rotation.x ),

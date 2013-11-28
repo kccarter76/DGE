@@ -7,8 +7,10 @@ using namespace HLE;
 
 IMesh::IMesh(void)
 	: IRenderable()
+	, m_mesh(nullptr)
+	, m_textures(nullptr)
 {
-	m_mesh			= nullptr;
+	m_textures = new CTextureArray();
 }
 
 
@@ -19,6 +21,8 @@ IMesh::~IMesh(void)
 
 void	IMesh::Release( void )
 {
+	SAFE_RELEASE_D3D(m_textures);
+
 	if ( m_mesh ) {
 		delete[] m_mesh;
 		m_mesh = nullptr;
@@ -84,4 +88,9 @@ bool	IMesh::Load( CHAR* filename )
 	fin.close();
 
 	return true;
+}
+
+bool	IMesh::SetTexture( WCHAR* filename )
+{
+	return m_textures->LoadTexture( filename );
 }
