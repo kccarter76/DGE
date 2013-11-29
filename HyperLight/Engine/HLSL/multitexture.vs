@@ -13,7 +13,6 @@ cbuffer MatrixBuffer
 	matrix projectionMatrix;
 };
 
-
 //////////////
 // TYPEDEFS //
 //////////////

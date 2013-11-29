@@ -114,7 +114,7 @@ bool	CSceneManager::LoadModel( std::string id )
 		if ( !mesh )	return false;
 
 		mesh->Initialize( "..\\models\\sphere.txt" );
-		mesh->SetTexture( L"..\\shaders\\resources\\seafloor.dds" );
+		//mesh->SetTexture( L"..\\shaders\\resources\\seafloor.dds" );
 		mesh->SetTexture( L"..\\shaders\\resources\\dirt01.dds" );
 	}
 	else if ( id.compare( "cube" ) == 0 )
@@ -124,8 +124,8 @@ bool	CSceneManager::LoadModel( std::string id )
 		if ( !mesh )	return false;
 
 		mesh->Initialize( "..\\models\\cube.txt" );
+		mesh->SetTexture( L"..\\shaders\\resources\\dirt01.dds" );
 		mesh->SetTexture( L"..\\shaders\\resources\\stone01.dds" );
-		//mesh->SetTexture( L"..\\shaders\\resources\\dirt01.dds" );
 	}
 	else 
 	{	// model mesh id is unknown
