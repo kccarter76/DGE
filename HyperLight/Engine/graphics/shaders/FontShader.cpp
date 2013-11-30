@@ -1,5 +1,4 @@
 #include "..\..\StdAfx.h"
-#include "..\..\engine.h"
 #include "FontShader.h"
 
 using namespace HLE;
@@ -8,13 +7,6 @@ FontShader::FontShader(void)
 	: IShader()
 {
 	m_pixel_buffer	= nullptr;
-
-	SingletonAccess<Engine> oEngine	= Engine::Get();
-
-	if ( !Initialize( oEngine->Handle, oEngine->GraphicsProvider->Device ) )
-	{
-		throw;	// Initialize method is either not implemented or there was a failure.
-	}
 }
 
 FontShader::~FontShader(void)
