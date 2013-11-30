@@ -49,7 +49,7 @@ float4 BumpMapPixelShader(PixelInputType input) : SV_TARGET
     bumpMap = shaderTextures[1].Sample(SampleType, input.tex);
 
     // Expand the range of the normal value from (0, +1) to (-1, +1).
-    bumpMap = (bumpMap * 2.0f) - 1.0f;
+    bumpMap = (bumpMap * 2.5f) - 1.0f;
     
     // Calculate the normal from the data in the bump map.
     bumpNormal = input.normal + bumpMap.x * input.tangent + bumpMap.y * input.binormal;
