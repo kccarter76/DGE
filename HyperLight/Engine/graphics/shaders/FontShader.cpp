@@ -1,4 +1,5 @@
-#include "StdAfx.h"
+#include "..\..\StdAfx.h"
+#include "..\..\engine.h"
 #include "FontShader.h"
 
 using namespace HLE;
@@ -7,6 +8,13 @@ FontShader::FontShader(void)
 	: IShader()
 {
 	m_pixel_buffer	= nullptr;
+
+	SingletonAccess<Engine> oEngine	= Engine::Get();
+
+	if ( !Initialize( oEngine->Handle, oEngine->GraphicsProvider->Device ) )
+	{
+		throw;	// Initialize method is either not implemented or there was a failure.
+	}
 }
 
 FontShader::~FontShader(void)
@@ -18,6 +26,11 @@ void	FontShader::Release( void )
 	SAFE_RELEASE_D3D(m_pixel_buffer);
 
 	IShader::Release();
+}
+
+bool	FontShader::Initialize( HWND hWnd, ID3D11Device* device )
+{
+	return IShader::Load( hWnd, device, "Font", L"..\\shaders\\font.vs", L"..\\shaders\\font.ps" );
 }
 
 void	FontShader::GetPolygonLayout( input_elements* inputs )
@@ -129,9 +142,4 @@ bool	FontShader::Render( ID3D11DeviceContext* context, int cnt, D3DXMATRIX world
 		return true;
 	}
 	return false;
-}
-
-bool	FontShader::Load( ID3D11Device* device, HWND hWnd )
-{
-	return IShader::Load( hWnd, device, "Font", L"..\\shaders\\font.vs", L"..\\shaders\\font.ps" );
 }

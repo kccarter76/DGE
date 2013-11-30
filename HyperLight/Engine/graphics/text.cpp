@@ -4,15 +4,10 @@
 
 using namespace HLE;
 
-Text::Text( ID3D11Device* device, HWND hWnd, HLE::SIZE screen, D3DXMATRIX default_view )
+Text::Text( HLE::SIZE screen, D3DXMATRIX default_view )
 	: m_font(nullptr), m_shader(nullptr), m_view(default_view), m_size(screen), m_color(D3DXVECTOR4( 1.0f, 1.0f, 1.0f, 1.0f ))
 {
 	m_shader	= new FontShader();
-
-	if ( m_shader && !m_shader->Load( device, hWnd ) )
-	{	// failed to initialize the font shader
-		
-	}
 }
 
 Text::~Text( void )

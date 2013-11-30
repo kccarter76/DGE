@@ -2,16 +2,22 @@
 #include "..\model.h"
 #include "..\engine.h"
 #include "scene_manager.h"
-
-#include "shaders\LightShader.h"
+#include "shaders\multishader.h"
 
 using namespace HLE;
 
 CSceneManager::CSceneManager( void )
 	: m_frustum( nullptr )
 {
+	SingletonAccess<Engine> oEngine	= Engine::Get();
+
 	m_frustum	= new Frustum();
-	m_multi_tex	= new CMultiTextureShader();
+	m_shader	= new CMultiTextureShader();
+
+	if ( !m_shader->Initialize( oEngine->Handle, oEngine->GraphicsProvider->Device ) )
+	{
+		throw;
+	}
 }
 
 CSceneManager::~CSceneManager( void )
@@ -25,7 +31,7 @@ void	CSceneManager::Release( void )
 	hle_meshs::iterator m_it;
 
 	SAFE_RELEASE_D3D(m_frustum);
-	SAFE_RELEASE_D3D(m_multi_tex);
+	SAFE_RELEASE_D3D(m_shader);
 
 	for( m_it = m_meshs.begin(); m_it != m_meshs.end(); m_it++ )
 	{
@@ -85,10 +91,12 @@ bool	CSceneManager::Render( ID3D11DeviceContext* context, D3DXMATRIX world, D3DX
 
 			m_meshs[ it->MeshID ]->Render();
 			// we need to shade the mesh object
+			CMultiTextureShader* multi = ((CMultiTextureShader*)m_shader);
+			//LightBuffer( D3DXVECTOR4( 1.0f, 1.0f, 1.0f, 1.0f ), D3DXVECTOR3( 0.0f, 0.0f, 1.0f ) )
 
-			if ( m_multi_tex->SetShaderParameters( context, world, view, projection, m_meshs[ it->MeshID ]->textures->data, m_meshs[ it->MeshID ]->textures->count ) )
+			if ( multi->SetShaderParameters( context, world, view, projection, m_meshs[ it->MeshID ]->textures->data, multi->GetBuffer(m_meshs[ it->MeshID ], 2.0f ) ) )
 			{
-				m_multi_tex->Render( m_meshs[ it->MeshID ]->IndexCount );
+				m_shader->Render( m_meshs[ it->MeshID ]->IndexCount );
 			}
 
 			// we need to grab a copy of the original world matrix
@@ -114,8 +122,7 @@ bool	CSceneManager::LoadModel( std::string id )
 		if ( !mesh )	return false;
 
 		mesh->Initialize( "..\\models\\sphere.txt" );
-		//mesh->SetTexture( L"..\\shaders\\resources\\seafloor.dds" );
-		mesh->SetTexture( L"..\\shaders\\resources\\dirt01.dds" );
+		mesh->SetTexture( L"..\\shaders\\resources\\seafloor.dds" );
 	}
 	else if ( id.compare( "cube" ) == 0 )
 	{
@@ -124,8 +131,9 @@ bool	CSceneManager::LoadModel( std::string id )
 		if ( !mesh )	return false;
 
 		mesh->Initialize( "..\\models\\cube.txt" );
-		mesh->SetTexture( L"..\\shaders\\resources\\dirt01.dds" );
 		mesh->SetTexture( L"..\\shaders\\resources\\stone01.dds" );
+		//mesh->SetTexture( L"..\\shaders\\resources\\bump01.dds" );
+
 	}
 	else 
 	{	// model mesh id is unknown

@@ -50,6 +50,18 @@
     <None Include="HLSL\multitexture.vs">
       <Filter>HLSL Files</Filter>
     </None>
+    <None Include="HLSL\alphatexture.vs">
+      <Filter>HLSL Files</Filter>
+    </None>
+    <None Include="HLSL\alphatexture.ps">
+      <Filter>HLSL Files</Filter>
+    </None>
+    <None Include="HLSL\bumpmap.vs">
+      <Filter>HLSL Files</Filter>
+    </None>
+    <None Include="HLSL\bumpmap.ps">
+      <Filter>HLSL Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -121,9 +133,6 @@
     <ClInclude Include="utility\generators\Mersenne.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\shaders\multitexture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\TextureArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -161,6 +170,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="graphics\scene_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\shaders\AlphaMapShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\shaders\multishader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\shaders\BumpMapShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -216,9 +234,6 @@
     <ClCompile Include="utility\generators\Mersenne.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\shaders\multitexture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\TextureArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -256,6 +271,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="graphics\scene_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\shaders\AlphaMapShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\shaders\multishader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\shaders\BumpMapShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

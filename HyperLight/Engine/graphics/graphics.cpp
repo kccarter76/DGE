@@ -96,7 +96,7 @@ bool Graphics::Initialize( HWND hWnd, LPRECTINFO ri, LPHARDWAREINFO hi, const bo
 		m_light->SpecularColor	= D3DXVECTOR4( 1.0f, 1.0f, 1.0f, 1.0f );
 		m_light->Power			= 64.0f;
 
-		m_text			= new Text( m_d3dx->Device, Engine::Get()->Handle, ri->size, m_camera->DefaultViewMatrix );
+		m_text			= new Text( ri->size, m_camera->DefaultViewMatrix );
 
 		if ( !m_text->Load( "..\\models\\fonts\\fontdata.txt", L"..\\shaders\\resources\\font.dds" ) )
 		{

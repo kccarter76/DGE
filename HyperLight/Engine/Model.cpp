@@ -18,8 +18,6 @@ Model::~Model(void)
 	
 }
 
-
-
 bool	Model::Initialize( CHAR* model )
 {
 	unsigned long*			indices;
@@ -31,11 +29,20 @@ bool	Model::Initialize( CHAR* model )
 	if ( !Load( model ) )
 		return false;
 
+	//CalculateVectors();
+
 	indices	= new unsigned long[m_vertex_cnt];
 
 	for ( int i = 0; i < m_vertex_cnt; i++ )
 	{
-		m_vertices.push_back( VERTEXTYPE( D3DXVECTOR3( m_mesh[i].x, m_mesh[i].y, m_mesh[i].z ), D3DXVECTOR2( m_mesh[i].tu, m_mesh[i].tv ), D3DXVECTOR3( m_mesh[i].nx, m_mesh[i].ny, m_mesh[i].nz ) ) );
+		m_vertices.push_back( 
+			VERTEXTYPE( 
+				D3DXVECTOR3( m_mesh[i].x, m_mesh[i].y, m_mesh[i].z ), 
+				D3DXVECTOR2( m_mesh[i].tu, m_mesh[i].tv ), 
+				D3DXVECTOR3( m_mesh[i].nx, m_mesh[i].ny, m_mesh[i].nz )//,
+				//D3DXVECTOR3( m_mesh[i].tx, m_mesh[i].ty, m_mesh[i].tz ),
+				//D3DXVECTOR3( m_mesh[i].bx, m_mesh[i].by, m_mesh[i].bz ) 
+				) );
 
 		indices[i] = i;
 	}

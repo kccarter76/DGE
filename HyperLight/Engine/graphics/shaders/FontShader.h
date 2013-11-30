@@ -25,6 +25,7 @@ namespace HLE
 
 	protected:
 		bool	Initialize( ID3D11Device* device );
+		bool	Initialize( HWND hWnd, ID3D11Device* device);
 		void	GetPolygonLayout( input_elements* inputs );
 
 	public:
@@ -33,7 +34,5 @@ namespace HLE
 
 		void	Release( void );
 		bool	Render( ID3D11DeviceContext* context, int cnt, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX ortho, ID3D11ShaderResourceView* texture, D3DXCOLOR color );
-		bool	Load( ID3D11Device* device, HWND hWnd );
-
 	};
 };

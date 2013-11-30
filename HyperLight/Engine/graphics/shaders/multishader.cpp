@@ -1,19 +1,13 @@
 #include "..\..\StdAfx.h"
-#include "..\..\engine.h"
-#include "multitexture.h"
+#include "multishader.h"
 
 using namespace HLE;
 
 CMultiTextureShader::CMultiTextureShader(void)
 	: IShader()
 	, m_texture_buffer(nullptr)
+	, max_count(3)
 {
-	SingletonAccess<Engine> oEngine	= Engine::Get();
-
-	if ( !IShader::Load( oEngine->Handle, oEngine->GraphicsProvider->Device, "MultiTexture", L"..\\shaders\\multitexture.vs", L"..\\shaders\\multitexture.ps" ) )
-	{
-		throw;
-	}
 }
 
 CMultiTextureShader::~CMultiTextureShader(void)
@@ -48,6 +42,11 @@ void	CMultiTextureShader::GetPolygonLayout( input_elements* inputs )
 	layout[1].InstanceDataStepRate = 0;
 
 	CopyPolygonArray( layout, sizeof( layout ) / sizeof( layout[0] ), inputs );
+}
+
+bool	CMultiTextureShader::Initialize( HWND hWnd, ID3D11Device* device )
+{
+	return IShader::Load( hWnd, device, "MultiTexture", L"..\\shaders\\multitexture.vs", L"..\\shaders\\multitexture.ps" );
 }
 
 bool	CMultiTextureShader::Initialize( ID3D11Device* device )
@@ -94,14 +93,30 @@ bool	CMultiTextureShader::Initialize( ID3D11Device* device )
 	return true;
 }
 
-bool	CMultiTextureShader::SetShaderParameters( ID3D11DeviceContext* context, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection, ID3D11ShaderResourceView** textures, int texture_cnt )
+TextureBuffer	CMultiTextureShader::GetBuffer( const LPMESH mesh, float gamma )
+{
+	TextureBuffer buffer;
+
+	if( mesh->textures->count > max_count )
+	{	// number of textures exceed the number of textures supported by the pixel shader.
+		throw;
+	}
+
+	buffer.count	= mesh->textures->count;
+	buffer.map_idx	= mesh->textures->map_index;
+	buffer.gamma	= gamma;
+
+	return buffer;
+}
+
+bool	CMultiTextureShader::SetShaderParameters( ID3D11DeviceContext* context, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection, ID3D11ShaderResourceView** textures, TextureBuffer texture )
 {
 	LPTextureBuffer	
-		texture		= nullptr;
+		texture_data	= nullptr;
 	D3D11_MAPPED_SUBRESOURCE
 		resource;
 	HRESULT
-		hr			= S_OK;
+		hr				= S_OK;
 
 	if ( !IShader::SetShaderParameters( context, world, view, projection ) )
 	{
@@ -115,18 +130,15 @@ bool	CMultiTextureShader::SetShaderParameters( ID3D11DeviceContext* context, D3D
 		return false;
 	}
 
-	texture	= (LPTextureBuffer)resource.pData;
+	texture_data	= (LPTextureBuffer)resource.pData;
 
-	texture->count			= texture_cnt;
-	texture->light_map_id	= 0;
-	texture->gamma			= 2.0f;
-	texture->padding		= 0.0f;
+	*texture_data	= &texture;
 
 	context->Unmap( m_texture_buffer, 0 );
 
 	context->PSSetConstantBuffers( 0, 1, &m_texture_buffer);
 
-	context->PSSetShaderResources( 0, texture_cnt, textures );
+	context->PSSetShaderResources( 0, texture_data->count, textures );
 
 	return true;
 }

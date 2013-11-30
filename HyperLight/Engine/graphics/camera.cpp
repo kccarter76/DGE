@@ -17,9 +17,9 @@ float	CCamera::Accelerate( bool down, float* accelerate, float* speed )
 {
 	if(down)
 	{
-		*accelerate += m_time * 0.01f;
+		*accelerate += m_time * 0.05f;
 
-		if( *accelerate > (m_time * 0.15f))
+		if( (*accelerate) > (m_time * 0.15f))
 		{
 			*accelerate = m_time * 0.15f;
 		}
