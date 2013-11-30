@@ -1,0 +1,40 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: texture.ps
+////////////////////////////////////////////////////////////////////////////////
+
+
+/////////////
+// GLOBALS //
+/////////////
+cbuffer TextureBuffer
+{
+	float	gamma;
+	int		count, map_idx;
+	float	padding;
+};
+
+Texture2D		textures[3];
+SamplerState	sample;
+
+//////////////
+// TYPEDEFS //
+//////////////
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+    float2 tex : TEXCOORD0;
+};
+
+////////////////////////////////////////////////////////////////////////////////
+// Pixel Shader
+////////////////////////////////////////////////////////////////////////////////
+float4 AlphaMapPixelShader(PixelInputType input) : SV_TARGET
+{
+	float4
+		final	= float4(0,0,0,1),
+		alpha	= textures[2].Sample(sample, input.tex);
+
+	final = ( alpha * textures[0].Sample(sample, input.tex) ) + ( ( 1.0 - alpha ) * textures[1].Sample(sample, input.tex) );
+
+    return saturate(final);
+}
