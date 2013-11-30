@@ -1,5 +1,5 @@
 #pragma once
-#include "multishader.h"
+#include "MultiTextureShader.h"
 
 namespace HLE
 {
