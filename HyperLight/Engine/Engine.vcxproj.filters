@@ -50,13 +50,13 @@
     <None Include="HLSL\multitexture.vs">
       <Filter>HLSL Files</Filter>
     </None>
-    <None Include="HLSL\alphatexture.vs">
-      <Filter>HLSL Files</Filter>
-    </None>
     <None Include="HLSL\alphatexture.ps">
       <Filter>HLSL Files</Filter>
     </None>
     <None Include="HLSL\bumpmap.vs">
+      <Filter>HLSL Files</Filter>
+    </None>
+    <None Include="HLSL\alphatexture.vs">
       <Filter>HLSL Files</Filter>
     </None>
     <None Include="HLSL\bumpmap.ps">
@@ -175,10 +175,10 @@
     <ClInclude Include="graphics\shaders\AlphaMapShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\shaders\multishader.h">
+    <ClInclude Include="graphics\shaders\BumpMapShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\shaders\BumpMapShader.h">
+    <ClInclude Include="graphics\shaders\MultiTextureShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -276,10 +276,10 @@
     <ClCompile Include="graphics\shaders\AlphaMapShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\shaders\multishader.cpp">
+    <ClCompile Include="graphics\shaders\BumpMapShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\shaders\BumpMapShader.cpp">
+    <ClCompile Include="graphics\shaders\MultiTextureShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

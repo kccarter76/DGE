@@ -210,7 +210,7 @@ void Engine::RenderFrame( void )
 	// update the camera with the current frame time
 	GraphicsProvider->Camera->Time = (float)m_time;
 	// update position
-	GraphicsProvider->Camera->Position	= D3DXVECTOR3(0.0f, 0.0f, -10.0f);
+	GraphicsProvider->Camera->Position	= D3DXVECTOR3(0.0f, 0.0f, -5.0f);
 	// update the input mappings
 	Engine::Get()->InputMap.Update();
 

@@ -19,8 +19,9 @@ namespace HLE
 	protected:
 		typedef struct VERTEXTYPE
 		{
-			D3DXVECTOR3 position, normal, tangent, binormal;
+			D3DXVECTOR3 position;
 			D3DXVECTOR2 tex_coords;
+			D3DXVECTOR3 normal, tangent, binormal;
 
 			VERTEXTYPE( void )
 			{
@@ -86,7 +87,6 @@ namespace HLE
 		SET(ID)	{ m_identifier = value;}
 
 		virtual	bool	SetTexture( WCHAR* filename );
-		virtual	bool	SetTexture( WCHAR* filename, bool is_map );
 		// initialize with multiple textures
 		virtual bool	Initialize( CHAR* model ) = 0;
 

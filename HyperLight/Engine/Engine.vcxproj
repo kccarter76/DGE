@@ -103,12 +103,11 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="graphics\shaders\BumpMapShader.h" />
-    <ClInclude Include="graphics\shaders\AlphaMapShader.h" />
     <ClInclude Include="Asset.h" />
     <ClInclude Include="graphics\camera.h" />
     <ClInclude Include="Clock.h" />
-    <ClInclude Include="graphics\shaders\multishader.h" />
+    <ClInclude Include="graphics\shaders\AlphaMapShader.h" />
+    <ClInclude Include="graphics\shaders\BumpMapShader.h" />
     <ClInclude Include="ColorShader.h" />
     <ClInclude Include="graphics\D3DX.h" />
     <ClInclude Include="defs.h" />
@@ -117,6 +116,7 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
     <ClInclude Include="graphics\shaders\FontShader.h" />
     <ClInclude Include="graphics\frustum.h" />
     <ClInclude Include="graphics\graphics.h" />
+    <ClInclude Include="graphics\shaders\MultiTextureShader.h" />
     <ClInclude Include="hardware.h" />
     <ClInclude Include="hle.h" />
     <ClInclude Include="input.h" />
@@ -144,18 +144,15 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
     <ClInclude Include="utility\Utility.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="graphics\shaders\BumpMapShader.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="graphics\shaders\AlphaMapShader.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="Asset.cpp" />
     <ClCompile Include="graphics\camera.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Clock.cpp" />
-    <ClCompile Include="graphics\shaders\multishader.cpp">
+    <ClCompile Include="graphics\shaders\AlphaMapShader.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="graphics\shaders\BumpMapShader.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="ColorShader.cpp" />
@@ -177,6 +174,9 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
     </ClCompile>
     <ClCompile Include="graphics\frustum.cpp" />
     <ClCompile Include="graphics\graphics.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="graphics\shaders\MultiTextureShader.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="hardware.cpp" />

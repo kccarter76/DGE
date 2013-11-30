@@ -5,7 +5,6 @@
 #include "frustum.h"
 #include "light.h"
 
-
 namespace HLE
 {
 	class ENGINE_API CSceneManager

@@ -92,12 +92,7 @@ bool	IMesh::Load( CHAR* filename )
 
 bool	IMesh::SetTexture( WCHAR* filename )
 {
-	return SetTexture( filename, false );
-}
-
-bool	IMesh::SetTexture( WCHAR* filename, bool is_map )
-{
-	return m_textures->LoadTexture( filename, is_map );
+	return m_textures->LoadTexture( filename );
 }
 
 void	IMesh::CalculateVectors( void )

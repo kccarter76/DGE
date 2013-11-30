@@ -67,7 +67,7 @@ namespace HLE
 		bool	UpdateText( LPSENTENCE sentence, wstring text, HLE::POINT pt, D3DXCOLOR color );
 	public:
 		// Text( void);
-		Text( ID3D11Device* device, HWND hWnd, HLE::SIZE screen, D3DXMATRIX default_view );
+		Text( HLE::SIZE screen, D3DXMATRIX default_view );
 		~Text( void );
 
 		bool	Load( LPCSTR fn_data, LPWSTR fn_texture );

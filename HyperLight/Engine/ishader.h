@@ -56,10 +56,9 @@ namespace HLE
 		IShader(void);
 		~IShader(void);
 
-		virtual bool	Initialize( HWND hWnd, ID3D11Device* device ) = 0;//{ UNREFERENCED_PARAMETER(hWnd); UNREFERENCED_PARAMETER(device); return false; };
-
-		bool	Load( HWND hWnd, ID3D11Device* device, LPCSTR fnPrefix , WCHAR* vsFilename, WCHAR* psFilename );
-		void	Render( int num_indices );
+		virtual bool	Initialize( HWND hWnd, ID3D11Device* device ) = 0;
+		bool			Load( HWND hWnd, ID3D11Device* device, LPCSTR fnPrefix , WCHAR* vsFilename, WCHAR* psFilename );
+		void			Render( int num_indices );
 		virtual void	Release( void );
 	};
 };

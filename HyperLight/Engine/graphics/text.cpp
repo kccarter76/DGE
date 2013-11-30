@@ -7,7 +7,14 @@ using namespace HLE;
 Text::Text( HLE::SIZE screen, D3DXMATRIX default_view )
 	: m_font(nullptr), m_shader(nullptr), m_view(default_view), m_size(screen), m_color(D3DXVECTOR4( 1.0f, 1.0f, 1.0f, 1.0f ))
 {
+	SingletonAccess<Engine> oEngine	= Engine::Get();
+
 	m_shader	= new FontShader();
+		
+	if ( !m_shader->Initialize( oEngine->Handle, oEngine->GraphicsProvider->Device ) )
+	{
+		throw;	// Initialize method is either not implemented or there was a failure.
+	}
 }
 
 Text::~Text( void )

@@ -28,7 +28,7 @@ void	CMultiTextureShader::Release( void )
 
 void	CMultiTextureShader::GetPolygonLayout( input_elements* inputs )
 {
-	D3D11_INPUT_ELEMENT_DESC layout[2];
+	D3D11_INPUT_ELEMENT_DESC layout[3];
 
 	layout[0].SemanticName = "POSITION";
 	layout[0].SemanticIndex = 0;
@@ -45,6 +45,30 @@ void	CMultiTextureShader::GetPolygonLayout( input_elements* inputs )
 	layout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 	layout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	layout[1].InstanceDataStepRate = 0;
+
+	layout[2].SemanticName = "NORMAL";
+	layout[2].SemanticIndex = 0;
+	layout[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	layout[2].InputSlot = 0;
+	layout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	layout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	layout[2].InstanceDataStepRate = 0;
+
+	/*layout[3].SemanticName = "TANGENT";
+	layout[3].SemanticIndex = 0;
+	layout[3].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	layout[3].InputSlot = 0;
+	layout[3].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	layout[3].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	layout[3].InstanceDataStepRate = 0;
+
+	layout[4].SemanticName = "BINORMAL";
+	layout[4].SemanticIndex = 0;
+	layout[4].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	layout[4].InputSlot = 0;
+	layout[4].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	layout[4].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	layout[4].InstanceDataStepRate = 0;*/
 
 	CopyPolygonArray( layout, sizeof( layout ) / sizeof( layout[0] ), inputs );
 }

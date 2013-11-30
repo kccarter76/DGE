@@ -1,10 +1,9 @@
 #pragma once
+#include "..\ishader.h"
 #include "..\asset.h"
 #include "..\imesh.h"
 #include "frustum.h"
 #include "light.h"
-
-#include "shaders\multitexture.h"
 
 namespace HLE
 {
@@ -15,7 +14,7 @@ namespace HLE
 		hle_meshs				m_meshs;
 		
 		Frustum*				m_frustum;
-		CMultiTextureShader*	m_multi_tex;
+		IShader*				m_shader;
 
 		//////////////////////////////////
 		//	function declarations
