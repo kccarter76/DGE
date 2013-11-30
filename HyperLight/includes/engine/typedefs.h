@@ -1,8 +1,26 @@
 #pragma once
+
+/// LINKING		/////////////
+/////////////////////////////
+#pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "d3dx11.lib")
+#pragma comment(lib, "d3dx10.lib")
+
+/// includes	////////////
+////////////////////////////
 #include "defs.h"
+
+#include <dxgi.h>
+#include <d3dcommon.h>
+#include <d3d11.h>
+#include <d3dx11tex.h>
+#include <d3dx10math.h>
 
 namespace HLE
 {
+	typedef	ID3D11ShaderResourceView SHADERRESOURCE, *LPSHADERRESOURCE;
+	
 	typedef struct ENGINE_API SIZE
 	{
 		int width;
@@ -23,6 +41,13 @@ namespace HLE
 			: width(width)
 			, height(height)
 		{
+		}
+
+		SIZE padding( const int& padding )
+		{
+			int p = padding * 2;
+
+			return SIZE( width - p, height - p );
 		}
 
 		void operator=( const SIZE& r )
@@ -86,26 +111,58 @@ namespace HLE
 		}
 	} POINT, *LPPOINT;
 
-	typedef struct ENGINE_API WINDOWINFO
+	typedef struct ENGINE_API RECTINFO
 	{
 		POINT		pt;
 		SIZE		size;
 
-		WINDOWINFO( void )
+		RECTINFO( void )
 		{
 			ZeroMemory(&pt, sizeof( pt ) );
 			ZeroMemory(&size, sizeof( size ) );
 		}
 
-		void operator=( const WINDOWINFO& r )
+		RECTINFO( const RECTINFO& rc )
+		{
+			(*this) = rc;
+		}
+
+		RECTINFO( POINT pt, SIZE sz )
+			: pt(pt)
+			, size(sz)
+		{
+		}
+
+		READONLY_PROPERTY(tagRECT, rect);
+		GET(rect)	{ 
+			tagRECT _rc;
+
+			_rc.left	= ( ( size.width / 2 ) * -1 ) + pt.x;
+			_rc.right	= _rc.left + size.width;
+			_rc.top		= ( size.height / 2 ) - pt.y;
+			_rc.bottom	= _rc.top - size.height;
+
+			return _rc;
+		}
+
+		void operator=( const RECTINFO& r )
 		{
 			pt		= r.pt;
 			size	= r.size;
 		}
 
-		bool operator==( const WINDOWINFO& r )
+		bool operator==( const RECTINFO& r )
 		{
 			return pt == r.pt && size == r.size;
 		}
-	} WINDOWINFO, *LPWINDOWINFO;
+	} RECTINFO, *LPRECTINFO;
+
+	typedef struct ENGINE_API INTERNALS
+	{
+		float	angle, ratio, fnear, fdepth;
+
+		INTERNALS( void ) 
+			: angle(0.0f), ratio(0.0f), fnear(0.0f), fdepth(0.0f) 
+		{ }
+	} INTERNALS, *LPINTERNALS;
 };

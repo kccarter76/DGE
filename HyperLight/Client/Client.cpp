@@ -34,26 +34,35 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	HWND hWnd;
 	//HACCEL hAccelTable;
 
-	//// Initialize global strings
-	//LoadString(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-	//LoadString(hInstance, IDC_CLIENT, szWindowClass, MAX_LOADSTRING);
-	//MyRegisterClass(hInstance);
-
-	//// Perform application initialization:
-	//if (!InitInstance (hInstance, nCmdShow))
-	//{
-	//	return FALSE;
-	//}
-
 	//hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CLIENT));
 
 	hWnd = Engine::Get()->CreateGameWindow(1024, 768, false, &WndProc);
+	// start up the engine after creating the Rendering Window
+	Engine::Get()->Initialize();
 
 	Engine::Get()->InputMap.Add( key_message(HLE_FULLSCREEN), GUI::KEY_F11, true, false );
 	Engine::Get()->InputMap.Add( key_message(HLE_ENGINE, GUI::STATS), GUI::KEY_F12, false, false );
 	Engine::Get()->InputMap.Add( key_message(HLE_ENGINE, GUI::PAUSE), GUI::KEY_PAUSE, false, false );
+	Engine::Get()->InputMap.Add( key_message(WM_QUIT), GUI::KEY_ESCAPE, false, false );
+	// register camera left and camera right mappings
+	Engine::Get()->InputMap.Add( key_message(HLE_CAMERA, GUI::LEFT), GUI::KEY_LEFT, false, false );
+	Engine::Get()->InputMap.Add( key_message(HLE_CAMERA, GUI::RIGHT), GUI::KEY_RIGHT, false, false );
 
-	Engine::Get()->Initialize();
+	//srand((unsigned int)time(NULL));
+	//// let's setup the scene
+	//for( int i = 0; i < 30; i++ )
+	//{
+	//	D3DXVECTOR3	position;
+	//	// Generate a random position in front of the viewer for the mode.
+	//	position.x =  (((float)rand()-(float)rand())/RAND_MAX) * 10.0f;
+	//	position.y =  (((float)rand()-(float)rand())/RAND_MAX) * 10.0f;
+	//	position.z = ((((float)rand()-(float)rand())/RAND_MAX) * 10.0f) + 5.0f;
+
+	//	Engine::Get()->GraphicsProvider->SceneManager->AddAsset( i % 2 ? "sphere" : "cube", position );
+	//}
+
+	Engine::Get()->GraphicsProvider->SceneManager->AddAsset( "cube", D3DXVECTOR3( 0.0f, 0.0f, 0.0f ) );
+
 	// Main message loop:
 	while (true)
 	{
@@ -73,72 +82,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 	return (int) msg.wParam;
 }
-
-
-
-//
-//  FUNCTION: MyRegisterClass()
-//
-//  PURPOSE: Registers the window class.
-//
-//  COMMENTS:
-//
-//    This function and its usage are only necessary if you want this code
-//    to be compatible with Win32 systems prior to the 'RegisterClassEx'
-//    function that was added to Windows 95. It is important to call this function
-//    so that the application will get 'well formed' small icons associated
-//    with it.
-//
-//ATOM MyRegisterClass(HINSTANCE hInstance)
-//{
-//	WNDCLASSEX wcex;
-//
-//	wcex.cbSize = sizeof(WNDCLASSEX);
-//
-//	wcex.style			= CS_HREDRAW | CS_VREDRAW;
-//	wcex.lpfnWndProc	= WndProc;
-//	wcex.cbClsExtra		= 0;
-//	wcex.cbWndExtra		= 0;
-//	wcex.hInstance		= hInstance;
-//	wcex.hIcon			= LoadIcon(hInstance, MAKEINTRESOURCE(IDI_CLIENT));
-//	wcex.hCursor		= LoadCursor(NULL, IDC_ARROW);
-//	wcex.hbrBackground	= (HBRUSH)(COLOR_WINDOW+1);
-//	wcex.lpszMenuName	= MAKEINTRESOURCE(IDC_CLIENT);
-//	wcex.lpszClassName	= szWindowClass;
-//	wcex.hIconSm		= LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
-//
-//	return RegisterClassEx(&wcex);
-//}
-
-//
-//   FUNCTION: InitInstance(HINSTANCE, int)
-//
-//   PURPOSE: Saves instance handle and creates main window
-//
-//   COMMENTS:
-//
-//        In this function, we save the instance handle in a global variable and
-//        create and display the main program window.
-//
-//BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
-//{
-//   HWND hWnd;
-//
-//   hInst = hInstance; // Store instance handle in our global variable
-//
-//   hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-//      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
-//
-//   if (!hWnd)
-//   {
-//      return FALSE;
-//   }
-//
-//   ShowWindow(hWnd, nCmdShow);
-//   UpdateWindow(hWnd);
-//
-//   return TRUE;
-//}
 
 //
 //  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)

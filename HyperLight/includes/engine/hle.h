@@ -10,4 +10,5 @@
 #include "input.h"
 #include "singleton.h"
 #include "hardware.h"
-#include "graphics.h"
+#include "graphics\graphics.h"
+#include "sound.h"

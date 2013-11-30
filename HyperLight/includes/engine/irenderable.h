@@ -1,10 +1,9 @@
 #pragma once
-#include <d3d11.h>
-#include <d3dx10math.h>
 #include <exception>
 
-#include "texture.h"
 #include "typedefs.h"
+#include "texture.h"
+
 
 namespace HLE
 {
@@ -17,17 +16,17 @@ namespace HLE
 		int						 m_vertex_cnt, m_index_cnt;
 
 	public:
-		IRenderable(void);
-		~IRenderable(void);
+		IRenderable	( void );
+		~IRenderable( void );
 
-		bool	LoadTexture( ID3D11Device* device, LPWSTR filename );
+		bool	LoadTexture( LPWSTR filename );
 
-		virtual void	Release( void );
+		virtual void	Release	( void );
 
 		READONLY_PROPERTY(int, IndexCount);
 		GET(IndexCount)		{ return m_index_cnt; }
 
-		READONLY_PROPERTY(ID3D11ShaderResourceView*, Texture);
+		READONLY_PROPERTY(LPSHADERRESOURCE, Texture);
 		GET(Texture)		{ return m_texture->Texture; }
 	};
 };

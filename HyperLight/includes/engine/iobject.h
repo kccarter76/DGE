@@ -1,6 +1,6 @@
 #pragma once
 #include <list>
-#include <d3dx10math.h>
+#include "typedefs.h"
 
 namespace HLE
 {
@@ -14,17 +14,17 @@ namespace HLE
 	protected:
 		struct HLEWORLDSPACE
 		{
-			D3DXVECTOR3	position;
-			D3DXVECTOR3 rotation;
-			D3DXVECTOR3 lookAt;
+			D3DXVECTOR3	position, rotation, lookAt, up;
 
 			HLEWORLDSPACE( void )
 			{
 				ZeroMemory( &position, sizeof( position ) );
 				ZeroMemory( &rotation, sizeof( rotation ) );
 				ZeroMemory( &lookAt, sizeof( lookAt ) );
+				ZeroMemory( &up, sizeof( up ) );
 
-				lookAt = D3DXVECTOR3( 0.0f, 0.0f, 1.0f );
+				lookAt	= D3DXVECTOR3( 0.0f, 0.0f, 1.0f );
+				up		= D3DXVECTOR3( 0.0f, 1.0f, 0.0f );
 			}
 		};
 
@@ -40,27 +40,14 @@ namespace HLE
 		
 		PROPERTY(D3DXVECTOR3, Position);
 		GET(Position)		{ return m_instance.position; }
-		SET(Position)		{
-			D3DXMATRIX matrix;
-
-			m_instance.position += value;
-
-			D3DXMatrixIdentity( &matrix );
-			D3DXMatrixTranslation( &matrix, value.x, value.y, value.z );
-			D3DXMatrixMultiply( &m_view_matrix, &m_view_matrix, &matrix );
-		}
+		SET(Position)		{ m_instance.position = value;}
 
 		PROPERTY(D3DXVECTOR3, Rotation);
 		GET(Rotation)		{ return m_instance.rotation; }
-		SET(Rotation)		{
-			D3DXMATRIX matrix;
+		SET(Rotation)		{ m_instance.rotation = value;}
 
-			m_instance.rotation += value;
-
-			D3DXMatrixIdentity( &matrix );
-			D3DXMatrixTranslation( &matrix, ( float )D3DXToRadian( value.x ), ( float )D3DXToRadian( value.y ), ( float )D3DXToRadian( value.z ) );
-			D3DXMatrixMultiply( &m_view_matrix, &m_view_matrix, &matrix );
-		}
+		READONLY_PROPERTY(D3DXVECTOR3, LookAt);
+		GET(LookAt)			{ return m_instance.lookAt; }
 
 		READONLY_PROPERTY(D3DXMATRIX, ViewMatrix);
 		GET(ViewMatrix)		{ return m_view_matrix; }

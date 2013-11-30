@@ -57,6 +57,7 @@ namespace HLE
 		~IShader(void);
 
 		bool	Load( HWND hWnd, ID3D11Device* device, LPCSTR fnPrefix , WCHAR* vsFilename, WCHAR* psFilename );
+		void	Render( int num_indices );
 		virtual void	Release( void );
 	};
 };
