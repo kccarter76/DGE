@@ -16,6 +16,7 @@
 #include <d3d11.h>
 #include <d3dx11tex.h>
 #include <d3dx10math.h>
+#include <d3dx11async.h>
 
 namespace HLE
 {
@@ -165,4 +166,46 @@ namespace HLE
 			: angle(0.0f), ratio(0.0f), fnear(0.0f), fdepth(0.0f) 
 		{ }
 	} INTERNALS, *LPINTERNALS;
+
+	namespace buffers
+	{
+		typedef struct LightBufferType
+		{
+			D3DXVECTOR4 diffuse, specular;
+			D3DXVECTOR3 direction;
+			float power;
+
+			LightBufferType( void )
+				: direction( 0.0f, 0.0f, 0.0f )
+				, power(0.0f)
+				, diffuse( 0.0f, 0.0f, 0.0f, 1.0f )
+				, specular( 0.0f, 0.0f, 0.0f, 1.0f )
+			{
+			}
+
+			LightBufferType( D3DXVECTOR4 diffuse, D3DXVECTOR3 direction )
+				: direction( direction )
+				, diffuse( diffuse )
+				, power( 0.0f )
+				, specular( 0.0f, 0.0f, 0.0f, 1.0f )
+			{
+			}
+
+			LightBufferType( D3DXVECTOR4 diffuse, D3DXVECTOR4 specular, float power, D3DXVECTOR3 direction )
+				: direction( direction )
+				, diffuse( diffuse )
+				, power( power )
+				, specular( specular )
+			{
+			}
+
+			void operator=(const LightBufferType* right)
+			{
+				diffuse		= right->diffuse;
+				specular	= right->specular;
+				direction	= right->direction;
+				power		= right->power;
+			}
+		} LightBuffer, *LPLightBuffer;
+	};
 };

@@ -9,10 +9,12 @@
 Texture2D shaderTextures[2];
 SamplerState SampleType;
 
-cbuffer LightBuffer
+cbuffer	LightBuffer
 {
-	float4 diffuseColor;
-	float3 lightDirection;
+	float4	diffuse;
+	float4	specular;
+	float	power;
+	float3	direction;
 };
 
 
@@ -58,13 +60,13 @@ float4 BumpMapPixelShader(PixelInputType input) : SV_TARGET
     bumpNormal = normalize(bumpNormal);
 
     // Invert the light direction for calculations.
-    lightDir = -lightDirection;
+    lightDir = -direction;
 
     // Calculate the amount of light on this pixel based on the bump map normal value.
     lightIntensity = saturate(dot(bumpNormal, lightDir));
 
     // Determine the final diffuse color based on the diffuse color and the amount of light intensity.
-    color = saturate(diffuseColor * lightIntensity);
+    color = saturate(diffuse * lightIntensity);
 
     // Combine the final bump light color with the texture color.
     color = color * textureColor;
