@@ -4,7 +4,7 @@
 #include "camera.h"
 #include "shaders\textureshader.h"
 #include "shaders\lightshader.h"
-#include "light.h"
+
 #include "bitmap.h"
 #include "text.h"
 #include "..\hardware.h"
@@ -25,7 +25,7 @@ namespace HLE
 		CCamera*		m_camera;
 		//TextureShader*	m_texture_shader;
 		//LightShader*	m_light_shader;
-		Light*			m_light;
+		//Light*			m_light;
 		Bitmap*			m_bitmap;
 		Text*			m_text;
 		CSceneManager*	m_manager;

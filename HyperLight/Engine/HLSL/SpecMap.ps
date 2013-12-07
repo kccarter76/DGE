@@ -1,0 +1,82 @@
+////////////////////////////////////////////////////////////////////////////////
+// Filename: specmap.ps
+////////////////////////////////////////////////////////////////////////////////
+
+
+/////////////
+// GLOBALS //
+/////////////
+Texture2D		textures[3];
+SamplerState	sample;
+
+cbuffer	LightBuffer
+{
+	float4	diffuse;
+	float4	specular;
+	float	power;
+	float3	direction;
+};
+
+//////////////
+// TYPEDEFS //
+//////////////
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+    float2 tex : TEXCOORD0;
+    float3 normal : NORMAL;
+    float3 tangent : TANGENT;
+    float3 binormal : BINORMAL;
+    float3 direction : TEXCOORD1;
+};
+
+////////////////////////////////////////////////////////////////////////////////
+// Pixel Shader
+////////////////////////////////////////////////////////////////////////////////
+float4 SpecMapPixelShader(PixelInputType input) : SV_TARGET
+{
+	float4
+		texture			= textures[0].Sample( sample, input.tex ),
+		bump			= textures[1].Sample( sample, input.tex ),
+		spec_color,
+		spec_intense	= textures[2].Sample( sample, input.tex ),
+		final;
+	float3
+		normal,
+		light_dir,
+		reflection;
+	float
+		intensity;
+
+	// Expand the range of the normal value from (0, +1) to (-1, +1).
+    bump = (bump * 2.0f) - 1.0f;
+
+    // Calculate the normal from the data in the bump map.
+    normal = input.normal + bump.x * input.tangent + bump.y * input.binormal;
+	
+    // Normalize the resulting bump normal.
+    normal = normalize(normal);
+
+    // Invert the light direction for calculations.
+    light_dir = -direction;
+
+    // Calculate the amount of light on this pixel based on the bump map normal value.
+    intensity = saturate(dot(normal, light_dir));
+
+    // Determine the final diffuse color based on the diffuse color and the amount of light intensity.
+    final = saturate(diffuse * intensity);
+
+    // Combine the final bump light color with the texture color.
+    final = final * texture;
+
+	if ( intensity > 0.0f )
+	{
+		 reflection = normalize(2 * intensity * normal - light_dir);
+		 specular	= pow(saturate(dot(reflection, input.direction)), power);
+
+		 specular	= specular * spec_intense;
+		 final		= saturate(final + specular);
+	}
+
+	return final;
+}

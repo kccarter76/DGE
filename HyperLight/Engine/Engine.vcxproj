@@ -98,6 +98,8 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
     <None Include="HLSL\light.vs" />
     <None Include="HLSL\multitexture.ps" />
     <None Include="HLSL\multitexture.vs" />
+    <None Include="HLSL\SpecMap.ps" />
+    <None Include="HLSL\SpecMap.vs" />
     <None Include="HLSL\texture.ps" />
     <None Include="HLSL\texture.vs" />
     <None Include="ReadMe.txt" />
@@ -129,6 +131,7 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
     <ClInclude Include="graphics\light.h" />
     <ClInclude Include="graphics\shaders\LightShader.h" />
     <ClInclude Include="graphics\TextureArray.h" />
+    <ClInclude Include="graphics\shaders\SpecularMapShader.h" />
     <ClInclude Include="utility\generators\Mersenne.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="resource.h" />
@@ -191,6 +194,9 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
     <ClCompile Include="graphics\light.cpp" />
     <ClCompile Include="graphics\shaders\LightShader.cpp" />
     <ClCompile Include="graphics\TextureArray.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="graphics\shaders\SpecularMapShader.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="utility\generators\Mersenne.cpp" />

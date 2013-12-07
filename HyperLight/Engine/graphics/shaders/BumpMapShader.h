@@ -1,35 +1,11 @@
 #pragma once
+#include "..\..\typedefs.h"
 #include "..\..\ishader.h"
+
+using namespace HLE::buffers;
 
 namespace HLE
 {
-	typedef struct LightBufferType
-	{
-		D3DXVECTOR4 color;
-		D3DXVECTOR3 direction;
-		float padding;
-
-		LightBufferType( void )
-			: direction( 0.0f, 0.0f, 0.0f )
-			, padding(0.0f)
-			, color( 0.0f, 0.0f, 0.0f, 1.0f )
-		{
-		}
-
-		LightBufferType( D3DXVECTOR4 color, D3DXVECTOR3 direction )
-			: direction( direction )
-			, color( color )
-			, padding( 0.0f )
-		{
-		}
-
-		void operator=(const LightBufferType* right)
-		{
-			color		= right->color;
-			direction	= right->direction;
-		}
-	} LightBuffer, *LPLightBuffer;
-
 	class CBumpMapShader
 		: public IShader
 	{

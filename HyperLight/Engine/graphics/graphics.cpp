@@ -13,7 +13,7 @@ Graphics::Graphics(void)
 	m_camera			= nullptr;
 	//m_texture_shader	= nullptr;
 	//m_light_shader		= nullptr;
-	m_light				= nullptr;
+	//m_light				= nullptr;
 	m_bitmap			= nullptr;
 	m_text				= nullptr;
 	m_manager			= nullptr;
@@ -25,7 +25,7 @@ Graphics::~Graphics(void)
 	SAFE_RELEASE_D3D(m_camera);
 	//SAFE_RELEASE_D3D(m_texture_shader);
 	//SAFE_RELEASE_D3D(m_light_shader);
-	SAFE_RELEASE_D3D(m_light);
+	//SAFE_RELEASE_D3D(m_light);
 	SAFE_RELEASE_D3D(m_bitmap);
 	SAFE_RELEASE_D3D(m_text);
 	SAFE_RELEASE_D3D(m_manager);
@@ -88,13 +88,7 @@ bool Graphics::Initialize( HWND hWnd, LPRECTINFO ri, LPHARDWAREINFO hi, const bo
 			return false;
 		}
 
-		m_light			= new Light();
-
-		m_light->AmbientColor	= D3DXVECTOR4( 0.15f, 0.15f, 0.15f, 1.0f );
-		m_light->DiffuseColor	= D3DXVECTOR4( 1.0f, 1.0f, 1.0f, 1.0f );
-		m_light->Direction		= D3DXVECTOR3( 1.0f, 0.0f, 1.0f );
-		m_light->SpecularColor	= D3DXVECTOR4( 1.0f, 1.0f, 1.0f, 1.0f );
-		m_light->Power			= 64.0f;
+		
 
 		m_text			= new Text( ri->size, m_camera->DefaultViewMatrix );
 

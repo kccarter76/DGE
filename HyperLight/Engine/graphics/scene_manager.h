@@ -2,6 +2,7 @@
 #include "..\ishader.h"
 #include "..\asset.h"
 #include "..\imesh.h"
+#include "light.h"
 #include "frustum.h"
 #include "light.h"
 
@@ -14,6 +15,7 @@ namespace HLE
 		hle_meshs				m_meshs;
 		
 		Frustum*				m_frustum;
+		Light*					m_light;
 		IShader*				m_shader;
 
 		//////////////////////////////////

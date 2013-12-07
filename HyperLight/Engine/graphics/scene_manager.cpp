@@ -3,15 +3,18 @@
 #include "..\engine.h"
 #include "scene_manager.h"
 
-#include "shaders\MultiTextureShader.h"
+#include "shaders\BumpMapShader.h"
 
 using namespace HLE;
 
 CSceneManager::CSceneManager( void )
 	: m_frustum( nullptr )
+	, m_light( nullptr )
+	, m_shader( nullptr )
 {
 	m_frustum	= new Frustum();
-	m_shader	= new CMultiTextureShader();
+	m_light		= new Light();
+	m_shader	= new CBumpMapShader();
 
 	SingletonAccess<Engine> oEngine	= Engine::Get();
 
@@ -19,6 +22,12 @@ CSceneManager::CSceneManager( void )
 	{
 		throw;
 	}
+
+	m_light->AmbientColor	= D3DXVECTOR4( 0.15f, 0.15f, 0.15f, 1.0f );
+	m_light->DiffuseColor	= D3DXVECTOR4( 1.0f, 1.0f, 1.0f, 1.0f );
+	m_light->Direction		= D3DXVECTOR3( 1.0f, 0.0f, 1.0f );
+	m_light->SpecularColor	= D3DXVECTOR4( 1.0f, 1.0f, 1.0f, 1.0f );
+	m_light->Power			= 64.0f;
 }
 
 CSceneManager::~CSceneManager( void )
@@ -32,6 +41,7 @@ void	CSceneManager::Release( void )
 	hle_meshs::iterator m_it;
 
 	SAFE_RELEASE_D3D(m_frustum);
+	SAFE_RELEASE_D3D(m_light);
 	SAFE_RELEASE_D3D(m_shader);
 
 	for( m_it = m_meshs.begin(); m_it != m_meshs.end(); m_it++ )
@@ -84,7 +94,7 @@ bool	CSceneManager::Render( ID3D11DeviceContext* context, D3DXMATRIX world, D3DX
 
 	for( it = m_assets.begin(); it != m_assets.end(); it++ )
 	{
-		if ( false || m_frustum->CheckSphere( it->Position, radius ) > Frustum::OUTSIDE )
+		if ( m_frustum->CheckSphere( it->Position, radius ) > Frustum::OUTSIDE )
 		{
 			position = it->Position;
 			
@@ -106,9 +116,9 @@ bool	CSceneManager::Render( ID3D11DeviceContext* context, D3DXMATRIX world, D3DX
 			m_meshs[ it->MeshID ]->Render();
 			// we need to shade the mesh object
 
-			TextureBuffer buffer	= ((CMultiTextureShader*)m_shader)->GetBuffer( m_meshs[ it->MeshID ], 2.0f );
+			LightBuffer buffer	= LightBuffer( D3DXVECTOR4( 1.0f, 1.0f, 1.0f, 1.0f ), D3DXVECTOR3( 0.5f, 1.0f, 1.5f ) );
 
-			if ( ((CMultiTextureShader*)m_shader)->SetShaderParameters( context, world, view, projection, m_meshs[ it->MeshID ]->textures->data, buffer ) )
+			if ( ((CBumpMapShader*)m_shader)->SetShaderParameters( context, world, view, projection, m_meshs[ it->MeshID ]->textures->data, buffer ) )
 			{
 				m_shader->Render( m_meshs[ it->MeshID ]->IndexCount );
 			}
@@ -148,6 +158,7 @@ bool	CSceneManager::LoadModel( std::string id )
 		mesh->Initialize( "..\\models\\cube.txt" );
 		//mesh->SetTexture( L"..\\shaders\\resources\\dirt01.dds" );
 		mesh->SetTexture( L"..\\shaders\\resources\\stone01.dds" );
+		mesh->SetTexture( L"..\\shaders\\resources\\bump01.dds" );
 	}
 	else 
 	{	// model mesh id is unknown
