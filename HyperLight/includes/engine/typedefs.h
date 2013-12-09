@@ -167,9 +167,26 @@ namespace HLE
 		{ }
 	} INTERNALS, *LPINTERNALS;
 
+	typedef struct ENGINE_API TEXTURES
+	{
+		SHADERRESOURCE**	resource;
+		int					count;
+
+		TEXTURES( void )
+			: count( 0 )
+		{
+		}
+
+		TEXTURES( int count, SHADERRESOURCE** resource )
+			: resource( resource )
+			, count( count )
+		{
+		}
+	} TEXTURES, *LPTEXTURES;
+
 	namespace buffers
 	{
-		typedef struct LightBufferType
+		typedef struct ENGINE_API LightBufferType
 		{
 			D3DXVECTOR4 diffuse, specular;
 			D3DXVECTOR3 direction;
@@ -206,6 +223,42 @@ namespace HLE
 				direction	= right->direction;
 				power		= right->power;
 			}
+
+			void operator=(const LightBufferType& right)
+			{
+				diffuse		= right.diffuse;
+				specular	= right.specular;
+				direction	= right.direction;
+				power		= right.power;
+			}
 		} LightBuffer, *LPLightBuffer;
+
+		typedef struct ENGINE_API CameraBufferType
+		{
+			D3DXVECTOR3	position;
+			float		padding;
+
+			CameraBufferType( void )
+				: position( 0.0f, 0.0f, 0.0f )
+				, padding( 0.0f )
+			{
+			}
+
+			CameraBufferType( D3DXVECTOR3 position )
+				: position( position )
+				, padding( 0.0f )
+			{
+			}
+
+			void operator=(const CameraBufferType* right)
+			{
+				position	= right->position;
+			}
+
+			void operator=(const CameraBufferType& right)
+			{
+				position	= right.position;
+			}
+		} CameraBuffer, *LPCameraBuffer;
 	};
 };
