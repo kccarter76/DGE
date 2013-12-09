@@ -48,20 +48,20 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	Engine::Get()->InputMap.Add( key_message(HLE_CAMERA, GUI::LEFT), GUI::KEY_LEFT, false, false );
 	Engine::Get()->InputMap.Add( key_message(HLE_CAMERA, GUI::RIGHT), GUI::KEY_RIGHT, false, false );
 
-	//srand((unsigned int)time(NULL));
-	//// let's setup the scene
-	//for( int i = 0; i < 30; i++ )
-	//{
-	//	D3DXVECTOR3	position;
-	//	// Generate a random position in front of the viewer for the mode.
-	//	position.x =  (((float)rand()-(float)rand())/RAND_MAX) * 10.0f;
-	//	position.y =  (((float)rand()-(float)rand())/RAND_MAX) * 10.0f;
-	//	position.z = ((((float)rand()-(float)rand())/RAND_MAX) * 10.0f) + 5.0f;
+	srand((unsigned int)time(NULL));
+	// let's setup the scene
+	for( int i = 0; i < 30; i++ )
+	{
+		D3DXVECTOR3	position;
+		// Generate a random position in front of the viewer for the mode.
+		position.x =  (((float)rand()-(float)rand())/RAND_MAX) * 10.0f;
+		position.y =  (((float)rand()-(float)rand())/RAND_MAX) * 10.0f;
+		position.z = ((((float)rand()-(float)rand())/RAND_MAX) * 10.0f) + 5.0f;
 
-	//	Engine::Get()->GraphicsProvider->SceneManager->AddAsset( i % 2 ? "sphere" : "cube", position );
-	//}
+		Engine::Get()->GraphicsProvider->SceneManager->AddAsset( "cube", position );
+	}
 
-	Engine::Get()->GraphicsProvider->SceneManager->AddAsset( "cube", D3DXVECTOR3( 0.0f, 0.0f, 0.0f ) );
+	//Engine::Get()->GraphicsProvider->SceneManager->AddAsset( "cube", D3DXVECTOR3( 0.0f, 0.0f, 0.0f ) );
 
 	// Main message loop:
 	while (true)
