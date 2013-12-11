@@ -28,26 +28,9 @@ bool	CBumpMapShader::Initialize( HWND hWnd, ID3D11Device* device )
 bool	CBumpMapShader::Initialize( ID3D11Device* device )
 {
 	HRESULT						result = S_OK;
-	D3D11_SAMPLER_DESC			sample_desc;
 	D3D11_BUFFER_DESC			light_desc;
 
-	sample_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	sample_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	sample_desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	sample_desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	sample_desc.MipLODBias = 0.0f;
-	sample_desc.MaxAnisotropy = 1;
-	sample_desc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-	sample_desc.BorderColor[0] = 0;
-	sample_desc.BorderColor[1] = 0;
-	sample_desc.BorderColor[2] = 0;
-	sample_desc.BorderColor[3] = 0;
-	sample_desc.MinLOD = 0;
-	sample_desc.MaxLOD = D3D11_FLOAT32_MAX;
-
-	// Create the texture sampler state.
-	result = device->CreateSamplerState(&sample_desc, &m_sample_state);
-	if(FAILED(result))
+	if(FAILED(this->CreateSampleState( device )))
 	{
 		return false;
 	}
@@ -116,7 +99,7 @@ void	CBumpMapShader::GetPolygonLayout( input_elements* inputs )
 	CopyPolygonArray( layout, sizeof( layout ) / sizeof( layout[0] ), inputs );
 }
 
-bool	CBumpMapShader::SetShaderParameters( ID3D11DeviceContext* context, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection, ID3D11ShaderResourceView** textures, LightBuffer buffer )
+bool	CBumpMapShader::SetShaderParameters( ID3D11DeviceContext* context, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection, TEXTURES textures, LightBuffer light_data )
 {
 	LPLightBuffer	
 		buffer_data		= nullptr;
@@ -130,7 +113,7 @@ bool	CBumpMapShader::SetShaderParameters( ID3D11DeviceContext* context, D3DXMATR
 		return false;
 	}
 
-	context->PSSetShaderResources( 0, 2, textures );
+	context->PSSetShaderResources( 0, textures.count, textures.resource );
 
 	hr	= context->Map( m_light_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource );
 
@@ -141,7 +124,7 @@ bool	CBumpMapShader::SetShaderParameters( ID3D11DeviceContext* context, D3DXMATR
 
 	buffer_data	= (LPLightBuffer)resource.pData;
 
-	*buffer_data	= &buffer;
+	*buffer_data	= &light_data;
 
 	context->Unmap( m_light_buffer, 0 );
 

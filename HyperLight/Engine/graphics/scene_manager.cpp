@@ -3,7 +3,7 @@
 #include "..\engine.h"
 #include "scene_manager.h"
 
-#include "shaders\BumpMapShader.h"
+#include "shaders\SpecularMapShader.h"
 
 using namespace HLE;
 
@@ -14,7 +14,7 @@ CSceneManager::CSceneManager( void )
 {
 	m_frustum	= new Frustum();
 	m_light		= new Light();
-	m_shader	= new CBumpMapShader();
+	m_shader	= new CSpecularMapShader();
 
 	SingletonAccess<Engine> oEngine	= Engine::Get();
 
@@ -25,9 +25,9 @@ CSceneManager::CSceneManager( void )
 
 	m_light->AmbientColor	= D3DXVECTOR4( 0.15f, 0.15f, 0.15f, 1.0f );
 	m_light->DiffuseColor	= D3DXVECTOR4( 1.0f, 1.0f, 1.0f, 1.0f );
-	m_light->Direction		= D3DXVECTOR3( 1.0f, 0.0f, 1.0f );
+	m_light->Direction		= D3DXVECTOR3( 0.5f, 1.0f, 1.5f );
 	m_light->SpecularColor	= D3DXVECTOR4( 1.0f, 1.0f, 1.0f, 1.0f );
-	m_light->Power			= 64.0f;
+	m_light->Power			= 1.05f;
 }
 
 CSceneManager::~CSceneManager( void )
@@ -110,15 +110,18 @@ bool	CSceneManager::Render( ID3D11DeviceContext* context, D3DXMATRIX world, D3DX
 				it->Rotation -= D3DXVECTOR3( -360.0f, 0.0f, 0.0f );
 			}
 
-			D3DXMatrixTranslation( &world, position.x, position.y, position.z );
+			
 			D3DXMatrixRotationYawPitchRoll( &world, it->Rotation.y,  it->Rotation.x,  it->Rotation.z );
+			D3DXMatrixTranslation( &world, position.x, position.y, position.z );
 
 			m_meshs[ it->MeshID ]->Render();
 			// we need to shade the mesh object
 
-			LightBuffer buffer	= LightBuffer( D3DXVECTOR4( 1.0f, 1.0f, 1.0f, 1.0f ), D3DXVECTOR3( 0.5f, 1.0f, 1.5f ) );
+			LightBuffer		light		= LightBuffer( m_light->DiffuseColor, m_light->SpecularColor, m_light->Power, m_light->Direction );
+			CameraBuffer	camera		= CameraBuffer( Engine::Get()->GraphicsProvider->Camera->Position );
+			TEXTURES		textures	= TEXTURES( m_meshs[ it->MeshID ]->textures->count, m_meshs[ it->MeshID ]->textures->data );
 
-			if ( ((CBumpMapShader*)m_shader)->SetShaderParameters( context, world, view, projection, m_meshs[ it->MeshID ]->textures->data, buffer ) )
+			if ( ((CSpecularMapShader*)m_shader)->SetShaderParameters( context, world, view, projection, textures, light, camera ) )
 			{
 				m_shader->Render( m_meshs[ it->MeshID ]->IndexCount );
 			}
@@ -156,9 +159,9 @@ bool	CSceneManager::LoadModel( std::string id )
 		if ( !mesh )	return false;
 
 		mesh->Initialize( "..\\models\\cube.txt" );
-		//mesh->SetTexture( L"..\\shaders\\resources\\dirt01.dds" );
-		mesh->SetTexture( L"..\\shaders\\resources\\stone01.dds" );
-		mesh->SetTexture( L"..\\shaders\\resources\\bump01.dds" );
+		mesh->SetTexture( L"..\\shaders\\resources\\stone02.dds" );
+		mesh->SetTexture( L"..\\shaders\\resources\\bump02.dds" );
+		mesh->SetTexture( L"..\\shaders\\resources\\spec02.dds" );
 	}
 	else 
 	{	// model mesh id is unknown
