@@ -45,6 +45,7 @@ namespace HLE
 		ID3D11Buffer*			m_matrix_buffer;
 		ID3D11SamplerState*		m_sample_state;
 
+		HRESULT	CreateSampleState( ID3D11Device* device );
 		void	OutputShaderError( ID3D10Blob* errorMessage, HWND hwnd, WCHAR* filename );
 		void	CopyPolygonArray( D3D11_INPUT_ELEMENT_DESC* desc, unsigned int size, input_elements* inputs );
 		bool	SetShaderParameters( ID3D11DeviceContext* context, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection );

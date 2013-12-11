@@ -132,6 +132,7 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
     <ClInclude Include="graphics\shaders\LightShader.h" />
     <ClInclude Include="graphics\TextureArray.h" />
     <ClInclude Include="graphics\shaders\SpecularMapShader.h" />
+    <ClInclude Include="graphics\RenderTexture.h" />
     <ClInclude Include="utility\generators\Mersenne.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="resource.h" />
@@ -197,6 +198,9 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="graphics\shaders\SpecularMapShader.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="graphics\RenderTexture.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="utility\generators\Mersenne.cpp" />

@@ -188,6 +188,9 @@
     <ClInclude Include="graphics\shaders\SpecularMapShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\RenderTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -290,6 +293,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="graphics\shaders\SpecularMapShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\RenderTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

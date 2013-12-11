@@ -20,8 +20,69 @@
 
 namespace HLE
 {
+	typedef ID3D11Device	Device, *LPDevice;
+
+	typedef ID3D11DeviceContext	DeviceContext, *LPDeviceContext;
+
+	typedef ID3D11DepthStencilView	DepthStencilView, *LPDepthStencilView;
+
 	typedef	ID3D11ShaderResourceView SHADERRESOURCE, *LPSHADERRESOURCE;
+
+	typedef ID3D11Texture2D	Texture2D, *LPTexture2D;
+
+	typedef ID3D11RenderTargetView	RenderTargetView, *LPRenderTargetView;
+
+	typedef ID3D11ShaderResourceView	ShaderResourceView, *LPShaderResourceView;
 	
+	typedef D3D11_TEXTURE2D_DESC			TEXTURE2D_DESC;
+
+	typedef D3D11_RENDER_TARGET_VIEW_DESC	RENDER_TARGET_VIEW_DESC;
+
+	typedef D3D11_SHADER_RESOURCE_VIEW_DESC SHADER_RESOURCE_VIEW_DESC;
+
+	typedef struct ENGINE_API COLOR
+	{
+		float	data[4];
+
+		COLOR( void )
+		{
+			ZeroMemory( data, sizeof( data ) );
+			
+			data[3]	= 1.0f;
+		};
+
+		COLOR( float r, float g, float b, float a )
+		{
+			ZeroMemory( data, sizeof( data ) );
+
+			data[0]	= r;
+			data[1]	= g;
+			data[2]	= b;
+			data[3]	= a;
+		};
+
+		PROPERTY(float, red);
+		GET(red)	{ return data[0]; };
+		SET(red)	{ data[0] = value;};
+
+		PROPERTY(float, green);
+		GET(green)	{ return data[1]; }
+		SET(green)	{ data[1] = value;}
+
+		PROPERTY(float, blue);
+		GET(blue)	{ return data[2]; }
+		SET(blue)	{ data[2] = value;}
+
+		PROPERTY(float, alpha);
+		GET(alpha)	{ return data[3]; }
+		SET(alpha)	{ data[3] = value;}
+
+		float* toArray( void )
+		{	
+			return data;
+		}
+	} COLOR, *LPCOLOR;
+
 	typedef struct ENGINE_API SIZE
 	{
 		int width;
@@ -167,9 +228,26 @@ namespace HLE
 		{ }
 	} INTERNALS, *LPINTERNALS;
 
+	typedef struct ENGINE_API TEXTURES
+	{
+		SHADERRESOURCE**	resource;
+		int					count;
+
+		TEXTURES( void )
+			: count( 0 )
+		{
+		}
+
+		TEXTURES( int count, SHADERRESOURCE** resource )
+			: resource( resource )
+			, count( count )
+		{
+		}
+	} TEXTURES, *LPTEXTURES;
+
 	namespace buffers
 	{
-		typedef struct LightBufferType
+		typedef struct ENGINE_API LightBufferType
 		{
 			D3DXVECTOR4 diffuse, specular;
 			D3DXVECTOR3 direction;
@@ -206,6 +284,42 @@ namespace HLE
 				direction	= right->direction;
 				power		= right->power;
 			}
+
+			void operator=(const LightBufferType& right)
+			{
+				diffuse		= right.diffuse;
+				specular	= right.specular;
+				direction	= right.direction;
+				power		= right.power;
+			}
 		} LightBuffer, *LPLightBuffer;
+
+		typedef struct ENGINE_API CameraBufferType
+		{
+			D3DXVECTOR3	position;
+			float		padding;
+
+			CameraBufferType( void )
+				: position( 0.0f, 0.0f, 0.0f )
+				, padding( 0.0f )
+			{
+			}
+
+			CameraBufferType( D3DXVECTOR3 position )
+				: position( position )
+				, padding( 0.0f )
+			{
+			}
+
+			void operator=(const CameraBufferType* right)
+			{
+				position	= right->position;
+			}
+
+			void operator=(const CameraBufferType& right)
+			{
+				position	= right.position;
+			}
+		} CameraBuffer, *LPCameraBuffer;
 	};
 };

@@ -33,6 +33,27 @@ void	IShader::Release( void )
 	delete this;
 }
 
+HRESULT	IShader::CreateSampleState( ID3D11Device* device )
+{
+	D3D11_SAMPLER_DESC	sample_desc;
+
+	sample_desc.Filter			= D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	sample_desc.AddressU		= D3D11_TEXTURE_ADDRESS_WRAP;
+	sample_desc.AddressV		= D3D11_TEXTURE_ADDRESS_WRAP;
+	sample_desc.AddressW		= D3D11_TEXTURE_ADDRESS_WRAP;
+	sample_desc.MipLODBias		= 0.0f;
+	sample_desc.MaxAnisotropy	= 1;
+	sample_desc.ComparisonFunc	= D3D11_COMPARISON_ALWAYS;
+	sample_desc.BorderColor[0]	= 0;
+	sample_desc.BorderColor[1]	= 0;
+	sample_desc.BorderColor[2]	= 0;
+	sample_desc.BorderColor[3]	= 0;
+	sample_desc.MinLOD			= 0;
+	sample_desc.MaxLOD			= D3D11_FLOAT32_MAX;
+
+	return device->CreateSamplerState( &sample_desc, &m_sample_state );
+}
+
 void	IShader::CopyPolygonArray( D3D11_INPUT_ELEMENT_DESC* desc, unsigned int size, input_elements* inputs )
 {
 	for( unsigned int i = 0; i < size; i++ )
