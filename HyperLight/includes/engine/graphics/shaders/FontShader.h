@@ -1,10 +1,11 @@
 #pragma once
 #include "..\..\ishader.h"
+#include "TextureShader.h"
 
 namespace HLE
 {
-	class FontShader
-		: public IShader
+	class CFontShader
+		: public CTextureShader
 	{
 		friend class Text;
 	private:
@@ -29,8 +30,8 @@ namespace HLE
 		void	GetPolygonLayout( input_elements* inputs );
 
 	public:
-		FontShader(void);
-		~FontShader(void);
+		CFontShader(void);
+		~CFontShader(void);
 
 		void	Release( void );
 		bool	Render( ID3D11DeviceContext* context, int cnt, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX ortho, ID3D11ShaderResourceView* texture, D3DXCOLOR color );

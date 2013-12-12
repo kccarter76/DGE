@@ -5,7 +5,7 @@
 #include "shaders\textureshader.h"
 #include "shaders\lightshader.h"
 
-#include "bitmap.h"
+#include "DebugWindow.h"
 #include "text.h"
 #include "..\hardware.h"
 #include "scene_manager.h"
@@ -23,10 +23,11 @@ namespace HLE
 
 		D3DX*			m_d3dx;
 		CCamera*		m_camera;
-		//TextureShader*	m_texture_shader;
+		CTextureShader*	m_texture_shader;
 		//LightShader*	m_light_shader;
 		//Light*			m_light;
 		Bitmap*			m_bitmap;
+		CDebugWindow*	m_debug;
 		Text*			m_text;
 		CSceneManager*	m_manager;
 		
@@ -37,6 +38,7 @@ namespace HLE
 		bool Initialize( HWND hWnd, LPRECTINFO ri, LPHARDWAREINFO hi, const bool& fullscreen );
 
 		void	RenderScene( float rotation );
+		void	RenderToTexture( void );
 
 		READONLY_PROPERTY(ID3D11Device*, Device);
 		GET(Device)		{ return m_d3dx->Device; }

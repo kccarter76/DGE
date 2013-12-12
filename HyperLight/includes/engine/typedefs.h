@@ -20,8 +20,84 @@
 
 namespace HLE
 {
+	typedef ID3D11Device	Device, *LPDevice;
+
+	typedef ID3D11DeviceContext	DeviceContext, *LPDeviceContext;
+
+	typedef ID3D11DepthStencilView	DepthStencilView, *LPDepthStencilView;
+
 	typedef	ID3D11ShaderResourceView SHADERRESOURCE, *LPSHADERRESOURCE;
+
+	typedef ID3D11Texture2D	Texture2D, *LPTexture2D;
+
+	typedef ID3D11RenderTargetView	RenderTargetView, *LPRenderTargetView;
+
+	typedef ID3D11ShaderResourceView	ShaderResourceView, *LPShaderResourceView;
 	
+	typedef D3D11_TEXTURE2D_DESC			TEXTURE2D_DESC;
+
+	typedef D3D11_RENDER_TARGET_VIEW_DESC	RENDER_TARGET_VIEW_DESC;
+
+	typedef D3D11_SHADER_RESOURCE_VIEW_DESC SHADER_RESOURCE_VIEW_DESC;
+
+	typedef struct ENGINE_API COLOR
+	{
+		float	data[4];
+
+		COLOR( void )
+		{
+			ZeroMemory( data, sizeof( data ) );
+			
+			data[3]	= 1.0f;
+		};
+
+		COLOR( float r, float g, float b, float a )
+		{
+			ZeroMemory( data, sizeof( data ) );
+
+			data[0]	= r;
+			data[1]	= g;
+			data[2]	= b;
+			data[3]	= a;
+		};
+
+		PROPERTY(float, red);
+		GET(red)	{ return data[0]; };
+		SET(red)	{ data[0] = value;};
+
+		PROPERTY(float, green);
+		GET(green)	{ return data[1]; }
+		SET(green)	{ data[1] = value;}
+
+		PROPERTY(float, blue);
+		GET(blue)	{ return data[2]; }
+		SET(blue)	{ data[2] = value;}
+
+		PROPERTY(float, alpha);
+		GET(alpha)	{ return data[3]; }
+		SET(alpha)	{ data[3] = value;}
+
+		float* toArray( void )
+		{	
+			return data;
+		}
+
+		/*static COLOR Blue( void )
+		{
+			return COLOR( 0.0f, 0.0f, 1.0f, 1.0f );
+		}
+
+		static COLOR Red( void )
+		{
+			return COLOR( 1.0f, 0.0f, 0.0f, 1.0f );
+		}
+
+		static COLOR Green( void )
+		{
+			return COLOR( 0.0f, 1.0f, 0.0f, 1.0f );
+		}*/
+	} COLOR, *LPCOLOR;
+
 	typedef struct ENGINE_API SIZE
 	{
 		int width;

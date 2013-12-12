@@ -44,6 +44,8 @@ namespace HLE
 
 		void	ChangePerspective( HLE::SIZE sz, float fnear, float fdepth );
 
+		void	SetBackBufferRenderTarget( void );
+
 		PROPERTY(bool, EnableZBuffer);
 		GET(EnableZBuffer)	{
 			ID3D11DepthStencilState* state = nullptr;
@@ -98,6 +100,9 @@ namespace HLE
 				m_deviceContext->OMSetBlendState( m_alphaEnableBlendingState, factor, 0xffffffff );
 			}
 		}
+
+		READONLY_PROPERTY(LPDepthStencilView, DepthStencilView);
+		GET(DepthStencilView);
 
 		READONLY_PROPERTY(ID3D11Device*, Device);
 		GET(Device)				{ return m_device; }

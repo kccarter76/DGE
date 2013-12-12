@@ -1,6 +1,6 @@
 #pragma once
 #include "font.h"
-#include "shaders\fontshader.h"
+#include "shaders\FontShader.h"
 
 #include <mutex>
 #include <string>
@@ -51,7 +51,7 @@ namespace HLE
 		typedef std::vector<l_text_itr>::iterator	v_text_itr;
 
 		Font					*m_font;
-		FontShader				*m_shader;
+		CFontShader				*m_shader;
 		// the default view for 2D space
 		D3DXMATRIX				 m_view;
 		D3DXCOLOR				 m_color;

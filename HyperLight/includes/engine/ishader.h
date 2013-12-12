@@ -49,7 +49,6 @@ namespace HLE
 		void	OutputShaderError( ID3D10Blob* errorMessage, HWND hwnd, WCHAR* filename );
 		void	CopyPolygonArray( D3D11_INPUT_ELEMENT_DESC* desc, unsigned int size, input_elements* inputs );
 		bool	SetShaderParameters( ID3D11DeviceContext* context, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection );
-		bool	SetShaderParameters( ID3D11DeviceContext* context, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection, ID3D11ShaderResourceView* texture );
 		
 		virtual	void	GetPolygonLayout( input_elements* inputs ) = 0;
 		virtual bool	Initialize( ID3D11Device* device ) { UNREFERENCED_PARAMETER(device); return true; }
