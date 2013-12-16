@@ -2,7 +2,7 @@
 #include "generators\mersenne.h"
 #include "..\hardware.h"
 
-namespace HLE
+namespace hle
 {
 	class ENGINE_API CUtility
 	{

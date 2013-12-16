@@ -2,7 +2,7 @@
 #include "..\..\imesh.h"
 #include "..\..\ishader.h"
 
-namespace HLE
+namespace hle
 {
 	typedef struct TextureBufferType
 	{

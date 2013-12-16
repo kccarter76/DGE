@@ -8,7 +8,7 @@
 #include "irenderable.h"
 #include "graphics\texturearray.h"
 
-namespace HLE
+namespace hle
 {
 	typedef class ENGINE_API IMesh
 		: public IRenderable

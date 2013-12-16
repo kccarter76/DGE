@@ -10,7 +10,7 @@
 #include "hardware.h"
 #include "utility\utility.h"
 
-namespace HLE
+namespace hle
 {
 	class ENGINE_API Engine 
 		: public Singleton<Engine>
@@ -73,7 +73,7 @@ namespace HLE
 		HWND	CreateGameWindow(const int& width, const int& height, const bool& fullScreen, WNDPROC lpClientProc);
 		void	Initialize( void );
 		void	ShutDown( void );
-		void	SetDisplayFullScreen( const bool& bFullScreen, HLE::SIZE sz );
+		void	SetDisplayFullScreen( const bool& bFullScreen, hle::SIZE sz );
 		void	RenderFrame( void );
 
 		static	WNDPROC			m_lpClientWndProc;

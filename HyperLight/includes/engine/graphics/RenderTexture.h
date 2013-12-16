@@ -1,7 +1,7 @@
 #pragma once
 #include "..\typedefs.h"
 
-namespace HLE
+namespace hle
 {
 	class ENGINE_API CRenderTexture
 	{
@@ -13,7 +13,7 @@ namespace HLE
 		CRenderTexture(void);
 		~CRenderTexture(void);
 
-		bool	Initialize( LPDevice device, HLE::SIZE size );
+		bool	Initialize( LPDevice device, hle::SIZE size );
 
 		void	SetRenderTarget( LPDeviceContext context, LPDepthStencilView view );
 		void	ClearRenderTarget( LPDeviceContext context, LPDepthStencilView view, COLOR color );

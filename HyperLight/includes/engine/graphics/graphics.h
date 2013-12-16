@@ -2,8 +2,10 @@
 
 #include "d3dx.h"
 #include "camera.h"
+#include "terrain\terrain.h"
 #include "shaders\textureshader.h"
 #include "shaders\lightshader.h"
+#include "shaders\ColorShader.h"
 
 #include "DebugWindow.h"
 #include "text.h"
@@ -14,7 +16,7 @@ const float
 	SCREEN_DEPTH	= 1000.0f,
 	SCREEN_NEAR		= 0.1f;
 
-namespace HLE
+namespace hle
 {
 	class ENGINE_API Graphics
 	{
@@ -23,6 +25,8 @@ namespace HLE
 
 		D3DX*			m_d3dx;
 		CCamera*		m_camera;
+		CTerrain*		m_terrain;
+		ColorShader*	m_color;
 		CTextureShader*	m_texture_shader;
 		//LightShader*	m_light_shader;
 		//Light*			m_light;

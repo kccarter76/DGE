@@ -3,7 +3,7 @@
 
 #include <unordered_map>
 
-namespace HLE {
+namespace hle {
 	namespace GUI {
 #ifdef _DIRECTX
 		enum ENGINE_API EKEY_CODE
@@ -130,12 +130,12 @@ namespace HLE {
 			KEY_PAUSE           = 0xC5,    /* Pause */
 			KEY_HOME            = 0xC7,    /* Home on arrow keypad */
 			KEY_UP              = 0xC8,    /* UpArrow on arrow keypad */
-			KEY_PRIOR           = 0xC9,    /* PgUp on arrow keypad */
+			KEY_PGUP			= 0xC9,    /* PgUp on arrow keypad */
 			KEY_LEFT            = 0xCB,    /* LeftArrow on arrow keypad */
 			KEY_RIGHT           = 0xCD,    /* RightArrow on arrow keypad */
 			KEY_END             = 0xCF,    /* End on arrow keypad */
 			KEY_DOWN            = 0xD0,    /* DownArrow on arrow keypad */
-			KEY_NEXT            = 0xD1,    /* PgDn on arrow keypad */
+			KEY_PGDN            = 0xD1,    /* PgDn on arrow keypad */
 			KEY_INSERT          = 0xD2,    /* Insert on arrow keypad */
 			KEY_DELETE          = 0xD3,    /* Delete on arrow keypad */
 			KEY_LWIN            = 0xDB,    /* Left Windows key */
@@ -347,8 +347,7 @@ namespace HLE {
 	};
 
 	struct ENGINE_API key_message {
-		UINT				msg, extended;
-		GUI::EACTION		action;
+		UINT				msg, action, extended;
 
 		key_message(void) {
 			ZeroMemory(&msg, sizeof(msg));
@@ -362,7 +361,7 @@ namespace HLE {
 			ZeroMemory(&extended, sizeof(extended));
 		}
 
-		key_message(UINT msg, GUI::EACTION action)
+		key_message(UINT msg, UINT action)
 			: msg(msg), action(action) 
 		{ 
 			ZeroMemory(&extended, sizeof(extended));

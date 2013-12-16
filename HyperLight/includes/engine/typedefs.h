@@ -18,7 +18,7 @@
 #include <d3dx10math.h>
 #include <d3dx11async.h>
 
-namespace HLE
+namespace hle
 {
 	typedef ID3D11Device	Device, *LPDevice;
 
@@ -30,15 +30,25 @@ namespace HLE
 
 	typedef ID3D11Texture2D	Texture2D, *LPTexture2D;
 
+	typedef	ID3D11Buffer	Buffer, *LPBuffer;
+
 	typedef ID3D11RenderTargetView	RenderTargetView, *LPRenderTargetView;
 
 	typedef ID3D11ShaderResourceView	ShaderResourceView, *LPShaderResourceView;
 	
-	typedef D3D11_TEXTURE2D_DESC			TEXTURE2D_DESC;
+	typedef D3D11_TEXTURE2D_DESC	TEXTURE2D_DESC;
+
+	typedef	D3D11_BUFFER_DESC		BUFFER_DESC;
+
+	typedef	D3D11_SUBRESOURCE_DATA	SUBRESOURCE_DATA;
 
 	typedef D3D11_RENDER_TARGET_VIEW_DESC	RENDER_TARGET_VIEW_DESC;
 
 	typedef D3D11_SHADER_RESOURCE_VIEW_DESC SHADER_RESOURCE_VIEW_DESC;
+
+	typedef D3DXVECTOR3	VECTOR3, *LPVECTOR3;
+
+	typedef D3DXVECTOR4	VECTOR4, *LPVECTOR4;
 
 	typedef struct ENGINE_API COLOR
 	{
@@ -82,20 +92,11 @@ namespace HLE
 			return data;
 		}
 
-		/*static COLOR Blue( void )
+		VECTOR4 toVector( void )
 		{
-			return COLOR( 0.0f, 0.0f, 1.0f, 1.0f );
+			return VECTOR4( red, green, blue, alpha );
 		}
-
-		static COLOR Red( void )
-		{
-			return COLOR( 1.0f, 0.0f, 0.0f, 1.0f );
-		}
-
-		static COLOR Green( void )
-		{
-			return COLOR( 0.0f, 1.0f, 0.0f, 1.0f );
-		}*/
+		
 	} COLOR, *LPCOLOR;
 
 	typedef struct ENGINE_API SIZE
@@ -259,6 +260,28 @@ namespace HLE
 		{
 		}
 	} TEXTURES, *LPTEXTURES;
+
+	namespace colors
+	{
+		static COLOR	red( void )		{ return COLOR( 1.0f, 0.0f, 0.0f, 1.0f ); }
+
+		static COLOR	green( void )	{ return COLOR( 0.0f, 1.0f, 0.0f, 1.0f ); }
+
+		static COLOR	blue( void )	{ return COLOR( 0.0f, 0.0f, 1.0f, 1.0f ); }
+
+		static COLOR	white( void )	{ return COLOR( 1.0f, 1.0f, 1.0f, 1.0f ); }
+
+		static COLOR	black( void )	{ return COLOR( 0.0f, 0.0f, 0.0f, 1.0f ); }
+	};
+
+	namespace vertexs
+	{
+		typedef struct ENGINE_API TerrainType
+		{
+			VECTOR3	position;
+			COLOR	color;
+		} TerrainType, *LPTerrainType;
+	};
 
 	namespace buffers
 	{

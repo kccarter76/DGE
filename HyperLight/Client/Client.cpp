@@ -6,7 +6,7 @@
 
 #include <hle.h>
 
-using namespace HLE;
+using namespace hle;
 
 #define MAX_LOADSTRING 100
 
@@ -44,9 +44,18 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	Engine::Get()->InputMap.Add( key_message(HLE_ENGINE, GUI::STATS), GUI::KEY_F12, false, false );
 	Engine::Get()->InputMap.Add( key_message(HLE_ENGINE, GUI::PAUSE), GUI::KEY_PAUSE, false, false );
 	Engine::Get()->InputMap.Add( key_message(WM_QUIT), GUI::KEY_ESCAPE, false, false );
-	// register camera left and camera right mappings
+	// register camera rotation keys
 	Engine::Get()->InputMap.Add( key_message(HLE_CAMERA, GUI::LEFT), GUI::KEY_LEFT, false, false );
 	Engine::Get()->InputMap.Add( key_message(HLE_CAMERA, GUI::RIGHT), GUI::KEY_RIGHT, false, false );
+	Engine::Get()->InputMap.Add( key_message(HLE_CAMERA, GUI::UP), GUI::KEY_UP, false, false );
+	Engine::Get()->InputMap.Add( key_message(HLE_CAMERA, GUI::DOWN), GUI::KEY_DOWN, false, false );
+	// register camera movement keys
+	Engine::Get()->InputMap.Add( key_message(HLE_CAMERA, GUI::MOVE | GUI::FORWARD), GUI::KEY_W, false, false );
+	Engine::Get()->InputMap.Add( key_message(HLE_CAMERA, GUI::MOVE | GUI::BACKWARD), GUI::KEY_S, false, false );
+	Engine::Get()->InputMap.Add( key_message(HLE_CAMERA, GUI::MOVE | GUI::LEFT), GUI::KEY_A, false, false );
+	Engine::Get()->InputMap.Add( key_message(HLE_CAMERA, GUI::MOVE | GUI::RIGHT), GUI::KEY_D, false, false );
+	Engine::Get()->InputMap.Add( key_message(HLE_CAMERA, GUI::MOVE | GUI::UP), GUI::KEY_PGUP, false, false );
+	Engine::Get()->InputMap.Add( key_message(HLE_CAMERA, GUI::MOVE | GUI::DOWN), GUI::KEY_PGDN, false, false );
 
 	//srand((unsigned int)time(NULL));
 	//// let's setup the scene
@@ -61,7 +70,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	//	Engine::Get()->GraphicsProvider->SceneManager->AddAsset( "cube", position );
 	//}
 
-	Engine::Get()->GraphicsProvider->SceneManager->AddAsset( "cube", D3DXVECTOR3( 0.0f, 0.0f, 0.0f ) );
+	//Engine::Get()->GraphicsProvider->SceneManager->AddAsset( "cube", D3DXVECTOR3( 0.0f, 0.0f, 0.0f ) );
 
 	// Main message loop:
 	while (true)

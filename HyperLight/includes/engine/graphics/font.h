@@ -4,7 +4,7 @@
 #include <fstream>
 
 
-namespace HLE
+namespace hle
 {
 	class ENGINE_API Font
 		: public IRenderable
@@ -44,7 +44,7 @@ namespace HLE
 
 		bool	Load( LPCSTR fn_data, LPWSTR fn_texture );
 		void	Release( void );
-		int		RenderText( void* vertices, const wchar_t* text, HLE::POINT pt ); 
+		int		RenderText( void* vertices, const wchar_t* text, hle::POINT pt ); 
 
 		PROPERTY(float, LineHeight);
 		GET(LineHeight)	{ return m_line_height; }

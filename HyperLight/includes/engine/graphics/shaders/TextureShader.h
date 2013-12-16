@@ -1,7 +1,7 @@
 #pragma once
 #include "..\..\ishader.h"
 
-namespace HLE
+namespace hle
 {
 	class ENGINE_API CTextureShader
 		: public IShader

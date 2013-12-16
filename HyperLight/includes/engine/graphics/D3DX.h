@@ -5,7 +5,7 @@
 
 #include <string>
 
-namespace HLE
+namespace hle
 {
 	class D3DX
 	{
@@ -42,7 +42,7 @@ namespace HLE
 
 		void	Release( void );
 
-		void	ChangePerspective( HLE::SIZE sz, float fnear, float fdepth );
+		void	ChangePerspective( hle::SIZE sz, float fnear, float fdepth );
 
 		void	SetBackBufferRenderTarget( void );
 

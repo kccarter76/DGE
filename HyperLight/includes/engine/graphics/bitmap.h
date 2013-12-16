@@ -3,7 +3,7 @@
 #include "..\typedefs.h"
 #include "..\irenderable.h"
 
-namespace HLE
+namespace hle
 {
 	class ENGINE_API Bitmap
 		: public IRenderable
@@ -31,10 +31,10 @@ namespace HLE
 		Bitmap(void);
 		~Bitmap(void);
 
-		virtual bool	Initialize( const HLE::SIZE& window, const HLE::SIZE& bitmap );
-		virtual	bool	Initialize( LPWSTR filename, const HLE::SIZE& window, const HLE::SIZE& bitmap );
-		virtual bool	Update( ID3D11DeviceContext* context, HLE::POINT pt );
-		virtual	bool	Render( ID3D11DeviceContext* context, HLE::POINT pt );
+		virtual bool	Initialize( const hle::SIZE& window, const hle::SIZE& bitmap );
+		virtual	bool	Initialize( LPWSTR filename, const hle::SIZE& window, const hle::SIZE& bitmap );
+		virtual bool	Update( ID3D11DeviceContext* context, hle::POINT pt );
+		virtual	bool	Render( ID3D11DeviceContext* context, hle::POINT pt );
 
 	};
 };

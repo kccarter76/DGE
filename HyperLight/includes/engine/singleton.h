@@ -3,7 +3,7 @@
 #include "stdafx.h"
 #include <mutex>
 
-namespace HLE
+namespace hle
 {
 	//TODO:: we need to lock the mutex however we are having some trouble with that.
 	//forward declaration

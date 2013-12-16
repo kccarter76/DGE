@@ -7,7 +7,7 @@
 
 using namespace std;
 
-namespace HLE
+namespace hle
 {
 	typedef std::vector<D3D11_INPUT_ELEMENT_DESC> input_elements;
 

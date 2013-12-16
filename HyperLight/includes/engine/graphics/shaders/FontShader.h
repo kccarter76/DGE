@@ -2,7 +2,7 @@
 #include "..\..\ishader.h"
 #include "TextureShader.h"
 
-namespace HLE
+namespace hle
 {
 	class CFontShader
 		: public CTextureShader

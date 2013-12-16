@@ -9,7 +9,7 @@
 
 #include <dinput.h>
 
-namespace HLE
+namespace hle
 {
 	class ENGINE_API Input
 	{
@@ -28,11 +28,11 @@ namespace HLE
 		void	SyncKeyState( void );
 
 		DIMOUSESTATE			m_mouse_state;
-		HLE::SIZE				m_screen;
-		HLE::POINT				m_pt;
+		hle::SIZE				m_screen;
+		hle::POINT				m_pt;
 	public:
 		Input( void );
-		Input( HWND hWnd, HINSTANCE hInstance, HLE::SIZE sz );
+		Input( HWND hWnd, HINSTANCE hInstance, hle::SIZE sz );
 		~Input(void);
 
 		void			Release( void );
@@ -66,7 +66,7 @@ namespace HLE
 #endif
 		
 
-		READONLY_PROPERTY(HLE::POINT, Mouse);
+		READONLY_PROPERTY(hle::POINT, Mouse);
 		GET(Mouse)	{ return m_pt; }
 	};
 };

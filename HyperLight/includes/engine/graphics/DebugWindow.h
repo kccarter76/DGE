@@ -1,7 +1,7 @@
 #pragma once
 #include "bitmap.h"
 
-namespace HLE
+namespace hle
 {
 	class ENGINE_API CDebugWindow
 		: public Bitmap

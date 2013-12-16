@@ -1,5 +1,5 @@
 #pragma once
-namespace HLE
+namespace hle
 {
 	class ENGINE_API CMersenne
 	{
