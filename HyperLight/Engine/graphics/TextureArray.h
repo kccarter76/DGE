@@ -3,7 +3,7 @@
 
 #include <vector>
 
-namespace HLE
+namespace hle
 {
 	class CTextureArray
 	{

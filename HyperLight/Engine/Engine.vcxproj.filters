@@ -110,9 +110,6 @@
     <ClInclude Include="ishader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ColorShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="iobject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -191,6 +188,15 @@
     <ClInclude Include="graphics\RenderTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\DebugWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\terrain\Terrain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\shaders\ColorShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -218,9 +224,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ishader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ColorShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="iobject.cpp">
@@ -296,6 +299,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="graphics\RenderTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\DebugWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\terrain\Terrain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\shaders\ColorShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

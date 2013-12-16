@@ -2,7 +2,7 @@
 #include "..\engine.h"
 #include "Utility.h"
 
-using namespace HLE;
+using namespace hle;
 
 CUtility::CUtility( LPHARDWAREINFO info  )
 	: m_random(nullptr)

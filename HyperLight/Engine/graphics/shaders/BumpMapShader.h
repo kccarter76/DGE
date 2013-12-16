@@ -2,9 +2,9 @@
 #include "..\..\typedefs.h"
 #include "..\..\ishader.h"
 
-using namespace HLE::buffers;
+using namespace hle::buffers;
 
-namespace HLE
+namespace hle
 {
 	class CBumpMapShader
 		: public IShader

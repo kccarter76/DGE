@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "frustum.h"
 
-using namespace HLE;
+using namespace hle;
 
 Frustum::Frustum(void)
 {

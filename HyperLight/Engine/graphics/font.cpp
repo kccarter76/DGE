@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "font.h"
 
-using namespace HLE;
+using namespace hle;
 
 Font::Font(void)
 	: IRenderable()
@@ -78,7 +78,7 @@ bool	Font::LoadData( LPCSTR fn_data )
 	return true;
 }
 
-int	Font::RenderText( void* vertices, const wchar_t* text, HLE::POINT pt )
+int	Font::RenderText( void* vertices, const wchar_t* text, hle::POINT pt )
 {
 	LPVERTEXTYPE	ptr	= nullptr;
 	int				num, index, i, letter, lines = 1;

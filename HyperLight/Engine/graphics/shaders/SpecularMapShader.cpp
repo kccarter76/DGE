@@ -1,7 +1,7 @@
 #include "..\..\StdAfx.h"
 #include "SpecularMapShader.h"
 
-using namespace HLE;
+using namespace hle;
 
 CSpecularMapShader::CSpecularMapShader(void)
 	: CBumpMapShader()

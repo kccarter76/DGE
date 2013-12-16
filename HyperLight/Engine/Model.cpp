@@ -4,7 +4,7 @@
 
 
 
-using namespace HLE;
+using namespace hle;
 
 Model::Model(void)
 	: IMesh()

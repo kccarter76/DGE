@@ -2,14 +2,14 @@
 #include "text.h"
 #include "..\engine.h"
 
-using namespace HLE;
+using namespace hle;
 
-Text::Text( HLE::SIZE screen, D3DXMATRIX default_view )
+Text::Text( hle::SIZE screen, D3DXMATRIX default_view )
 	: m_font(nullptr), m_shader(nullptr), m_view(default_view), m_size(screen), m_color(D3DXVECTOR4( 1.0f, 1.0f, 1.0f, 1.0f ))
 {
 	SingletonAccess<Engine> oEngine	= Engine::Get();
 
-	m_shader	= new FontShader();
+	m_shader	= new CFontShader();
 		
 	if ( !m_shader->Initialize( oEngine->Handle, oEngine->GraphicsProvider->Device ) )
 	{
@@ -163,7 +163,7 @@ bool	Text::InitializeText( SENTENCE** obj, int length )
 	return true;
 }
 
-bool	Text::UpdateText( LPSENTENCE obj, wstring text, HLE::POINT pt, D3DXCOLOR color )
+bool	Text::UpdateText( LPSENTENCE obj, wstring text, hle::POINT pt, D3DXCOLOR color )
 {
 	Font::LPVERTEXTYPE				vertices	= nullptr, ptr = nullptr;
 	D3D11_MAPPED_SUBRESOURCE		resource;
@@ -211,6 +211,19 @@ bool	Text::DrawFormattedText( wstring text, ... )
 
 	va_start( args, text );
 	result = DrawFormattedText( ri, m_color, text, args );
+	va_end( args );
+
+	return result;
+}
+
+bool	Text::DrawFormattedText( D3DXCOLOR color, wstring text, ... )
+{
+	bool		result				= false;
+	RECTINFO	ri( m_pt, m_size );
+	va_list		args;
+
+	va_start( args, text );
+	result = DrawFormattedText( ri, color, text, args );
 	va_end( args );
 
 	return result;

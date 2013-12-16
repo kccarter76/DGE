@@ -1,29 +1,29 @@
-#include "StdAfx.h"
+#include "..\..\StdAfx.h"
 #include "LightShader.h"
 
-using namespace HLE;
+using namespace hle;
 
-LightShader::LightShader( void )
-	: IShader()
+CLightShader::CLightShader( void )
+	: CTextureShader()
 {
 	m_light_buffer	= nullptr;
 	m_camera_buffer	= nullptr;
 }
 
 
-LightShader::~LightShader(void)
+CLightShader::~CLightShader(void)
 {
 }
 
-void	LightShader::Release( void )
+void	CLightShader::Release( void )
 {
 	SAFE_RELEASE_D3D(m_light_buffer);
 	SAFE_RELEASE_D3D(m_camera_buffer);
 
-	IShader::Release();
+	CTextureShader::Release();
 }
 
-void	LightShader::GetPolygonLayout( input_elements* inputs )
+void	CLightShader::GetPolygonLayout( input_elements* inputs )
 {
 	// Initialize the polygon layout array.
 	D3D11_INPUT_ELEMENT_DESC polygon_layout[3];
@@ -56,7 +56,7 @@ void	LightShader::GetPolygonLayout( input_elements* inputs )
 	this->CopyPolygonArray( polygon_layout, 3, inputs );
 }
 
-bool	LightShader::Initialize( ID3D11Device* device )
+bool	CLightShader::Initialize( ID3D11Device* device )
 {
 	HRESULT						result = S_OK;
 	D3D11_SAMPLER_DESC			sample_desc;
@@ -118,7 +118,7 @@ bool	LightShader::Initialize( ID3D11Device* device )
 	return true;
 }
 
-bool	LightShader::SetShaderParameters( ID3D11DeviceContext* context, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection, ID3D11ShaderResourceView* texture, D3DXVECTOR3 source, D3DXVECTOR3 camera,
+bool	CLightShader::SetShaderParameters( ID3D11DeviceContext* context, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection, ID3D11ShaderResourceView* texture, D3DXVECTOR3 source, D3DXVECTOR3 camera,
 											D3DXVECTOR4 ambient, D3DXVECTOR4 diffuse, D3DXVECTOR4 specular, float power )
 {
 	HRESULT						result;
@@ -128,7 +128,7 @@ bool	LightShader::SetShaderParameters( ID3D11DeviceContext* context, D3DXMATRIX 
 	 
 	unsigned int				buffer_num			= 0;
 
-	if( !IShader::SetShaderParameters( context, world, view, projection, texture ) )
+	if( !CTextureShader::SetShaderParameters( context, world, view, projection, texture ) )
 	{
 		return false;
 	}
@@ -183,7 +183,7 @@ bool	LightShader::SetShaderParameters( ID3D11DeviceContext* context, D3DXMATRIX 
 	return true;
 }
 
-bool	LightShader::Render(  ID3D11DeviceContext* context, int index_cnt, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection, ID3D11ShaderResourceView* texture, D3DXVECTOR3 source, D3DXVECTOR3 camera,
+bool	CLightShader::Render(  ID3D11DeviceContext* context, int index_cnt, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection, ID3D11ShaderResourceView* texture, D3DXVECTOR3 source, D3DXVECTOR3 camera,
 											D3DXVECTOR4 ambient, D3DXVECTOR4 diffuse, D3DXVECTOR4 specular, float power )
 {
 	if ( this->SetShaderParameters( context, world, view, projection, texture, source, camera, ambient, diffuse, specular, power ) )

@@ -1,7 +1,7 @@
 #pragma once
 #include "MultiTextureShader.h"
 
-namespace HLE
+namespace hle
 {
 	class CAlphaMapShader
 		: public CMultiTextureShader

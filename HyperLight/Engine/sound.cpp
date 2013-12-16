@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "sound.h"
 
-using namespace HLE;
+using namespace hle;
 
 Sound::Sound( HWND hWnd )
 	: m_sound( nullptr ), m_primary( nullptr ), m_secondary( nullptr )

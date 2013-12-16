@@ -63,6 +63,7 @@
       <Command>XCOPY $(ProjectDir)*.h $(SolutionDir)includes\engine\ /Y
 XCOPY $(ProjectDir)graphics\*.h $(SolutionDir)includes\engine\graphics\ /Y
 XCOPY $(ProjectDir)graphics\shaders\*.h $(SolutionDir)includes\engine\graphics\shaders\ /Y
+XCOPY $(ProjectDir)graphics\terrain\*.h $(SolutionDir)includes\engine\graphics\terrain\ /Y
 XCOPY $(ProjectDir)utility\*.h $(SolutionDir)includes\engine\utility\ /Y
 XCOPY $(ProjectDir)utility\generators\*.h $(SolutionDir)includes\engine\utility\generators\ /Y
 XCOPY $(ProjectDir)hlsl\*.ps $(SolutionDir)shaders\ /Y
@@ -106,11 +107,12 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Asset.h" />
+    <ClInclude Include="graphics\DebugWindow.h" />
     <ClInclude Include="graphics\camera.h" />
     <ClInclude Include="Clock.h" />
     <ClInclude Include="graphics\shaders\AlphaMapShader.h" />
     <ClInclude Include="graphics\shaders\BumpMapShader.h" />
-    <ClInclude Include="ColorShader.h" />
+    <ClInclude Include="graphics\shaders\ColorShader.h" />
     <ClInclude Include="graphics\D3DX.h" />
     <ClInclude Include="defs.h" />
     <ClInclude Include="Engine.h" />
@@ -133,6 +135,7 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
     <ClInclude Include="graphics\TextureArray.h" />
     <ClInclude Include="graphics\shaders\SpecularMapShader.h" />
     <ClInclude Include="graphics\RenderTexture.h" />
+    <ClInclude Include="graphics\terrain\Terrain.h" />
     <ClInclude Include="utility\generators\Mersenne.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="resource.h" />
@@ -149,6 +152,9 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Asset.cpp" />
+    <ClCompile Include="graphics\DebugWindow.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="graphics\camera.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -159,7 +165,9 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
     <ClCompile Include="graphics\shaders\BumpMapShader.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="ColorShader.cpp" />
+    <ClCompile Include="graphics\shaders\ColorShader.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="graphics\D3DX.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -193,7 +201,9 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
     <ClCompile Include="irenderable.cpp" />
     <ClCompile Include="ishader.cpp" />
     <ClCompile Include="graphics\light.cpp" />
-    <ClCompile Include="graphics\shaders\LightShader.cpp" />
+    <ClCompile Include="graphics\shaders\LightShader.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="graphics\TextureArray.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -201,6 +211,9 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="graphics\RenderTexture.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="graphics\terrain\Terrain.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="utility\generators\Mersenne.cpp" />
@@ -217,7 +230,9 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="texture.cpp" />
-    <ClCompile Include="graphics\shaders\TextureShader.cpp" />
+    <ClCompile Include="graphics\shaders\TextureShader.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="utility\Utility.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>

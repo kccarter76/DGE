@@ -5,7 +5,7 @@
 
 #include <string>
 
-namespace HLE
+namespace hle
 {
 	class D3DX
 	{
@@ -42,7 +42,9 @@ namespace HLE
 
 		void	Release( void );
 
-		void	ChangePerspective( HLE::SIZE sz, float fnear, float fdepth );
+		void	ChangePerspective( hle::SIZE sz, float fnear, float fdepth );
+
+		void	SetBackBufferRenderTarget( void );
 
 		PROPERTY(bool, EnableZBuffer);
 		GET(EnableZBuffer)	{
@@ -98,6 +100,9 @@ namespace HLE
 				m_deviceContext->OMSetBlendState( m_alphaEnableBlendingState, factor, 0xffffffff );
 			}
 		}
+
+		READONLY_PROPERTY(LPDepthStencilView, DepthStencilView);
+		GET(DepthStencilView);
 
 		READONLY_PROPERTY(ID3D11Device*, Device);
 		GET(Device)				{ return m_device; }

@@ -1,18 +1,18 @@
-#include "StdAfx.h"
+#include "..\..\StdAfx.h"
 #include "TextureShader.h"
 
-using namespace HLE;
+using namespace hle;
 
-TextureShader::TextureShader(void)
+CTextureShader::CTextureShader(void)
 	: IShader()
 {
 }
 
-TextureShader::~TextureShader(void)
+CTextureShader::~CTextureShader(void)
 {
 }
 
-void	TextureShader::GetPolygonLayout( input_elements* inputs )
+void	CTextureShader::GetPolygonLayout( input_elements* inputs )
 {
 	D3D11_INPUT_ELEMENT_DESC layout[2]; 
 	// Now setup the layout of the data that goes into the shader.
@@ -38,7 +38,12 @@ void	TextureShader::GetPolygonLayout( input_elements* inputs )
 	this->CopyPolygonArray( layout, sizeof( layout ) / sizeof( layout[0] ), inputs );
 }
 
-bool	TextureShader::SetSampleDesc( ID3D11Device* device )
+bool	CTextureShader::Initialize( HWND hWnd, ID3D11Device* device )
+{
+	return Load( hWnd, device, "Texture", L"..\\shaders\\texture.vs", L"..\\shaders\\texture.ps" );
+}
+
+bool	CTextureShader::SetSampleDesc( ID3D11Device* device )
 {
 	HRESULT						result = S_OK;
 	D3D11_SAMPLER_DESC			sample_desc;
@@ -68,7 +73,16 @@ bool	TextureShader::SetSampleDesc( ID3D11Device* device )
 	return true;
 }
 
-bool	TextureShader::Render( ID3D11DeviceContext* context, int cnt, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection, ID3D11ShaderResourceView* texture )
+bool	CTextureShader::SetShaderParameters( ID3D11DeviceContext* context, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection, ID3D11ShaderResourceView* texture )
+{
+	bool result = IShader::SetShaderParameters( context, world, view, projection );
+
+	context->PSSetShaderResources( 0, 1, &texture );
+
+	return result;
+}
+
+bool	CTextureShader::Render( ID3D11DeviceContext* context, int cnt, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection, ID3D11ShaderResourceView* texture )
 {
 	bool result = false;
 

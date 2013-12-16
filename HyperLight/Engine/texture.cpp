@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "texture.h"
 
-using namespace HLE;
+using namespace hle;
 
 TextureMap::TextureMap(void)
 {

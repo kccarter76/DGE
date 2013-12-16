@@ -2,7 +2,7 @@
 #include "..\engine.h"
 #include "TextureArray.h"
 
-using namespace HLE;
+using namespace hle;
 
 CTextureArray::CTextureArray(void)
 	: m_light_map_idx(0)

@@ -1,7 +1,7 @@
 #include "..\..\StdAfx.h"
 #include "BumpMapShader.h"
 
-using namespace HLE;
+using namespace hle;
 
 CBumpMapShader::CBumpMapShader(void)
 	: IShader()

@@ -4,7 +4,7 @@
 #include "engine.h"
 #include "input_defs.h"
 
-using namespace HLE;
+using namespace hle;
 
 //forward declaration
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -39,7 +39,7 @@ Engine::~Engine( void )
 WNDPROC Engine::m_lpClientWndProc = NULL;
 WINDOWPLACEMENT Engine::m_wndPlacement = { sizeof(m_wndPlacement) };
 
-void Engine::SetDisplayFullScreen( const bool& bFullScreen, HLE::SIZE sz )
+void Engine::SetDisplayFullScreen( const bool& bFullScreen, hle::SIZE sz )
 {
 	DEVMODE		dmScreenSetting;
 
@@ -209,8 +209,6 @@ void Engine::RenderFrame( void )
 
 	// update the camera with the current frame time
 	GraphicsProvider->Camera->Time = (float)m_time;
-	// update position
-	GraphicsProvider->Camera->Position	= D3DXVECTOR3(0.0f, 0.0f, -5.0f);
 	// update the input mappings
 	Engine::Get()->InputMap.Update();
 
@@ -226,11 +224,22 @@ void Engine::RenderFrame( void )
 
 		GraphicsProvider->Camera->Turn(GUI::RIGHT, InputMap[GUI::KEY_RIGHT]);
 		GraphicsProvider->Camera->Turn(GUI::LEFT, InputMap[GUI::KEY_LEFT]);
+		GraphicsProvider->Camera->Turn(GUI::UP, InputMap[GUI::KEY_UP]);
+		GraphicsProvider->Camera->Turn(GUI::DOWN, InputMap[GUI::KEY_DOWN]);
+
+		GraphicsProvider->Camera->Move(GUI::FORWARD, InputMap[GUI::KEY_W] );
+		GraphicsProvider->Camera->Move(GUI::BACKWARD, InputMap[GUI::KEY_S] );
+		GraphicsProvider->Camera->Move(GUI::LEFT, InputMap[GUI::KEY_A] );
+		GraphicsProvider->Camera->Move(GUI::RIGHT, InputMap[GUI::KEY_D] );
+		GraphicsProvider->Camera->Move(GUI::UP,  InputMap[GUI::KEY_PGUP] );
+		GraphicsProvider->Camera->Move(GUI::DOWN,  InputMap[GUI::KEY_PGDN] );
 
 		RECTINFO ri( POINT( 100, 85 ), SIZE() );
 
-		GraphicsProvider->Text2D->DrawFormattedText(L"Rotation Yaw: %0.2f", GraphicsProvider->Camera->Rotation.y );
-		GraphicsProvider->Text2D->DrawFormattedText(L"Mouse Coordinates\n\tX: %i\n\tY: %i", InputMap.Mouse.x, InputMap.Mouse.y );
+		//GraphicsProvider->Text2D->DrawFormattedText(L"Mouse Coordinates\n\tX: %i\n\tY: %i", InputMap.Mouse.x, InputMap.Mouse.y );
+
+		GraphicsProvider->Text2D->DrawFormattedText(D3DXCOLOR( 0.0f, 1.0f, 0.0f, 1.0f), L"Camera Position:\n\tX: %0.2f\n\tY: %0.2f\n\tZ: %0.2f", GraphicsProvider->Camera->Position.x, GraphicsProvider->Camera->Position.y, GraphicsProvider->Camera->Position.z);
+		GraphicsProvider->Text2D->DrawFormattedText(D3DXCOLOR( 0.0f, 1.0f, 0.0f, 1.0f), L"Camera Rotation:\n\tX: %0.2f\n\tY: %0.2f\n\tZ: %0.2f", GraphicsProvider->Camera->Rotation.x, GraphicsProvider->Camera->Rotation.y, GraphicsProvider->Camera->Rotation.z);
 
 		m_graphics_ptr->RenderScene( 0.0f );
 	} else {
@@ -261,7 +270,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case HLE_FULLSCREEN:
 		{
 			DWORD		dwStyle = GetWindowLong(hWnd, GWL_STYLE);
-			HLE::SIZE	sz;
+			hle::SIZE	sz;
 			
 			if(dwStyle & WS_OVERLAPPEDWINDOW)
 			{

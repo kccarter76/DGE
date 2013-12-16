@@ -1,7 +1,7 @@
-#include "StdAfx.h"
+#include "..\..\StdAfx.h"
 #include "ColorShader.h"
 
-using namespace HLE;
+using namespace hle;
 
 ColorShader::ColorShader(void)
 	: IShader()
@@ -11,6 +11,11 @@ ColorShader::ColorShader(void)
 
 ColorShader::~ColorShader(void)
 {
+}
+
+bool	ColorShader::Initialize( HWND hWnd, ID3D11Device* device )
+{
+	return Load( hWnd, device, "Color", L"..\\shaders\\color.vs", L"..\\shaders\\color.ps" );
 }
 
 void	ColorShader::GetPolygonLayout( input_elements* inputs )

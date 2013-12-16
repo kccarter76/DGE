@@ -1,7 +1,7 @@
 #include "..\StdAfx.h"
 #include "RenderTexture.h"
 
-using namespace HLE;
+using namespace hle;
 
 CRenderTexture::CRenderTexture(void)
 	: m_targetTexture( nullptr )
@@ -23,7 +23,7 @@ void	CRenderTexture::Release( void )
 	delete this;
 }
 
-bool	CRenderTexture::Initialize( LPDevice device, HLE::SIZE size )
+bool	CRenderTexture::Initialize( LPDevice device, hle::SIZE size )
 {
 	HRESULT						hr	= S_OK;
 	TEXTURE2D_DESC				texture_desc;

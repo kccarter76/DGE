@@ -5,7 +5,7 @@
 #include "texture.h"
 
 
-namespace HLE
+namespace hle
 {
 	class ENGINE_API IRenderable
 	{

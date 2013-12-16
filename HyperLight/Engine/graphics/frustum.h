@@ -6,7 +6,7 @@
 #include "..\typedefs.h"
 #include "camera.h"
 
-namespace HLE
+namespace hle
 {
 	typedef class ENGINE_API Frustum
 	{

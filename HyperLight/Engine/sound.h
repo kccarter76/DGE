@@ -11,7 +11,7 @@
 #include <dsound.h>
 #include <stdio.h>
 
-namespace HLE
+namespace hle
 {
 	enum ENGINE_API SoundFileType
 	{

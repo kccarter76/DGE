@@ -5,12 +5,13 @@
 
 #include "shaders\SpecularMapShader.h"
 
-using namespace HLE;
+using namespace hle;
 
 CSceneManager::CSceneManager( void )
 	: m_frustum( nullptr )
 	, m_light( nullptr )
 	, m_shader( nullptr )
+	, m_texture_debug( nullptr )
 {
 	m_frustum	= new Frustum();
 	m_light		= new Light();
@@ -22,6 +23,10 @@ CSceneManager::CSceneManager( void )
 	{
 		throw;
 	}
+
+	m_texture_debug			= new CRenderTexture();
+
+	m_texture_debug->Initialize( oEngine->GraphicsProvider->Device, oEngine->Window->size );
 
 	m_light->AmbientColor	= D3DXVECTOR4( 0.15f, 0.15f, 0.15f, 1.0f );
 	m_light->DiffuseColor	= D3DXVECTOR4( 1.0f, 1.0f, 1.0f, 1.0f );
@@ -43,6 +48,7 @@ void	CSceneManager::Release( void )
 	SAFE_RELEASE_D3D(m_frustum);
 	SAFE_RELEASE_D3D(m_light);
 	SAFE_RELEASE_D3D(m_shader);
+	SAFE_RELEASE_D3D(m_texture_debug);
 
 	for( m_it = m_meshs.begin(); m_it != m_meshs.end(); m_it++ )
 	{
@@ -75,6 +81,26 @@ bool	CSceneManager::AddAsset( std::string mesh_id, D3DXVECTOR3 position, D3DXVEC
 	m_assets.push_back( Asset( mesh_id, position, rotation ) ); 
 
 	return true;
+}
+
+bool	CSceneManager::RenderToTexture( LPDeviceContext context, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection )
+{
+	SingletonAccess<Engine> oEngine = Engine::Get();
+
+	m_texture_debug->SetRenderTarget( context, oEngine->GraphicsProvider->Video->DepthStencilView );
+
+	m_texture_debug->ClearRenderTarget( context, oEngine->GraphicsProvider->Video->DepthStencilView, COLOR( 0.0f, 0.0f, 1.0f, 1.0f ) );
+
+	bool result = Render( context, world, view, projection );
+
+	oEngine->GraphicsProvider->Video->SetBackBufferRenderTarget();
+
+	return result;
+}
+
+GET_DEF(CSceneManager, DebugShaderView)
+{
+	return m_texture_debug->ShaderResourceView;
 }
 
 bool	CSceneManager::Render( ID3D11DeviceContext* context, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection )
@@ -110,10 +136,9 @@ bool	CSceneManager::Render( ID3D11DeviceContext* context, D3DXMATRIX world, D3DX
 				it->Rotation -= D3DXVECTOR3( -360.0f, 0.0f, 0.0f );
 			}
 
-			
-			D3DXMatrixRotationYawPitchRoll( &world, it->Rotation.y,  it->Rotation.x,  it->Rotation.z );
 			D3DXMatrixTranslation( &world, position.x, position.y, position.z );
-
+			D3DXMatrixRotationYawPitchRoll( &world, it->Rotation.y,  it->Rotation.x,  it->Rotation.z );
+			
 			m_meshs[ it->MeshID ]->Render();
 			// we need to shade the mesh object
 

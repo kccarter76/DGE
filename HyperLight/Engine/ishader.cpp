@@ -4,7 +4,7 @@
 
 #include <string>
 
-using namespace HLE;
+using namespace hle;
 
 LPCSTR	IShader::profiles::vs_5_0 = "vs_5_0";
 LPCSTR	IShader::profiles::ps_5_0 = "ps_5_0";
@@ -229,15 +229,6 @@ bool	IShader::SetShaderParameters( ID3D11DeviceContext* context, D3DXMATRIX worl
 	context->VSSetConstantBuffers(buffer_num, 1, &m_matrix_buffer);
 
 	return true;
-}
-
-bool	IShader::SetShaderParameters( ID3D11DeviceContext* context, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection, ID3D11ShaderResourceView* texture )
-{
-	bool result = SetShaderParameters( context, world, view, projection );
-
-	context->PSSetShaderResources( 0, 1, &texture );
-
-	return result;
 }
 
 void	IShader::Render( int num_indices )

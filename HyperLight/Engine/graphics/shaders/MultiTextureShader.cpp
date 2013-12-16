@@ -1,7 +1,7 @@
 #include "..\..\StdAfx.h"
 #include "MultiTextureShader.h"
 
-using namespace HLE;
+using namespace hle;
 
 CMultiTextureShader::CMultiTextureShader(void)
 	: IShader()

@@ -3,7 +3,7 @@
 
 #include <assert.h>
 
-using namespace HLE;
+using namespace hle;
 
 Clock::Clock(void)
 	: _bTimerStopped(true)

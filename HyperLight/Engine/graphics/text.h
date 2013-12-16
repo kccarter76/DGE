@@ -1,13 +1,13 @@
 #pragma once
 #include "font.h"
-#include "shaders\fontshader.h"
+#include "shaders\FontShader.h"
 
 #include <mutex>
 #include <string>
 #include <vector>
 #include <list>
 
-namespace HLE
+namespace hle
 {
 	class ENGINE_API Text
 	{
@@ -51,7 +51,7 @@ namespace HLE
 		typedef std::vector<l_text_itr>::iterator	v_text_itr;
 
 		Font					*m_font;
-		FontShader				*m_shader;
+		CFontShader				*m_shader;
 		// the default view for 2D space
 		D3DXMATRIX				 m_view;
 		D3DXCOLOR				 m_color;
@@ -64,10 +64,10 @@ namespace HLE
 
 		bool	SetText( LPRECTINFO rc, D3DXCOLOR color, wstring text );
 		bool	InitializeText( SENTENCE** sentence, int length );
-		bool	UpdateText( LPSENTENCE sentence, wstring text, HLE::POINT pt, D3DXCOLOR color );
+		bool	UpdateText( LPSENTENCE sentence, wstring text, hle::POINT pt, D3DXCOLOR color );
 	public:
 		// Text( void);
-		Text( HLE::SIZE screen, D3DXMATRIX default_view );
+		Text( hle::SIZE screen, D3DXMATRIX default_view );
 		~Text( void );
 
 		bool	Load( LPCSTR fn_data, LPWSTR fn_texture );
@@ -84,7 +84,7 @@ namespace HLE
 		void	Release( bool del ); 
 		bool	Render( ID3D11DeviceContext* context, D3DXMATRIX world, D3DXMATRIX ortho );
 		
-		PROPERTY(HLE::POINT, Position);
+		PROPERTY(hle::POINT, Position);
 		GET(Position)	{ return m_pt; }
 		SET(Position)	{ m_pt = value;}
 	};

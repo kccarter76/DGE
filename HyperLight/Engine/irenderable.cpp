@@ -2,7 +2,7 @@
 #include "engine.h"
 #include "irenderable.h"
 
-using namespace HLE;
+using namespace hle;
 
 IRenderable::IRenderable( void )
 	: m_vertex_cnt(0)

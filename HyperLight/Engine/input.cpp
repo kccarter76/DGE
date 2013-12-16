@@ -2,7 +2,7 @@
 #include "input.h"
 #include "engine.h"
 
-using namespace HLE;
+using namespace hle;
 
 Input::Input( void )
 	: m_input(nullptr), m_keyboard(nullptr), m_mouse(nullptr)
@@ -13,7 +13,7 @@ Input::Input( void )
 	}
 }
 
-Input::Input( HWND hWnd, HINSTANCE hInstance, HLE::SIZE sz )
+Input::Input( HWND hWnd, HINSTANCE hInstance, hle::SIZE sz )
 	: m_input(nullptr), m_keyboard(nullptr), m_mouse(nullptr)
 {
 	for( int i = 0; i < GUI::KEY_KEY_CODES_COUNT; i++)

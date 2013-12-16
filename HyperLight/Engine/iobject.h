@@ -2,7 +2,9 @@
 #include <list>
 #include "typedefs.h"
 
-namespace HLE
+#define RADIANS ( D3DX_PI / 180 )
+
+namespace hle
 {
 	class ENGINE_API IObject
 	{
@@ -30,6 +32,16 @@ namespace HLE
 
 		D3DXMATRIX		m_view_matrix;
 		HLEWORLDSPACE	m_instance;
+
+		enum DIRECTION {
+			FORWARD	= 0,
+			BACKWARD,
+			LEFT,
+			RIGHT,
+			UP,
+			DOWN,
+			COUNT
+		};
 
 	public:
 		IObject( D3DXVECTOR3 position, D3DXVECTOR3 rotation, bool generate_view_matrix );

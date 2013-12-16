@@ -2,7 +2,7 @@
 #include "..\engine.h"
 #include "bitmap.h"
 
-using namespace HLE;
+using namespace hle;
 
 Bitmap::Bitmap(void)
 	: IRenderable()
@@ -21,15 +21,13 @@ Bitmap::~Bitmap(void)
 ///	End Property Definitions
 //////////////////////////////
 
-bool	Bitmap::Initialize( LPWSTR filename, const HLE::SIZE& window, const HLE::SIZE& bitmap )
+bool	Bitmap::Initialize( const hle::SIZE& window, const hle::SIZE& bitmap )
 {
+	SingletonAccess<Engine> oEngine	= Engine::Get();
+
 	m_window	= window;
 	m_bitmap	= bitmap;
 	m_point		= POINT( -1, -1 );
-
-	if( !LoadTexture( filename ) ) {
-		return false;
-	}
 
 	LPVERTEXTYPE			vertices	= nullptr;
 	unsigned long*			indices		= nullptr;
@@ -62,7 +60,7 @@ bool	Bitmap::Initialize( LPWSTR filename, const HLE::SIZE& window, const HLE::SI
 	vertex_data.SysMemSlicePitch = 0;
 
 	// Now create the vertex buffer.
-	hr = Engine::Get()->GraphicsProvider->Device->CreateBuffer(&vertex_desc, &vertex_data, &m_vertex_buffer);
+	hr = oEngine->GraphicsProvider->Device->CreateBuffer(&vertex_desc, &vertex_data, &m_vertex_buffer);
 	if( FAILED( hr ) )
 	{
 		return false;
@@ -82,7 +80,7 @@ bool	Bitmap::Initialize( LPWSTR filename, const HLE::SIZE& window, const HLE::SI
 	index_data.SysMemSlicePitch = 0;
 
 	// Create the index buffer.
-	hr = Engine::Get()->GraphicsProvider->Device->CreateBuffer(&index_desc, &index_data, &m_index_buffer);
+	hr = oEngine->GraphicsProvider->Device->CreateBuffer(&index_desc, &index_data, &m_index_buffer);
 	if( FAILED( hr ) ) 
 	{
 		return false;
@@ -97,7 +95,16 @@ bool	Bitmap::Initialize( LPWSTR filename, const HLE::SIZE& window, const HLE::SI
 	return true;
 }
 
-bool	Bitmap::Update( ID3D11DeviceContext* context, HLE::POINT pt )
+bool	Bitmap::Initialize( LPWSTR filename, const hle::SIZE& window, const hle::SIZE& bitmap )
+{
+	bool	result = Initialize( window, bitmap );
+
+	result = result && LoadTexture( filename );
+
+	return result;
+}
+
+bool	Bitmap::Update( ID3D11DeviceContext* context, hle::POINT pt )
 {
 	float						left, right, top, bottom;
 	LPVERTEXTYPE				vertices = nullptr, 
@@ -151,7 +158,7 @@ bool	Bitmap::Update( ID3D11DeviceContext* context, HLE::POINT pt )
 	return true;
 }
 
-bool	Bitmap::Render( ID3D11DeviceContext* context, HLE::POINT pt )
+bool	Bitmap::Render( ID3D11DeviceContext* context, hle::POINT pt )
 {
 	if ( !Update( context, pt ) )
 	{

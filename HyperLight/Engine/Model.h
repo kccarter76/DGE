@@ -1,7 +1,7 @@
 #pragma once
 #include "imesh.h"
 
-namespace HLE
+namespace hle
 {
 	class Model
 		: public IMesh

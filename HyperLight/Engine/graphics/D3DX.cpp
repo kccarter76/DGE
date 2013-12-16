@@ -1,7 +1,7 @@
 #include "..\StdAfx.h"
 #include "D3DX.h"
 
-using namespace HLE;
+using namespace hle;
 
 D3DX::D3DX(void)
 {
@@ -401,7 +401,7 @@ HRESULT	D3DX::Initialize( HWND hwnd, int width, int height, float fdepth, float 
 	return result;
 }
 
-void	D3DX::ChangePerspective( HLE::SIZE sz, float fnear, float fdepth )
+void	D3DX::ChangePerspective( hle::SIZE sz, float fnear, float fdepth )
 {
 	if ( !this )
 		return;	// if we are not initialized abort
@@ -479,4 +479,14 @@ void	D3DX::GetVideoCardInfo( std::wstring* name, int* memory )
 	//memcpy((void*)name, (void*)m_videoCardDescription, len );
 	*memory = m_videoCardMemory;
 	return;
+}
+
+void	D3DX::SetBackBufferRenderTarget( void )
+{
+	m_deviceContext->OMSetRenderTargets( 1, &m_renderTargetView, m_depthStencilView );
+}
+
+GET_DEF(D3DX, DepthStencilView)
+{
+	return m_depthStencilView;
 }

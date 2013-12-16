@@ -2,7 +2,7 @@
 #include <d3d11.h>
 #include <d3dx11tex.h>
 
-namespace HLE
+namespace hle
 {
 	class TextureMap
 	{

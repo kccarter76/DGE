@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "Mersenne.h"
 
-using namespace HLE;
+using namespace hle;
 
 CMersenne::CMersenne( unsigned int seed )
 	: index(0), mt(nullptr)

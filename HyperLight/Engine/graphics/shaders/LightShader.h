@@ -1,10 +1,11 @@
 #pragma once
 #include "..\..\ishader.h"
+#include "TextureShader.h"
 
-namespace HLE
+namespace hle
 {
-	class ENGINE_API LightShader
-		: public IShader
+	class ENGINE_API CLightShader
+		: public CTextureShader
 	{
 	protected:
 		struct CameraBufferType
@@ -32,8 +33,8 @@ namespace HLE
 		bool	Initialize( ID3D11Device* device );
 
 	public:
-		LightShader(void);
-		~LightShader(void);
+		CLightShader(void);
+		~CLightShader(void);
 
 		void			Release( void );
 		bool			Render( ID3D11DeviceContext* context, int index_cnt, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX projection, ID3D11ShaderResourceView* texture, D3DXVECTOR3 source, D3DXVECTOR3 camera,

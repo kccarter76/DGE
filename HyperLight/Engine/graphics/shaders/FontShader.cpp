@@ -1,31 +1,31 @@
 #include "..\..\StdAfx.h"
 #include "FontShader.h"
 
-using namespace HLE;
+using namespace hle;
 
-FontShader::FontShader(void)
-	: IShader()
+CFontShader::CFontShader(void)
+	: CTextureShader()
 {
 	m_pixel_buffer	= nullptr;
 }
 
-FontShader::~FontShader(void)
+CFontShader::~CFontShader(void)
 {
 }
 
-void	FontShader::Release( void )
+void	CFontShader::Release( void )
 {
 	SAFE_RELEASE_D3D(m_pixel_buffer);
 
-	IShader::Release();
+	CTextureShader::Release();
 }
 
-bool	FontShader::Initialize( HWND hWnd, ID3D11Device* device )
+bool	CFontShader::Initialize( HWND hWnd, ID3D11Device* device )
 {
 	return IShader::Load( hWnd, device, "Font", L"..\\shaders\\font.vs", L"..\\shaders\\font.ps" );
 }
 
-void	FontShader::GetPolygonLayout( input_elements* inputs )
+void	CFontShader::GetPolygonLayout( input_elements* inputs )
 {
 	D3D11_INPUT_ELEMENT_DESC polygon_layout[2];
 
@@ -48,7 +48,7 @@ void	FontShader::GetPolygonLayout( input_elements* inputs )
 	this->CopyPolygonArray( polygon_layout, 2, inputs );
 }
 
-bool	FontShader::Initialize( ID3D11Device *device )
+bool	CFontShader::Initialize( ID3D11Device *device )
 {
 	D3D11_SAMPLER_DESC samplerDesc;
 	D3D11_BUFFER_DESC pixelBufferDesc;
@@ -93,9 +93,9 @@ bool	FontShader::Initialize( ID3D11Device *device )
 	return true;
 }
 
-bool	FontShader::SetShaderParameters( ID3D11DeviceContext* context, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX ortho, ID3D11ShaderResourceView* texture, D3DXVECTOR4 color )
+bool	CFontShader::SetShaderParameters( ID3D11DeviceContext* context, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX ortho, ID3D11ShaderResourceView* texture, D3DXVECTOR4 color )
 {
-	if ( !IShader::SetShaderParameters( context, world, view, ortho, texture ) )
+	if ( !CTextureShader::SetShaderParameters( context, world, view, ortho, texture ) )
 		return false;
 
 	D3D11_MAPPED_SUBRESOURCE	resource;
@@ -115,7 +115,7 @@ bool	FontShader::SetShaderParameters( ID3D11DeviceContext* context, D3DXMATRIX w
 	return true;
 }
 
-bool	FontShader::Render( ID3D11DeviceContext* context, int cnt, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX ortho, ID3D11ShaderResourceView* texture, D3DXCOLOR color )
+bool	CFontShader::Render( ID3D11DeviceContext* context, int cnt, D3DXMATRIX world, D3DXMATRIX view, D3DXMATRIX ortho, ID3D11ShaderResourceView* texture, D3DXCOLOR color )
 {
 	if ( SetShaderParameters( context, world, view, ortho, texture, D3DXVECTOR4( color.r, color.g, color.b, color.a ) ) )
 	{

@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "light.h"
 
-using namespace HLE;
+using namespace hle;
 
 Light::Light(void)
 	: m_ambient_color( 0.0f, 0.0f, 0.0f, 1.0f )

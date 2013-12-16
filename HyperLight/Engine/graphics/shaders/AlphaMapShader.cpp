@@ -1,7 +1,7 @@
 #include "..\..\StdAfx.h"
 #include "AlphaMapShader.h"
 
-using namespace HLE;
+using namespace hle;
 
 CAlphaMapShader::CAlphaMapShader(void)
 	: CMultiTextureShader()

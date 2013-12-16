@@ -3,7 +3,7 @@
 
 #include <fstream>
 
-using namespace HLE;
+using namespace hle;
 
 IMesh::IMesh(void)
 	: IRenderable()
