@@ -71,55 +71,59 @@ float	CCamera::Accelerate( bool down, float* speed, float accel, float max )
 	return *speed;
 }
 
-void	CCamera::Move( GUI::EACTION action, bool down )
+void	CCamera::Move( UINT action, bool down )
 {
 	if ( ( action & GUI::MOVE ) == 0 &&  ( action & GUI::FORWARD ) == 0 && ( action & GUI::BACKWARD ) == 0 && ( action & GUI::UP ) == 0 && ( action & GUI::DOWN ) == 0 && ( action & GUI::LEFT ) == 0 && ( action & GUI::RIGHT ) == 0 )
 		return;	// not supported yet
 
 	VECTOR3	position	= this->Position;
 
-	float	radians	= position.y * RADIANS;
+	float	radians	= this->Rotation.y * RADIANS;
 	float	speed	= 0.0f;
 
-	if ( ( action & GUI::FORWARD ) == 0 )
+	if ( ( action & GUI::FORWARD ) != 0 )
 	{	// moving forward
-		speed		= Accelerate( down, &m_move[FORWARD], 0.003f, 0.03f );
-		position.x	-= speed * sinf(radians);
-		position.z	-= speed * cosf(radians);
+		speed		= Accelerate( down, &m_move[FORWARD], 0.001f, 0.03f );
+		position.x	+= sinf(radians) * speed;
+		position.z	+= cosf(radians) * speed;
 	} 
 	
-	if ( ( action & GUI::BACKWARD ) == 0 )
+	if ( ( action & GUI::BACKWARD ) != 0 )
 	{	// moving forward
-		speed		= Accelerate( down, &m_move[BACKWARD], 0.003f, 0.03f );
-		position.x	+= speed * sinf(radians);
-		position.z	+= speed * cosf(radians);
+		speed		= Accelerate( down, &m_move[BACKWARD], 0.001f, 0.03f );
+		position.x	-= sinf(radians) * speed;
+		position.z	-= cosf(radians) * speed;
 	}
 
-	if ( ( action & GUI::LEFT ) == 0 )
+	if ( ( action & GUI::LEFT ) != 0 )
 	{	// straffing left
-		position.x += Accelerate( down, &m_move[LEFT], 0.003f, 0.03f );
+		speed		= Accelerate( down, &m_move[LEFT], 0.001f, 0.03f );
+		position.x	-= cosf(radians) * speed;
+		position.z	-= sinf(radians) * speed;
 	}
-	else if ( ( action & GUI::RIGHT ) == 0 )
+	else if ( ( action & GUI::RIGHT ) != 0 )
 	{	// straffing right
-		position.x -= Accelerate( down, &m_move[RIGHT], 0.003f, 0.03f );
+		speed		= Accelerate( down, &m_move[RIGHT], 0.001f, 0.03f );
+		position.x	+= cosf(radians) * speed;
+		position.z	+= sinf(radians) * speed;
 	}
 
-	if ( ( action & GUI::UP ) == 0 )
+	if ( ( action & GUI::UP ) != 0 )
 	{	// moving forward
-		speed		= Accelerate( down, &m_move[UP], 0.003f, 0.03f );
-		position.y	-= speed;
-	}
-
-	if ( ( action & GUI::DOWN ) == 0 )
-	{	// moving forward
-		speed		= Accelerate( down, &m_move[DOWN], 0.003f, 0.03f );
+		speed		= Accelerate( down, &m_move[UP], 0.001f, 0.03f );
 		position.y	+= speed;
+	}
+
+	if ( ( action & GUI::DOWN ) != 0 )
+	{	// moving forward
+		speed		= Accelerate( down, &m_move[DOWN], 0.001f, 0.03f );
+		position.y	-= speed;
 	}
 
 	this->Position = position;
 }
 
-void	CCamera::Turn( GUI::EACTION action, bool down )
+void	CCamera::Turn( UINT action, bool down )
 {
 	if ( ( action & GUI::LEFT ) == 0 && ( action & GUI::RIGHT ) == 0 && ( action & GUI::UP ) == 0 && ( action & GUI::DOWN ) == 0 )
 		return;	// not supported yet
@@ -137,11 +141,11 @@ void	CCamera::Turn( GUI::EACTION action, bool down )
 
 	if ( ( action & GUI::UP ) != 0 )
 	{
-		rotation.x	-= Accelerate( down, &m_turn[UP], 0.01f, 0.15f );
+		rotation.x	-= Accelerate( down, &m_turn[UP], 0.05f, 0.1f );
 	}
 	else if ( ( action & GUI::DOWN ) != 0 )
 	{
-		rotation.x	+= Accelerate( down, &m_turn[DOWN], 0.01f, 0.15f );
+		rotation.x	+= Accelerate( down, &m_turn[DOWN], 0.05f, 0.1f );
 	}
 
 	if ( rotation.y < 0.0f )

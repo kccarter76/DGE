@@ -36,7 +36,8 @@ void	IObject::Update( void )
 	{
 		D3DXVECTOR3
 			up			= m_instance.up,
-			lookAt		= VECTOR3( 0.0f, 0.0f, 1.0f );
+			lookAt		= VECTOR3( 0.0f, 0.0f, 1.0f ), 
+			direction	= m_instance.position - lookAt;
 
 		float
 			pitch	= ( float )( m_instance.rotation.x * RADIANS ),

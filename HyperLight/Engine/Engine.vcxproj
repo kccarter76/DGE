@@ -136,6 +136,7 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
     <ClInclude Include="graphics\shaders\SpecularMapShader.h" />
     <ClInclude Include="graphics\RenderTexture.h" />
     <ClInclude Include="graphics\terrain\Terrain.h" />
+    <ClInclude Include="utility\generators\Perlin.h" />
     <ClInclude Include="utility\generators\Mersenne.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="resource.h" />
@@ -214,6 +215,9 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="graphics\terrain\Terrain.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="utility\generators\Perlin.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="utility\generators\Mersenne.cpp" />
