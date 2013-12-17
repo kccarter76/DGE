@@ -24,8 +24,8 @@ namespace hle
 		READONLY_PROPERTY(D3DXMATRIX, DefaultViewMatrix);
 		GET(DefaultViewMatrix);
 
-		void	Turn( GUI::EACTION action, bool down );
-		void	Move( GUI::EACTION action, bool down );
+		void	Turn( UINT action, bool down );
+		void	Move( UINT action, bool down );
 	} CAMERA, *LPCAMERA;
 };
 
