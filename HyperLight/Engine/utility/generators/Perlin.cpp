@@ -141,3 +141,20 @@ double	CSimplexNoise::noise( double xin, double yin )
     // The result is scaled to return values in the interval [-1,1].
 	return 70.0 * ( n0 + n1 + n2 );
 }
+
+double	CSimplexNoise::noise( double xin, double yin, double zin )
+{
+	double n0, n1, n2, n3;
+
+	// Add contributions from each corner to get the final noise value.
+    // The result is scaled to stay just inside [-1,1]
+    return 32.0*(n0 + n1 + n2 + n3);
+}
+
+double	CSimplexNoise::noise( double xin, double yin, double zin, double win )
+{
+	double n0, n1, n2, n3, n4;
+
+	// Sum up and scale the result to cover the range [-1,1]
+    return 27.0 * (n0 + n1 + n2 + n3 + n4);
+}
