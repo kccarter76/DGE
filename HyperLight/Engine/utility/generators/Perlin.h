@@ -35,5 +35,9 @@ namespace hle
 	public:
 		CSimplexNoise(void);
 		~CSimplexNoise(void);
+
+		double	noise( double xin, double yin );
+		double	noise( double xin, double yin, double zin );
+		double	noise( double xin, double yin, double zin, double win );
 	};
 };
