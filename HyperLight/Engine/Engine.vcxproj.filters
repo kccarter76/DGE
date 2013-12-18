@@ -200,6 +200,9 @@
     <ClInclude Include="utility\generators\Perlin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="utility\HeightMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -314,6 +317,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="utility\generators\Perlin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utility\HeightMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

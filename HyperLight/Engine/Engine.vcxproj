@@ -122,6 +122,7 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
     <ClInclude Include="graphics\graphics.h" />
     <ClInclude Include="graphics\shaders\MultiTextureShader.h" />
     <ClInclude Include="hardware.h" />
+    <ClInclude Include="utility\HeightMap.h" />
     <ClInclude Include="hle.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="input_defs.h" />
@@ -193,6 +194,9 @@ XCOPY $(ProjectDir)hlsl\*.vs $(SolutionDir)shaders\ /Y</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="hardware.cpp" />
+    <ClCompile Include="utility\HeightMap.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="input.cpp" />
     <ClCompile Include="imesh.cpp" />
     <ClCompile Include="iobject.cpp" />
