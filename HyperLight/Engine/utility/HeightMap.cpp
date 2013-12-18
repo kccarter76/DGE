@@ -60,7 +60,7 @@ void	CHeightMap::AddPerlinNoise( float freq )
 
 		for ( z = 0; z < m_size.height; z++ )
 		{
-			this[x][z]	= m_perlin->noise( freq * x / (float)m_size.width, freq * z / (float)m_size.height );
+			m_data[x][z]	= m_perlin->noise( freq * x / (float)m_size.width, freq * z / (float)m_size.height );
 		}
 	}
 }
