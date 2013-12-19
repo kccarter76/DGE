@@ -6,7 +6,7 @@ using namespace hle;
 CTerrain::CTerrain(void)
 	: m_size( 0, 0 )
 	, m_vertex_cnt( 0 ), m_index_cnt( 0 )
-	, m_index( nullptr ), m_vertex( nullptr )
+	, m_index( nullptr ), m_vertex( nullptr ), m_height( nullptr )
 {
 }
 
@@ -18,6 +18,7 @@ void	CTerrain::Release( void )
 {
 	SAFE_RELEASE_D3D( m_index );
 	SAFE_RELEASE_D3D( m_vertex );
+	SAFE_RELEASE_D3D( m_height );
 
 	delete this;
 }
@@ -26,17 +27,24 @@ bool	CTerrain::Initialize( LPDevice device )
 {
 	HRESULT		hr = S_OK; 
 
-	m_size.width	= 100;
-	m_size.height	= 100;
+	m_size.width	= 512;
+	m_size.height	= 512;
 
 	LPTerrainType		vertices	= nullptr;
 	unsigned long*		indices		= nullptr;
 	int					index, i, j;
-	float				x, z;
 	BUFFER_DESC			vertex_desc, index_desc;
 	SUBRESOURCE_DATA	vertex_data, index_data;
+	int					index1, index2, index3, index4;
 
-	m_vertex_cnt	= (m_size.width - 1)*(m_size.height - 1) * 8;
+	m_height		= new CHeightMap( m_size );
+
+	m_height->AddPerlinNoise( 12, 0.0f, 16, 1 );
+	m_height->Perturbation( 24, 12 );
+	m_height->Erode( 16, 132 );
+	m_height->Smooth( 1 );
+
+	m_vertex_cnt	= m_height->count * 12;
 	m_index_cnt		= m_vertex_cnt;
 
 	vertices		= new TerrainType[m_vertex_cnt];
@@ -51,82 +59,82 @@ bool	CTerrain::Initialize( LPDevice device )
 	{
 		for ( i = 0; i < ( m_size.width - 1 ); i++ )
 		{
-			//line 1
-			//Upper left
-			x	= (float)i;
-			z	= (float)(j + 1);
+			index1 = (m_size.height * j) + i;          // Bottom left.
+			index2 = (m_size.height * j) + (i+1);      // Bottom right.
+			index3 = (m_size.height * (j+1)) + i;      // Upper left.
+			index4 = (m_size.height * (j+1)) + (i+1);  // Upper right.
 
-			vertices[index].position	= VECTOR3( x, 0.0f, z );
+			// Upper left.
+			vertices[index].position	= m_height->map[index3].toVector();
 			vertices[index].color		= white;
 			indices[index]				= index;
-
 			index++;
 
 			// Upper right.
-			x	= (float)(i+1);
-			z	= (float)(j+1);
-
-			vertices[index].position	= VECTOR3(x, 0.0f, z);
+			vertices[index].position	= m_height->map[index4].toVector();
 			vertices[index].color		= white;
 			indices[index]				= index;
 			index++;
 
-			// LINE 2
 			// Upper right.
-			x = (float)(i+1);
-			z = (float)(j+1);
-
-			vertices[index].position	= VECTOR3(x, 0.0f, z);
+			vertices[index].position	= m_height->map[index4].toVector();
 			vertices[index].color		= white;
 			indices[index]				= index;
 			index++;
 
-			// Bottom right.
-			x = (float)(i+1);
-			z = (float)j;
-
-			vertices[index].position	= VECTOR3(x, 0.0f, z);
+			// Bottom left.
+			vertices[index].position	= m_height->map[index1].toVector();
 			vertices[index].color		= white;
 			indices[index]				= index;
 			index++;
 
-			// LINE 3
-			// Bottom right.
-			x = (float)(i+1);
-			z = (float)j;
-
-			vertices[index].position	= VECTOR3(x, 0.0f, z);
-			vertices[index].color		= white;
-			indices[index] = index;
-			index++;
-
 			// Bottom left.
-			x = (float)i;
-			z = (float)j;
-
-			vertices[index].position	= VECTOR3(x, 0.0f, z);
-			vertices[index].color		= white;
-			indices[index] = index;
-			index++;
-
-			// LINE 4
-			// Bottom left.
-			x = (float)i;
-			z = (float)j;
-
-			vertices[index].position	= VECTOR3(x, 0.0f, z);
+			vertices[index].position	= m_height->map[index1].toVector();
 			vertices[index].color		= white;
 			indices[index]				= index;
 			index++;
 
 			// Upper left.
-			x = (float)i;
-			z = (float)(j+1);
-
-			vertices[index].position	= VECTOR3(x, 0.0f, z);
+			vertices[index].position	= m_height->map[index3].toVector();
 			vertices[index].color		= white;
 			indices[index]				= index;
-			index++;			
+			index++;
+
+			// Bottom left.
+			vertices[index].position	= m_height->map[index1].toVector();
+			vertices[index].color		= white;
+			indices[index]				= index;
+			index++;
+
+			// Upper right.
+			vertices[index].position	= m_height->map[index4].toVector();
+			vertices[index].color		= white;
+			indices[index]				= index;
+			index++;
+
+			// Upper right.
+			vertices[index].position	= m_height->map[index4].toVector();
+			vertices[index].color		= white;
+			indices[index]				= index;
+			index++;
+
+			// Bottom right.
+			vertices[index].position	= m_height->map[index2].toVector();
+			vertices[index].color		= white;
+			indices[index]				= index;
+			index++;
+
+			// Bottom right.
+			vertices[index].position	= m_height->map[index2].toVector();
+			vertices[index].color		= white;
+			indices[index]				= index;
+			index++;
+
+			// Bottom left.
+			vertices[index].position	= m_height->map[index1].toVector();
+			vertices[index].color		= white;
+			indices[index]				= index;
+			index++;
 		}
 	}
 

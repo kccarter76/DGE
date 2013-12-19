@@ -53,6 +53,26 @@ CSimplexNoise::CSimplexNoise(void)
 	}
 }
 
+CSimplexNoise::CSimplexNoise( LPMersenne seed )
+	: F2( 0.5 * ( sqrt( 3.0 ) - 1.0 ) )
+	, G2( ( 3.0 - sqrt( 3.0 ) ) / 6.0 )
+	, F3( 1.0 / 3.0 )
+	, G3( 1.0 / 6.0 )
+	, F4( ( sqrt( 5.0 ) - 1.0 ) / 4.0 )
+	, G4( ( 5.0 - sqrt( 5.0 ) ) / 20.0 )
+{
+	for ( int i = 0; i < (sizeof(p) / sizeof(p[0])); i++ )
+	{
+		p[i]			= seed->random % 255;
+	}
+
+	for	( int i = 0; i < 512; i++ )
+	{
+		perm[i]			= p[i & 255];
+		permMod12[i]	= ( short )( perm[i] % 12 );
+	}
+}
+
 CSimplexNoise::~CSimplexNoise(void)
 {
 }

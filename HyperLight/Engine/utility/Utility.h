@@ -16,7 +16,7 @@ namespace hle
 		void	Release( void );
 
 		READONLY_PROPERTY(unsigned int, Random);
-		GET(Random)	{ return m_random->rand; }
+		GET(Random)	{ return m_random->random; }
 
 		template <class N>
 		N GetRandom( N high );

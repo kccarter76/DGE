@@ -1,6 +1,7 @@
 #pragma once
 namespace hle
 {
+	typedef
 	class ENGINE_API CMersenne
 	{
 	private:
@@ -17,30 +18,17 @@ namespace hle
 		void	generate_numbers( void );
 
 	public:
+		CMersenne ( void );
 		CMersenne ( unsigned int seed );
-		~CMersenne(void);
+		~CMersenne( void );
 
-		READONLY_PROPERTY(unsigned int, rand);
-		GET(rand)	{
-			if ( index == 0 ) 
-				generate_numbers();
-
-			unsigned int 
-				y	= mt[index];
-
-			y		^= y >> 11;
-			y		^=( y << 7) & 2636928640;
-			y		^=( y << 15) & 4022730752;
-			y		^= y >> 18;
-			index	 =( index + 1 ) % length;
-
-			return y;
-		}
+		READONLY_PROPERTY(unsigned int, random);
+		GET(random);
 
 		CMersenne operator=(const CMersenne&)
 		{
 			throw;
 		}
-	};
+	} CMersenne, *LPMersenne;
 };
 

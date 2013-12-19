@@ -208,7 +208,7 @@ void Engine::RenderFrame( void )
 	Timer->GetTimeValues(&m_time, &m_absTime, &m_elapsedTime);
 
 	// update the camera with the current frame time
-	GraphicsProvider->Camera->Time = (float)m_time;
+	GraphicsProvider->Camera->Time = (float)32;
 	// update the input mappings
 	Engine::Get()->InputMap.Update();
 

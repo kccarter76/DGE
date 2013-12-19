@@ -276,6 +276,26 @@ namespace hle
 
 	namespace vertexs
 	{
+		typedef struct ENGINE_API HeightMapType
+		{
+			float	x, y, z;
+
+			HeightMapType( void )
+				: x(0.0f), y(0.0f), z(0.0f)
+			{
+			}
+
+			HeightMapType( float x, float y, float z )
+				: x(x), y(y), z(z)
+			{
+			}
+
+			VECTOR3	toVector()
+			{
+				return VECTOR3(x,y,z);
+			}
+		} HeightMapType, *LPHeightMapType;
+
 		typedef struct ENGINE_API TerrainType
 		{
 			VECTOR3	position;

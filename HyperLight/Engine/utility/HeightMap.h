@@ -1,49 +1,44 @@
 #pragma once
 #include "..\typedefs.h"
 #include "generators\Perlin.h"
+#include "generators\mersenne.h"
+
+using namespace hle::vertexs;
 
 namespace hle
 {
+	typedef
 	class CHeightMap
 	{
 	private:
-		struct data
-		{
-			int		x,z;
-			float	height;
-
-			data( void )
-				: x(0), z(0), height(0.0f)
-			{
-			}
-
-			data( int x, int z, float height )
-				: x(x), z(z), height(height)
-			{
-			}
-
-			VECTOR3	toVector( void )
-			{
-				return VECTOR3( (float)x, height, (float)z );
-			}
-		};
-
+		CMersenne		m_rand;
 		CSimplexNoise*	m_perlin;
 		SIZE			m_size;
-		float**			m_data;
+		LPHeightMapType	m_data;
 
 		void	Initialize( void );
+
+		void	Erode( float smooth );
 	public:
 		CHeightMap(void);
 		CHeightMap( SIZE size );
 		~CHeightMap(void);
 
 		void	Release( void );
-		void	AddPerlinNoise( float f );
+		void	AddPerlinNoise( float frequency, float floor, int scale, int exp );
+		void	Perturbation( float frequency, float scale );
+		void	Erode( float smooth, int x );
+		void	Smooth( int x );
+		
 
-		READONLY_PROPERTY( SIZE, Size );
-		GET(Size)	{ return m_size; }
+		READONLY_PROPERTY( SIZE, size );
+		GET(size)	{ return m_size; }
 
-		float*	operator[]( int x );
-	};
+		READONLY_PROPERTY( int, count );
+		GET(count);
+
+		READONLY_PROPERTY( LPHeightMapType, map );
+		GET(map)	{ return m_data; }
+
+	} CHeightMap, *LPHeightMap;
 };

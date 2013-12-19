@@ -1,7 +1,20 @@
-#include "StdAfx.h"
+#include "..\..\StdAfx.h"
 #include "Mersenne.h"
 
+#include <stdlib.h>
+
 using namespace hle;
+
+CMersenne::CMersenne( void )
+	: index(0), mt(nullptr)
+	, length( ( unsigned int )624 )
+	, bit_mask_32( ( unsigned int )0xffffffff )
+	, bit_pow_31( ( unsigned int )( 1 << 31 ) )
+{
+	srand((unsigned int)624);
+
+	initialize_generator( rand() );
+}
 
 CMersenne::CMersenne( unsigned int seed )
 	: index(0), mt(nullptr)
@@ -41,4 +54,21 @@ void	CMersenne::generate_numbers( void )
 			 mt[i]		^= 2567483615;
 	}
 	return;
+}
+
+GET_DEF(CMersenne, random)
+{
+	if ( index == 0 ) 
+		generate_numbers();
+
+	unsigned int 
+		y	= mt[index];
+
+	y		^= y >> 11;
+	y		^=( y << 7) & 2636928640;
+	y		^=( y << 15) & 4022730752;
+	y		^= y >> 18;
+	index	 =( index + 1 ) % length;
+
+	return y;
 }

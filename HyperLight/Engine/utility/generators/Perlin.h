@@ -1,4 +1,5 @@
 #pragma once
+#include "Mersenne.h"
 
 namespace hle
 {
@@ -34,6 +35,7 @@ namespace hle
 		inline double dot( Gradient g, double x, double y, double z, double w )	{ return g.x * x + g.y * y + g.z * z + g.w * w; }
 	public:
 		CSimplexNoise(void);
+		CSimplexNoise( LPMersenne seed );
 		~CSimplexNoise(void);
 
 		double	noise( double xin, double yin );
